@@ -1,0 +1,19 @@
+{
+  "id": "req-123",
+  "imp": [
+    {
+      "id": "1",
+      "banner": {
+        "format": [{ "w": 300, "h": 250 }]
+      },
+      "tagid": "news/home/hero",
+      "bidfloor": 1.2,
+      "ext": {
+        "kv": { "category": "news", "logged_in": "true" }
+      }
+    }
+  ],
+  "site": { "domain": "news.example" },
+  "device": { "ua": "Mozilla/5.0", "geo": { "country": "USA" } },
+  "user": { "id": "u1" }
+}

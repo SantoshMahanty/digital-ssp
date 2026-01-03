@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="grid two">
+  <div class="card">
+    <h2>Unified Floors</h2>
+    <table class="table">
+      <thead><tr><th>Context</th><th>Floor</th></tr></thead>
+      <tbody>
+        {% for f in floors %}
+        <tr><td>{{ f.context }}</td><td>{{ f.floor }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="card">
+    <h2>Deal Overrides</h2>
+    <table class="table">
+      <thead><tr><th>Deal</th><th>Min</th><th>Notes</th></tr></thead>
+      <tbody>
+        {% for d in deals %}
+        <tr><td>{{ d.name }}</td><td>{{ d.min }}</td><td>{{ d.note }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

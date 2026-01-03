@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="grid two">
+  <div class="card">
+    <h2>Ad Inspector</h2>
+    <form method="get">
+      <label>Request ID: <input name="reqId" value="{{ req_id or '' }}" /></label>
+      <button type="submit">Fetch</button>
+    </form>
+    <ul>
+      {% for t in trace %}
+      <li><strong>{{ t.step }}</strong>: {{ t.detail }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  <div class="card">
+    <h3>Instructions</h3>
+    <p class="tagline">Call POST /ad on FastAPI to generate a reqId, then paste it here.</p>
+  </div>
+</div>
+{% endblock %}
