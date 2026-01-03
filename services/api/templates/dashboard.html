@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Real-Time Dashboard - Ad Manager 360{% endblock %}
+{% block title %}Real-Time Dashboard - Digital-SSP{% endblock %}
 
 {% block content %}
 <div class="page-header">
@@ -12,9 +12,9 @@
         <div class="live-badge" style="flex-shrink: 0;">● LIVE</div>
     </div>
     <div style="display: flex; gap: 12px; margin-top: 16px; align-items: center;">
-        <button style="padding: 8px 16px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">⏱️ Live (Updates every 5s)</button>
-        <button style="padding: 8px 16px; background: #f1f3f4; color: #202124; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">📅 Last 24h</button>
-        <button style="padding: 8px 16px; background: #f1f3f4; color: #202124; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">📊 Last 7d</button>
+        <button data-period="today" class="period-btn active-btn" style="padding: 8px 16px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">⏱️ Live (Updates every 5s)</button>
+        <button data-period="last24h" class="period-btn" style="padding: 8px 16px; background: #f1f3f4; color: #202124; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">📅 Last 24h</button>
+        <button data-period="last7d" class="period-btn" style="padding: 8px 16px; background: #f1f3f4; color: #202124; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">📊 Last 7d</button>
         <span style="font-size: 11px; color: #5f6368; margin-left: 12px;" data-last-refresh>Updated just now</span>
     </div>
 </div>
@@ -509,13 +509,15 @@
 // Auto-refresh dashboard data every 5 seconds
 let isRefreshing = false;
 let lastUpdate = Date.now();
+let currentPeriod = 'today';
+let autoRefreshInterval = null;
 
 async function refreshDashboardData() {
     if (isRefreshing) return;
     isRefreshing = true;
     
     try {
-        const response = await fetch('/api/dashboard-data');
+        const response = await fetch(`/api/dashboard-data?period=${currentPeriod}`);
         if (!response.ok) throw new Error('Failed to fetch');
         
         const data = await response.json();
@@ -551,6 +553,39 @@ async function refreshDashboardData() {
     }
 }
 
+// Handle period button clicks
+document.querySelectorAll('.period-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const period = this.getAttribute('data-period');
+        
+        // Update button styles
+        document.querySelectorAll('.period-btn').forEach(b => {
+            b.style.background = '#f1f3f4';
+            b.style.color = '#202124';
+            b.classList.remove('active-btn');
+        });
+        this.style.background = '#1967d2';
+        this.style.color = '#fff';
+        this.classList.add('active-btn');
+        
+        // Update current period and refresh
+        currentPeriod = period;
+        lastUpdate = Date.now();
+        refreshDashboardData();
+        
+        // Stop/start auto-refresh based on period
+        if (autoRefreshInterval) {
+            clearInterval(autoRefreshInterval);
+        }
+        
+        if (period === 'today') {
+            // Auto-refresh only for live view
+            autoRefreshInterval = setInterval(refreshDashboardData, 5000);
+            setInterval(updateLastRefreshTime, 1000);
+        }
+    });
+});
+
 function formatNumber(num, decimals = 0) {
     return new Intl.NumberFormat('en-US', {
         minimumFractionDigits: decimals,
@@ -560,7 +595,7 @@ function formatNumber(num, decimals = 0) {
 
 function updateLastRefreshTime() {
     const refreshIndicator = document.querySelector('[data-last-refresh]');
-    if (refreshIndicator) {
+    if (refreshIndicator && currentPeriod === 'today') {
         const seconds = Math.floor((Date.now() - lastUpdate) / 1000);
         if (seconds < 60) {
             refreshIndicator.textContent = `Updated ${seconds}s ago`;
@@ -568,7 +603,7 @@ function updateLastRefreshTime() {
     }
 }
 
-// Start auto-refresh
+// Start auto-refresh for live view
 setInterval(refreshDashboardData, 5000);
 setInterval(updateLastRefreshTime, 1000);
 

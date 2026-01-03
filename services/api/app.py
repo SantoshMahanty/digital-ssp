@@ -1,5 +1,5 @@
 """
-FastAPI application for the GAM-360 simulator.
+FastAPI application for the Digital-SSP platform.
 Provides JSON APIs and lightweight HTML console pages.
 """
 
@@ -18,6 +18,7 @@ from pydantic import BaseModel, Field
 from services.delivery_engine.types import AdRequest, LineItem, Size
 from services.delivery_engine.decision import evaluate_request
 from services.api.examples import ALL_LINE_ITEMS, FLOOR_RULES, EXAMPLE_REQUESTS
+from services.api.mysql_queries import get_line_items_for_engine
 
 
 # -----------------------------------------------------------------------------
@@ -34,14 +35,14 @@ def _page(title: str, content: str, active_nav: str = "") -> str:
     """Fallback page wrapper for console pages (CSS moved to static files)."""
     nav_items = [
         ("Home", "/", "🏠"),
-        ("Delivery", "/console/delivery", "📦"),
-        ("Inventory", "/console/inventory", "📊"),
-        ("Reporting", "/console/reporting", "📈"),
-        ("Optimization", "/console/optimization", "⚡"),
-        ("Programmatic", "/console/programmatic", "💰"),
-        ("Admin", "/console/admin", "⚙️"),
-        ("Privacy", "/console/privacy", "🔒"),
-        ("Tools", "/console/tools", "🛠️"),
+        ("Delivery", "/delivery", "📦"),
+        ("Inventory", "/inventory", "📊"),
+        ("Reporting", "/reporting", "📈"),
+        ("Optimization", "/optimization", "⚡"),
+        ("Programmatic", "/programmatic", "💰"),
+        ("Admin", "/admin", "⚙️"),
+        ("Privacy", "/privacy", "🔒"),
+        ("Tools", "/tools", "🛠️"),
     ]
     
     sidebar_html = ""
@@ -54,7 +55,7 @@ def _page(title: str, content: str, active_nav: str = "") -> str:
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{_esc(title)} - Ad Manager 360</title>
+    <title>{_esc(title)} - Digital-SSP</title>
     <link rel="stylesheet" href="/static/css/console.css">
 </head>
 <body>
@@ -66,7 +67,7 @@ def _page(title: str, content: str, active_nav: str = "") -> str:
                 <rect x="14" y="14" width="7" height="7"></rect>
                 <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
-            <span class="logo-text">Ad Manager <strong>360</strong></span>
+            <span class="logo-text">Digital-<strong>SSP</strong></span>
         </div>
         <div class="search-container">
             <input type="text" placeholder="Search orders, line items, ad units..." class="search-input">
@@ -109,7 +110,7 @@ logger = logging.getLogger(__name__)
 
 
 # FastAPI app
-app = FastAPI(title="GAM-360 Simulator API", version="1.0.0", description="Educational simulator for Google Ad Manager 360 behavior")
+app = FastAPI(title="Digital-SSP API", version="1.0.0", description="Digital Supply-Side Platform for programmatic advertising")
 
 # Mount static files
 static_dir = os.path.join(BASE_DIR, "static")
@@ -177,7 +178,14 @@ class DecisionTraceModel(BaseModel):
 # -----------------------------------------------------------------------------
 # Data
 # -----------------------------------------------------------------------------
-LINE_ITEMS: List[LineItem] = ALL_LINE_ITEMS
+try:
+    LINE_ITEMS: List[LineItem] = get_line_items_for_engine()
+    if not LINE_ITEMS:
+        LINE_ITEMS = ALL_LINE_ITEMS
+        logger.warning("Using in-memory sample line items; DB returned none.")
+except Exception as e:
+    logger.error(f"Error loading line items from DB: {e}")
+    LINE_ITEMS = ALL_LINE_ITEMS
 FLOOR_RULES_DATA = FLOOR_RULES
 REQUEST_TRACES: Dict[str, Dict] = {}
 
@@ -295,13 +303,13 @@ async def console_redirect():
     return RedirectResponse(url="/", status_code=307)
 
 
-@app.get("/console/delivery", response_class=HTMLResponse)
+@app.get("/delivery", response_class=HTMLResponse)
 async def console_delivery(request: Request):
     """Delivery management page."""
     return templates.TemplateResponse("delivery.html", {"request": request, "active_nav": "Delivery"})
 
 
-@app.get("/console/orders", response_class=HTMLResponse)
+@app.get("/orders", response_class=HTMLResponse)
 async def console_orders(request: Request):
     """Orders management page using Jinja2 template with live MySQL data."""
     try:
@@ -313,7 +321,7 @@ async def console_orders(request: Request):
     return templates.TemplateResponse("orders.html", {"request": request, "active_nav": "Orders", "orders": orders})
 
 
-@app.get("/console/inventory", response_class=HTMLResponse)
+@app.get("/inventory", response_class=HTMLResponse)
 async def console_inventory():
     ad_units = set()
     placements = set()
@@ -367,7 +375,7 @@ async def console_inventory():
     return HTMLResponse(_page("Inventory", body, "Inventory"))
 
 
-@app.get("/console/reporting", response_class=HTMLResponse)
+@app.get("/reporting", response_class=HTMLResponse)
 async def console_reporting():
     total_requests = len(REQUEST_TRACES)
     filled = sum(1 for t in REQUEST_TRACES.values() if t["trace"].winner)
@@ -401,7 +409,7 @@ async def console_reporting():
     return HTMLResponse(_page("Reporting", body, "Reporting"))
 
 
-@app.get("/console/optimization", response_class=HTMLResponse)
+@app.get("/optimization", response_class=HTMLResponse)
 async def console_optimization():
     rows = []
     for rule in FLOOR_RULES_DATA:
@@ -427,15 +435,15 @@ async def console_optimization():
     return HTMLResponse(_page("Optimization", body, "Optimization"))
 
 
-@app.get("/console/programmatic", response_class=HTMLResponse)
-async def console_programmatic():
+@app.get("/programmatic", response_class=HTMLResponse)
+async def console_programmatic_page():
     body = f"""
         <div class=\"card\" style=\"margin-bottom:20px;\">
             <h2>Programmatic & Deals</h2>
             <div class=\"muted\">Unified auction placeholder: floors, buyers, deals.</div>
             <p>Use floor rules as yield groups; map buyers and deals in a future iteration.</p>
             <ul>
-                <li><a href=\"/console/floors\">Floor rules</a></li>
+                <li><a href="/floors">Floor rules</a></li>
                 <li><a href=\"/line-items\">Line items JSON</a> for price priority vs. sponsorship mix</li>
             </ul>
         </div>
@@ -451,7 +459,7 @@ async def console_programmatic():
     return HTMLResponse(_page("Programmatic", body, "Programmatic"))
 
 
-@app.get("/console/admin", response_class=HTMLResponse)
+@app.get("/admin", response_class=HTMLResponse)
 async def console_admin():
     body = f"""
         <div class=\"card\" style=\"margin-bottom:20px;\">
@@ -473,7 +481,7 @@ async def console_admin():
     return HTMLResponse(_page("Admin", body, "Admin"))
 
 
-@app.get("/console/privacy", response_class=HTMLResponse)
+@app.get("/privacy", response_class=HTMLResponse)
 async def console_privacy():
     body = """
         <div class=\"card\" style=\"margin-bottom:20px;\">
@@ -494,7 +502,7 @@ async def console_privacy():
     return HTMLResponse(_page("Privacy", body, "Privacy"))
 
 
-@app.get("/console/tools", response_class=HTMLResponse)
+@app.get("/tools", response_class=HTMLResponse)
 async def console_tools():
     recent = sorted(REQUEST_TRACES.items(), key=lambda x: x[1]["timestamp"], reverse=True)[:15]
     trace_rows = []
@@ -510,7 +518,7 @@ async def console_tools():
                 <li><a href=\"/docs\">Swagger</a> to POST /ad and view schemas</li>
                 <li><a href=\"/examples\">Example requests</a> for quick testing</li>
                 <li><a href=\"/stats\">Stats</a> for health</li>
-                <li><a href=\"/console/floors\">Floor rules</a> viewer</li>
+                <li><a href="/floors">Floor rules</a> viewer</li>
             </ul>
         </div>
         <div class=\"card\">
@@ -521,7 +529,7 @@ async def console_tools():
     return HTMLResponse(_page("Tools", body, "Tools"))
 
 
-@app.get("/console/line-items", response_class=HTMLResponse)
+@app.get("/line-items", response_class=HTMLResponse)
 async def console_line_items(request: Request):
     """Line items management page using Jinja2 template with live MySQL data."""
     try:
@@ -533,7 +541,7 @@ async def console_line_items(request: Request):
     return templates.TemplateResponse("line_items.html", {"request": request, "active_nav": "Line Items", "line_items": line_items})
 
 
-@app.get("/console/creatives", response_class=HTMLResponse)
+@app.get("/creatives", response_class=HTMLResponse)
 async def console_creatives(request: Request):
     """Creatives management page using Jinja2 template with live MySQL data."""
     try:
@@ -545,48 +553,42 @@ async def console_creatives(request: Request):
     return templates.TemplateResponse("creatives.html", {"request": request, "active_nav": "Creatives", "creatives": creatives})
 
 
-@app.get("/console/study-hub", response_class=HTMLResponse)
+@app.get("/study-hub", response_class=HTMLResponse)
 async def console_study_hub(request: Request):
     """Study Hub page for organizing learning resources."""
     return templates.TemplateResponse("study_hub.html", {"request": request, "active_nav": "Study Hub"})
 
-@app.get("/console/pacing", response_class=HTMLResponse)
+@app.get("/pacing", response_class=HTMLResponse)
 async def console_pacing(request: Request):
     """Pacing & delivery controls page using Jinja2 template."""
     return templates.TemplateResponse("pacing.html", {"request": request, "active_nav": "Pacing"})
 
-@app.get("/console/programmatic", response_class=HTMLResponse)
-async def console_programmatic(request: Request):
-    """Programmatic delivery management page using Jinja2 template."""
-    return templates.TemplateResponse("programmatic.html", {"request": request, "active_nav": "Programmatic"})
-
-@app.get("/console/dashboard", response_class=HTMLResponse)
-async def console_dashboard(request: Request):
-    """Real-time analytics dashboard page using Jinja2 template with live MySQL data."""
-    return RedirectResponse(url="/console", status_code=307)
-
 @app.get("/api/dashboard-data")
-async def api_dashboard_data():
-    """API endpoint to fetch dashboard data as JSON for auto-refresh."""
+async def api_dashboard_data(period: str = 'today'):
+    """API endpoint to fetch dashboard data as JSON for auto-refresh.
+    
+    Args:
+        period: 'today', 'last24h', or 'last7d'
+    """
     try:
         from services.api.mysql_queries import get_dashboard_data
-        dashboard_data = get_dashboard_data()
+        dashboard_data = get_dashboard_data(period=period)
         return dashboard_data
     except Exception as e:
         logger.error(f"Error fetching dashboard data API: {e}")
         return {"error": str(e)}
 
-@app.get("/console/creative-health-check", response_class=HTMLResponse)
+@app.get("/creative-health-check", response_class=HTMLResponse)
 async def console_creative_health_check(request: Request):
     """Creative health check and QA page using Jinja2 template."""
     return templates.TemplateResponse("creative-health-check.html", {"request": request, "active_nav": "Creative Health"})
 
-@app.get("/console/audiences", response_class=HTMLResponse)
+@app.get("/audiences", response_class=HTMLResponse)
 async def console_audiences(request: Request):
     """Audience management and segmentation page using Jinja2 template."""
     return templates.TemplateResponse("audiences.html", {"request": request, "active_nav": "Audiences"})
 
-@app.get("/console/floors", response_class=HTMLResponse)
+@app.get("/floors", response_class=HTMLResponse)
 async def console_floors():
     rows = []
     for rule in FLOOR_RULES_DATA:
@@ -621,7 +623,7 @@ async def console_floors():
 # -----------------------------------------------------------------------------
 @app.on_event("startup")
 async def startup_event():
-    logger.info("GAM-360 Simulator API starting...")
+    logger.info("Digital-SSP API starting...")
     logger.info(f"Loaded {len(LINE_ITEMS)} line items")
     logger.info(f"Configured {len(FLOOR_RULES_DATA)} floor rules")
     logger.info("API running on http://0.0.0.0:8001")
@@ -629,7 +631,7 @@ async def startup_event():
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    logger.info("GAM-360 Simulator API shutting down...")
+    logger.info("Digital-SSP API shutting down...")
 
 
 if __name__ == "__main__":

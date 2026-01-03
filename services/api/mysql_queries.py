@@ -1,11 +1,12 @@
 """
-MySQL database queries for GAM360 dashboard
+MySQL database queries for Digital-SSP dashboard
 """
 
 import mysql.connector
 from mysql.connector import Error
 from typing import Dict, List, Optional, Any
 import os
+import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -50,18 +51,30 @@ def execute_query(query: str, params: tuple = None) -> List[Dict[str, Any]]:
             conn.close()
         return []
 
-def get_dashboard_data() -> Dict[str, Any]:
-    """Get all dashboard data in one call"""
+def get_dashboard_data(period: str = 'today') -> Dict[str, Any]:
+    """Get dashboard data for specified time period
     
-    # Today's metrics
-    today_query = """
+    Args:
+        period: 'today', 'last24h', 'last7d'
+    """
+    
+    # Determine date filter based on period
+    if period == 'last24h':
+        date_filter = "metric_date >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
+    elif period == 'last7d':
+        date_filter = "metric_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)"
+    else:  # today
+        date_filter = "metric_date = CURDATE()"
+    
+    # Today's metrics from daily_metrics (pre-computed)
+    today_query = f"""
         SELECT 
-            COUNT(*) as total_impressions,
-            SUM(CASE WHEN click_through = 1 THEN 1 ELSE 0 END) as total_clicks,
-            SUM(revenue) as total_revenue,
-            SUM(CASE WHEN viewable = 1 THEN 1 ELSE 0 END) as viewable_impressions
-        FROM impressions
-        WHERE DATE(impression_time) = CURDATE()
+            COALESCE(SUM(impressions), 0) as total_impressions,
+            COALESCE(SUM(clicks), 0) as total_clicks,
+            COALESCE(SUM(revenue), 0) as total_revenue,
+            COALESCE(SUM(viewable_impressions), 0) as viewable_impressions
+        FROM daily_metrics
+        WHERE {date_filter}
     """
     
     today_results = execute_query(today_query)
@@ -72,7 +85,7 @@ def get_dashboard_data() -> Dict[str, Any]:
     revenue = float(today_metrics.get('total_revenue', 0) or 0)
     viewable = today_metrics.get('viewable_impressions', 0) or 0
     
-    # Hourly delivery
+    # Last 24 hours from impressions (with date filter)
     hourly_query = """
         SELECT 
             HOUR(impression_time) as hour,
@@ -84,15 +97,16 @@ def get_dashboard_data() -> Dict[str, Any]:
     """
     hourly_data = execute_query(hourly_query)
     
-    # Line item performance
+    # Line item performance (use daily_metrics for efficiency)
     line_items_query = """
         SELECT 
+            o.order_id,
             o.order_name,
-            COUNT(i.impression_id) as delivered,
+            COALESCE(SUM(dm.impressions), 0) as delivered,
             o.lifetime_impression_goal as booked,
             o.status
         FROM orders o
-        LEFT JOIN impressions i ON o.order_id = i.order_id
+        LEFT JOIN daily_metrics dm ON o.order_id = dm.order_id AND dm.metric_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
         WHERE o.status = 'ACTIVE'
         GROUP BY o.order_id
         ORDER BY delivered DESC
@@ -107,7 +121,7 @@ def get_dashboard_data() -> Dict[str, Any]:
         item['pct_complete'] = round((delivered / booked * 100), 1)
         item['variance'] = round(item['pct_complete'] - 50, 1)  # Simplified
     
-    # Recent activity
+    # Recent activity (last 24 hours only)
     activity_query = """
         SELECT 
             o.order_name,
@@ -116,6 +130,7 @@ def get_dashboard_data() -> Dict[str, Any]:
         FROM impressions i
         JOIN orders o ON i.order_id = o.order_id
         JOIN creatives c ON i.creative_id = c.creative_id
+        WHERE i.impression_time >= DATE_SUB(NOW(), INTERVAL 24 HOUR)
         ORDER BY i.impression_time DESC
         LIMIT 10
     """
@@ -133,6 +148,36 @@ def get_dashboard_data() -> Dict[str, Any]:
         'line_items': line_items,
         'activity': activity
     }
+
+
+def ensure_indexes():
+    """Create indexes for performance optimization"""
+    conn = get_connection()
+    if not conn:
+        return
+    
+    cursor = conn.cursor()
+    indexes = [
+        "CREATE INDEX IF NOT EXISTS idx_impressions_time ON impressions(impression_time)",
+        "CREATE INDEX IF NOT EXISTS idx_impressions_order_time ON impressions(order_id, impression_time)",
+        "CREATE INDEX IF NOT EXISTS idx_impressions_creative_time ON impressions(creative_id, impression_time)",
+        "CREATE INDEX IF NOT EXISTS idx_daily_metrics_date ON daily_metrics(metric_date)",
+        "CREATE INDEX IF NOT EXISTS idx_daily_metrics_order_date ON daily_metrics(order_id, metric_date)",
+    ]
+    
+    for idx_sql in indexes:
+        try:
+            cursor.execute(idx_sql)
+        except Exception:
+            pass  # Index might already exist
+    
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+
+# Create indexes on module load
+ensure_indexes()
 
 
 def get_orders_list(limit: int = 50) -> List[Dict[str, Any]]:
@@ -213,3 +258,96 @@ def get_creatives_list(limit: int = 50) -> List[Dict[str, Any]]:
         row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
         row['size'] = f"{row.get('width') or 0}x{row.get('height') or 0}" if row.get('width') and row.get('height') else "—"
     return rows
+
+
+def get_line_items_for_engine(limit: int = 200):
+    """Load active line items from MySQL and hydrate delivery-engine objects."""
+    try:
+        from services.delivery_engine.types import LineItem, Creative, Size
+    except Exception:
+        return []
+
+    query = f'''
+        SELECT 
+            o.order_id,
+            o.order_name,
+            o.priority,
+            o.cpm,
+            o.pacing_strategy,
+            o.targeting,
+            o.start_date,
+            o.end_date,
+            o.lifetime_impression_goal,
+            o.status,
+            o.campaign_id,
+            o.publisher_id,
+            COALESCE(SUM(i.impression_id IS NOT NULL), 0) AS delivered
+        FROM orders o
+        LEFT JOIN impressions i ON i.order_id = o.order_id
+        WHERE o.status = 'ACTIVE'
+        GROUP BY o.order_id
+        ORDER BY o.priority DESC, o.created_at DESC
+        LIMIT {limit}
+    '''
+    rows = execute_query(query)
+    if not rows:
+        return []
+
+    # Fetch creatives by campaign for hydration
+    campaign_ids = [r['campaign_id'] for r in rows if r.get('campaign_id')]
+    creative_map: Dict[int, List[Dict[str, Any]]] = {}
+    if campaign_ids:
+        ids_csv = ",".join(str(cid) for cid in sorted(set(campaign_ids)))
+        creative_rows = execute_query(
+            f"""
+            SELECT creative_id, campaign_id, creative_type, width, height, creative_name
+            FROM creatives
+            WHERE campaign_id IN ({ids_csv}) AND status = 'ACTIVE'
+            """
+        )
+        for cr in creative_rows:
+            creative_map.setdefault(cr['campaign_id'], []).append(cr)
+
+    hydrated = []
+    for r in rows:
+        targeting_raw = r.get('targeting')
+        try:
+            targeting = json.loads(targeting_raw) if targeting_raw else {}
+        except Exception:
+            targeting = {}
+
+        start_ts = None
+        end_ts = None
+        if r.get('start_date'):
+            start_ts = r['start_date'].timestamp()
+        if r.get('end_date'):
+            end_ts = r['end_date'].timestamp()
+
+        creatives_dom = []
+        for cr in creative_map.get(r.get('campaign_id'), []):
+            creatives_dom.append(
+                Creative(
+                    id=str(cr['creative_id']),
+                    size=Size(w=cr.get('width') or 0, h=cr.get('height') or 0),
+                    type=cr.get('creative_type') or 'display',
+                    adm=None,
+                )
+            )
+
+        hydrated.append(
+            LineItem(
+                id=str(r['order_id']),
+                name=r.get('order_name'),
+                priority=int(r.get('priority') or 8),
+                cpm=float(r.get('cpm') or 0),
+                targeting=targeting or {},
+                pacing=r.get('pacing_strategy') or 'even',
+                booked_imps=r.get('lifetime_impression_goal'),
+                delivered_imps=int(r.get('delivered') or 0),
+                start=start_ts,
+                end=end_ts,
+                creatives=creatives_dom,
+            )
+        )
+
+    return hydrated

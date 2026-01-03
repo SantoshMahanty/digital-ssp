@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Ad Manager 360{% endblock %}</title>
+    <title>{% block title %}Digital-SSP{% endblock %}</title>
     <link rel="stylesheet" href="/static/css/console.css">
 </head>
 <body>
@@ -16,7 +16,7 @@
                 <rect x="14" y="14" width="7" height="7"></rect>
                 <rect x="3" y="14" width="7" height="7"></rect>
             </svg>
-            <span class="logo-text">Ad Manager <strong>360</strong></span>
+            <span class="logo-text">Digital-<strong>SSP</strong></span>
         </div>
         <div class="search-container">
             <input type="text" placeholder="Search orders, line items, ad units..." class="search-input">
@@ -36,48 +36,48 @@
                 <a href="/" class="sidebar-item {% if active_nav.lower() in ['home', 'dashboard'] %}active{% endif %}">
                     <span class="icon">📊</span>Home
                 </a>
-                <a href="/console/delivery" class="sidebar-item {% if active_nav.lower() == 'delivery' %}active{% endif %}">
+                <a href="/delivery" class="sidebar-item {% if active_nav.lower() == 'delivery' %}active{% endif %}">
                     <span class="icon">📤</span>Delivery
                 </a>
                 <div class="sidebar-subsection" style="display: {% if active_nav.lower() in ['orders', 'line items', 'creatives', 'pacing', 'programmatic'] %}block{% else %}none{% endif %};">
-                    <a href="/console/orders" class="sidebar-item-sub {% if active_nav.lower() == 'orders' %}active{% endif %}">
+                    <a href="/orders" class="sidebar-item-sub {% if active_nav.lower() == 'orders' %}active{% endif %}">
                         <span class="icon">📋</span>Orders
                     </a>
-                    <a href="/console/line-items" class="sidebar-item-sub {% if active_nav.lower() == 'line items' %}active{% endif %}">
+                    <a href="/line-items" class="sidebar-item-sub {% if active_nav.lower() == 'line items' %}active{% endif %}">
                         <span class="icon">📝</span>Line Items
                     </a>
-                    <a href="/console/creatives" class="sidebar-item-sub {% if active_nav.lower() == 'creatives' %}active{% endif %}">
+                    <a href="/creatives" class="sidebar-item-sub {% if active_nav.lower() == 'creatives' %}active{% endif %}">
                         <span class="icon">🎨</span>Creatives
                     </a>
-                    <a href="/console/pacing" class="sidebar-item-sub {% if active_nav.lower() == 'pacing' %}active{% endif %}">
+                    <a href="/pacing" class="sidebar-item-sub {% if active_nav.lower() == 'pacing' %}active{% endif %}">
                         <span class="icon">⏱️</span>Pacing
                     </a>
-                    <a href="/console/programmatic" class="sidebar-item-sub {% if active_nav.lower() == 'programmatic' %}active{% endif %}">
+                    <a href="/programmatic" class="sidebar-item-sub {% if active_nav.lower() == 'programmatic' %}active{% endif %}">
                         <span class="icon">🤖</span>Programmatic
                     </a>
                 </div>
-                <a href="/console/audiences" class="sidebar-item {% if active_nav.lower() == 'audiences' %}active{% endif %}">
+                <a href="/audiences" class="sidebar-item {% if active_nav.lower() == 'audiences' %}active{% endif %}">
                     <span class="icon">👥</span>Audiences
                 </a>
-                <a href="/console/creative-health-check" class="sidebar-item {% if active_nav.lower() == 'creative health' %}active{% endif %}">
+                <a href="/creative-health-check" class="sidebar-item {% if active_nav.lower() == 'creative health' %}active{% endif %}">
                     <span class="icon">🏥</span>Creative QA
                 </a>
-                <a href="/console/inventory" class="sidebar-item {% if active_nav.lower() == 'inventory' %}active{% endif %}">
+                <a href="/inventory" class="sidebar-item {% if active_nav.lower() == 'inventory' %}active{% endif %}">
                     <span class="icon">📦</span>Inventory
                 </a>
-                <a href="/console/reporting" class="sidebar-item {% if active_nav.lower() == 'reporting' %}active{% endif %}">
+                <a href="/reporting" class="sidebar-item {% if active_nav.lower() == 'reporting' %}active{% endif %}">
                     <span class="icon">📈</span>Reporting
                 </a>
-                <a href="/console/optimization" class="sidebar-item {% if active_nav.lower() == 'optimization' %}active{% endif %}">
+                <a href="/optimization" class="sidebar-item {% if active_nav.lower() == 'optimization' %}active{% endif %}">
                     <span class="icon">⚙️</span>Optimization
                 </a>
-                <a href="/console/admin" class="sidebar-item {% if active_nav.lower() == 'admin' %}active{% endif %}">
+                <a href="/admin" class="sidebar-item {% if active_nav.lower() == 'admin' %}active{% endif %}">
                     <span class="icon">🛡️</span>Admin
                 </a>
-                <a href="/console/privacy" class="sidebar-item {% if active_nav.lower() == 'privacy' %}active{% endif %}">
+                <a href="/privacy" class="sidebar-item {% if active_nav.lower() == 'privacy' %}active{% endif %}">
                     <span class="icon">🔒</span>Privacy
                 </a>
-                <a href="/console/tools" class="sidebar-item {% if active_nav.lower() == 'tools' %}active{% endif %}">
+                <a href="/tools" class="sidebar-item {% if active_nav.lower() == 'tools' %}active{% endif %}">
                     <span class="icon">🔧</span>Tools
                 </a>
             </div>
@@ -95,7 +95,7 @@
                 <a href="/docs#/default/get_ad_ad_post" class="sidebar-item">
                     <span class="icon">📨</span>POST /ad - Submit ad request
                 </a>
-                <a href="/console/study-hub" class="sidebar-item {% if active_nav.lower() == 'study hub' %}active{% endif %}">
+                <a href="/study-hub" class="sidebar-item {% if active_nav.lower() == 'study hub' %}active{% endif %}">
                     <span class="icon">📚</span>Study Hub
                 </a>
             </div>
