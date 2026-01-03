@@ -626,6 +626,15 @@ async def startup_event():
     logger.info("Digital-SSP API starting...")
     logger.info(f"Loaded {len(LINE_ITEMS)} line items")
     logger.info(f"Configured {len(FLOOR_RULES_DATA)} floor rules")
+    
+    # Add recent impression data on startup
+    try:
+        from add_recent_data import add_recent_impressions
+        logger.info("Adding 1000 recent impression records (last 7 days)...")
+        add_recent_impressions(1000)
+    except Exception as e:
+        logger.error(f"Error adding recent data: {e}")
+    
     logger.info("API running on http://0.0.0.0:8001")
 
 

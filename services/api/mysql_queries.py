@@ -60,13 +60,13 @@ def get_dashboard_data(period: str = 'today') -> Dict[str, Any]:
     
     # Determine date filter based on period
     if period == 'last24h':
-        date_filter = "metric_date >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
+        date_condition = "metric_date >= DATE_SUB(CURDATE(), INTERVAL 1 DAY)"
     elif period == 'last7d':
-        date_filter = "metric_date >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)"
+        date_condition = "metric_date >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)"
     else:  # today
-        date_filter = "metric_date = CURDATE()"
+        date_condition = "metric_date = CURDATE()"
     
-    # Today's metrics from daily_metrics (pre-computed)
+    # Get metrics from daily_metrics (pre-computed)
     today_query = f"""
         SELECT 
             COALESCE(SUM(impressions), 0) as total_impressions,
@@ -74,7 +74,7 @@ def get_dashboard_data(period: str = 'today') -> Dict[str, Any]:
             COALESCE(SUM(revenue), 0) as total_revenue,
             COALESCE(SUM(viewable_impressions), 0) as viewable_impressions
         FROM daily_metrics
-        WHERE {date_filter}
+        WHERE {date_condition}
     """
     
     today_results = execute_query(today_query)
@@ -98,7 +98,7 @@ def get_dashboard_data(period: str = 'today') -> Dict[str, Any]:
     hourly_data = execute_query(hourly_query)
     
     # Line item performance (use daily_metrics for efficiency)
-    line_items_query = """
+    line_items_query = f"""
         SELECT 
             o.order_id,
             o.order_name,
@@ -106,7 +106,7 @@ def get_dashboard_data(period: str = 'today') -> Dict[str, Any]:
             o.lifetime_impression_goal as booked,
             o.status
         FROM orders o
-        LEFT JOIN daily_metrics dm ON o.order_id = dm.order_id AND dm.metric_date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+        LEFT JOIN daily_metrics dm ON o.order_id = dm.order_id AND {date_condition}
         WHERE o.status = 'ACTIVE'
         GROUP BY o.order_id
         ORDER BY delivered DESC
@@ -136,11 +136,17 @@ def get_dashboard_data(period: str = 'today') -> Dict[str, Any]:
     """
     activity = execute_query(activity_query)
     
+    # Convert to float for calculations
+    impressions = float(impressions) if impressions else 0
+    clicks = float(clicks) if clicks else 0
+    revenue = float(revenue) if revenue else 0
+    viewable = float(viewable) if viewable else 0
+    
     return {
-        'impressions': impressions,
-        'clicks': clicks,
+        'impressions': int(impressions),
+        'clicks': int(clicks),
         'revenue': revenue,
-        'viewable': viewable,
+        'viewable': int(viewable),
         'ctr': round((clicks / impressions * 100), 2) if impressions > 0 else 0,
         'cpm': round((revenue / impressions * 1000), 2) if impressions > 0 else 0,
         'fill_rate': round((impressions / (impressions * 1.15)) * 100, 1) if impressions > 0 else 0,
