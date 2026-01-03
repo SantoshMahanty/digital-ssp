@@ -33,7 +33,7 @@ def _esc(val: str) -> str:
 def _page(title: str, content: str, active_nav: str = "") -> str:
     """Fallback page wrapper for console pages (CSS moved to static files)."""
     nav_items = [
-        ("Home", "/console", "🏠"),
+        ("Home", "/", "🏠"),
         ("Delivery", "/console/delivery", "📦"),
         ("Inventory", "/console/inventory", "📊"),
         ("Reporting", "/console/reporting", "📈"),
@@ -185,25 +185,25 @@ REQUEST_TRACES: Dict[str, Dict] = {}
 # -----------------------------------------------------------------------------
 # API endpoints
 # -----------------------------------------------------------------------------
-@app.get("/", response_class=HTMLResponse)
-async def root():
-    return HTMLResponse(
-        """
-        <html><head><title>GAM-360 Simulator</title></head>
-        <body style=\"font-family: sans-serif; margin: 40px;\">
-            <h1>GAM-360 Simulator API</h1>
-            <p>Educational simulator for Google Ad Manager 360 behavior.</p>
-            <h2>Useful Endpoints</h2>
-            <ul>
-                <li><a href=\"/docs\"><strong>API Docs (Swagger)</strong></a></li>
-                <li><a href=\"/examples\"><strong>Example Requests</strong></a></li>
-                <li><a href=\"/line-items\"><strong>Line Items (JSON)</strong></a></li>
-                <li><a href=\"/console\"><strong>GAM 360 Console UI</strong></a></li>
-                <li><strong>POST /ad</strong> - Submit ad request</li>
-            </ul>
-        </body></html>
-        """
+async def _render_console(request: Request):
+    """Shared renderer for the console dashboard."""
+    try:
+        from services.api.mysql_queries import get_dashboard_data
+        dashboard_data = get_dashboard_data()
+    except Exception as e:
+        logger.error(f"Error fetching dashboard data: {e}")
+        dashboard_data = {}
+
+    return templates.TemplateResponse(
+        "dashboard.html",
+        {"request": request, "active_nav": "Home", "data": dashboard_data},
     )
+
+
+@app.get("/", response_class=HTMLResponse)
+async def root(request: Request):
+    # Render console directly at root for a consistent entry point.
+    return await _render_console(request)
 
 
 @app.post("/ad", response_model=BidModel)
@@ -289,20 +289,10 @@ async def get_stats():
 # -----------------------------------------------------------------------------
 # Console pages
 # -----------------------------------------------------------------------------
-@app.get("/console", response_class=HTMLResponse)
-async def console(request: Request):
-    """Home route now serves the live dashboard (merged with /console/dashboard)."""
-    try:
-        from services.api.mysql_queries import get_dashboard_data
-        dashboard_data = get_dashboard_data()
-    except Exception as e:
-        logger.error(f"Error fetching dashboard data: {e}")
-        dashboard_data = {}
-
-    return templates.TemplateResponse(
-        "dashboard.html",
-        {"request": request, "active_nav": "Home", "data": dashboard_data},
-    )
+@app.get("/console", response_class=RedirectResponse, status_code=307)
+async def console_redirect():
+    # Backward compatibility: old /console links now land on root.
+    return RedirectResponse(url="/", status_code=307)
 
 
 @app.get("/console/delivery", response_class=HTMLResponse)
@@ -313,8 +303,14 @@ async def console_delivery(request: Request):
 
 @app.get("/console/orders", response_class=HTMLResponse)
 async def console_orders(request: Request):
-    """Orders management page using Jinja2 template."""
-    return templates.TemplateResponse("orders.html", {"request": request, "active_nav": "Orders"})
+    """Orders management page using Jinja2 template with live MySQL data."""
+    try:
+        from services.api.mysql_queries import get_orders_list
+        orders = get_orders_list()
+    except Exception as e:
+        logger.error(f"Error fetching orders data: {e}")
+        orders = []
+    return templates.TemplateResponse("orders.html", {"request": request, "active_nav": "Orders", "orders": orders})
 
 
 @app.get("/console/inventory", response_class=HTMLResponse)
@@ -527,14 +523,32 @@ async def console_tools():
 
 @app.get("/console/line-items", response_class=HTMLResponse)
 async def console_line_items(request: Request):
-    """Line items management page using Jinja2 template."""
-    return templates.TemplateResponse("line_items.html", {"request": request, "active_nav": "Line Items"})
+    """Line items management page using Jinja2 template with live MySQL data."""
+    try:
+        from services.api.mysql_queries import get_line_items_list
+        line_items = get_line_items_list()
+    except Exception as e:
+        logger.error(f"Error fetching line items data: {e}")
+        line_items = []
+    return templates.TemplateResponse("line_items.html", {"request": request, "active_nav": "Line Items", "line_items": line_items})
 
 
 @app.get("/console/creatives", response_class=HTMLResponse)
 async def console_creatives(request: Request):
-    """Creatives management page using Jinja2 template."""
-    return templates.TemplateResponse("creatives.html", {"request": request, "active_nav": "Creatives"})
+    """Creatives management page using Jinja2 template with live MySQL data."""
+    try:
+        from services.api.mysql_queries import get_creatives_list
+        creatives = get_creatives_list()
+    except Exception as e:
+        logger.error(f"Error fetching creatives data: {e}")
+        creatives = []
+    return templates.TemplateResponse("creatives.html", {"request": request, "active_nav": "Creatives", "creatives": creatives})
+
+
+@app.get("/console/study-hub", response_class=HTMLResponse)
+async def console_study_hub(request: Request):
+    """Study Hub page for organizing learning resources."""
+    return templates.TemplateResponse("study_hub.html", {"request": request, "active_nav": "Study Hub"})
 
 @app.get("/console/pacing", response_class=HTMLResponse)
 async def console_pacing(request: Request):

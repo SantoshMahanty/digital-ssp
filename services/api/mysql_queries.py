@@ -133,3 +133,83 @@ def get_dashboard_data() -> Dict[str, Any]:
         'line_items': line_items,
         'activity': activity
     }
+
+
+def get_orders_list(limit: int = 50) -> List[Dict[str, Any]]:
+    """Fetch orders with advertiser/campaign names and delivery metrics."""
+    query = f'''
+        SELECT
+            o.order_id,
+            o.order_name,
+            o.status,
+            o.start_date,
+            o.end_date,
+            o.lifetime_impression_goal,
+            o.lifetime_budget,
+            o.order_type,
+            o.pacing_rate,
+            a.advertiser_name,
+            c.campaign_name,
+            p.publisher_name,
+            COALESCE(SUM(i.impression_id IS NOT NULL), 0) AS delivered,
+            COALESCE(SUM(i.click_through), 0) AS clicks,
+            COALESCE(SUM(i.revenue), 0) AS revenue
+        FROM orders o
+        JOIN campaigns c ON o.campaign_id = c.campaign_id
+        JOIN advertisers a ON c.advertiser_id = a.advertiser_id
+        JOIN publishers p ON o.publisher_id = p.publisher_id
+        LEFT JOIN impressions i ON i.order_id = o.order_id
+        GROUP BY o.order_id
+        ORDER BY o.updated_at DESC
+        LIMIT {limit}
+    '''
+    rows = execute_query(query)
+    for row in rows:
+        delivered = row.get('delivered', 0) or 0
+        goal = row.get('lifetime_impression_goal', 0) or 0
+        row['pct_complete'] = round((delivered / goal * 100), 1) if goal else 0
+        revenue = float(row.get('revenue', 0) or 0)
+        row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
+        clicks = row.get('clicks', 0) or 0
+        row['ctr'] = round((clicks / max(delivered, 1) * 100), 2)
+    return rows
+
+
+def get_line_items_list(limit: int = 50) -> List[Dict[str, Any]]:
+    """Reuse orders as line items list for the console."""
+    return get_orders_list(limit)
+
+
+def get_creatives_list(limit: int = 50) -> List[Dict[str, Any]]:
+    """Fetch creatives with delivery metrics."""
+    query = f'''
+        SELECT
+            c.creative_id,
+            c.creative_name,
+            c.creative_type,
+            c.width,
+            c.height,
+            c.status,
+            c.approval_status,
+            a.advertiser_name,
+            c.campaign_id,
+            cmp.campaign_name,
+            COALESCE(SUM(i.impression_id IS NOT NULL), 0) AS delivered,
+            COALESCE(SUM(i.click_through), 0) AS clicks,
+            COALESCE(SUM(i.revenue), 0) AS revenue
+        FROM creatives c
+        JOIN campaigns cmp ON c.campaign_id = cmp.campaign_id
+        JOIN advertisers a ON cmp.advertiser_id = a.advertiser_id
+        LEFT JOIN impressions i ON i.creative_id = c.creative_id
+        GROUP BY c.creative_id
+        ORDER BY c.updated_at DESC
+        LIMIT {limit}
+    '''
+    rows = execute_query(query)
+    for row in rows:
+        delivered = row.get('delivered', 0) or 0
+        revenue = float(row.get('revenue', 0) or 0)
+        row['ctr'] = round(((row.get('clicks', 0) or 0) / max(delivered, 1) * 100), 2)
+        row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
+        row['size'] = f"{row.get('width') or 0}x{row.get('height') or 0}" if row.get('width') and row.get('height') else "—"
+    return rows

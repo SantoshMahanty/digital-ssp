@@ -32,46 +32,23 @@
                 </tr>
             </thead>
             <tbody>
+                {% for order in orders %}
                 <tr>
-                    <td><strong>#ORD-2024-001</strong></td>
-                    <td>Premium Brand Co.</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>5</td>
-                    <td>Jan 1, 2024</td>
-                    <td>Dec 31, 2024</td>
-                    <td>$125,000</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                    <td><strong>#ORD-{{ order.order_id }}</strong></td>
+                    <td>{{ order.advertiser_name }}</td>
+                    <td>
+                        {% set status = (order.status or '').upper() %}
+                        {% if status == 'ACTIVE' %}<span class="badge badge-success">Active</span>{% elif status == 'PAUSED' %}<span class="badge badge-warning">Paused</span>{% elif status == 'COMPLETED' %}<span class="badge badge-info">Completed</span>{% else %}<span class="badge badge-neutral">{{ status }}</span>{% endif %}
+                    </td>
+                    <td>{{ "{:,}".format(order.delivered or 0) }}</td>
+                    <td>{{ order.start_date }} </td>
+                    <td>{{ order.end_date }}</td>
+                    <td>${{ "{:,.2f}".format(order.lifetime_budget or 0) }}</td>
+                    <td><span class="muted">CTR {{ order.ctr }}% · CPM ${{ order.cpm }}</span></td>
                 </tr>
-                <tr>
-                    <td><strong>#ORD-2024-002</strong></td>
-                    <td>Tech Solutions Inc.</td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>3</td>
-                    <td>Jan 15, 2024</td>
-                    <td>Mar 15, 2024</td>
-                    <td>$50,000</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
-                </tr>
-                <tr>
-                    <td><strong>#ORD-2024-003</strong></td>
-                    <td>Retail Partners</td>
-                    <td><span class="badge badge-warning">Paused</span></td>
-                    <td>2</td>
-                    <td>Feb 1, 2024</td>
-                    <td>May 31, 2024</td>
-                    <td>$75,000</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
-                </tr>
-                <tr>
-                    <td><strong>#ORD-2024-004</strong></td>
-                    <td>Financial Services</td>
-                    <td><span class="badge badge-info">Pending Approval</span></td>
-                    <td>4</td>
-                    <td>Feb 15, 2024</td>
-                    <td>Apr 15, 2024</td>
-                    <td>$200,000</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
-                </tr>
+                {% else %}
+                <tr><td colspan="8" class="muted">No orders found.</td></tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

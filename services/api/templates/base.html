@@ -33,7 +33,7 @@
         <div class="sidebar">
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Main</div>
-                <a href="/console" class="sidebar-item {% if active_nav.lower() in ['home', 'dashboard'] %}active{% endif %}">
+                <a href="/" class="sidebar-item {% if active_nav.lower() in ['home', 'dashboard'] %}active{% endif %}">
                     <span class="icon">📊</span>Home
                 </a>
                 <a href="/console/delivery" class="sidebar-item {% if active_nav.lower() == 'delivery' %}active{% endif %}">
@@ -84,10 +84,19 @@
             <div class="sidebar-section">
                 <div class="sidebar-section-title">Help</div>
                 <a href="/docs" class="sidebar-item">
-                    <span class="icon">📘</span>API Docs
+                    <span class="icon">📘</span>API Docs (Swagger)
                 </a>
                 <a href="/examples" class="sidebar-item">
-                    <span class="icon">💡</span>Examples
+                    <span class="icon">💡</span>Example Requests
+                </a>
+                <a href="/line-items" class="sidebar-item">
+                    <span class="icon">🧾</span>Line Items (JSON)
+                </a>
+                <a href="/docs#/default/get_ad_ad_post" class="sidebar-item">
+                    <span class="icon">📨</span>POST /ad - Submit ad request
+                </a>
+                <a href="/console/study-hub" class="sidebar-item {% if active_nav.lower() == 'study hub' %}active{% endif %}">
+                    <span class="icon">📚</span>Study Hub
                 </a>
             </div>
         </div>

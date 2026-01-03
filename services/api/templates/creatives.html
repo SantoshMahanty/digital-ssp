@@ -19,17 +19,18 @@
     </div>
     
     <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 24px;">
-        <!-- DISPLAY CREATIVE -->
+        {% for creative in creatives %}
         <div style="border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s;">
-            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
-                728x90 Display Ad
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #1967d2 0%, #34a853 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
+                {{ creative.size }} {{ creative.creative_type }}
             </div>
             <div style="padding: 16px;">
-                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">Homepage Banner 2024</h4>
+                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">{{ creative.creative_name }}</h4>
                 <div style="font-size: 12px; color: #5f6368; margin-bottom: 12px;">
-                    <div>📦 Display</div>
-                    <div>📐 728x90</div>
-                    <div>📝 3 versions</div>
+                    <div>Advertiser: {{ creative.advertiser_name }}</div>
+                    <div>Status: {{ creative.status }}</div>
+                    <div>Approval: {{ creative.approval_status }}</div>
+                    <div>Delivered: {{ "{:,}".format(creative.delivered or 0) }} · CTR {{ creative.ctr }}% · CPM ${{ creative.cpm }}</div>
                 </div>
                 <div style="display: flex; gap: 8px;">
                     <button style="flex: 1; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">View</button>
@@ -37,44 +38,9 @@
                 </div>
             </div>
         </div>
-        
-        <!-- VIDEO CREATIVE -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s;">
-            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
-                640x480 Video
-            </div>
-            <div style="padding: 16px;">
-                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">Product Demo Video</h4>
-                <div style="font-size: 12px; color: #5f6368; margin-bottom: 12px;">
-                    <div>🎬 Video</div>
-                    <div>⏱️ 30 seconds</div>
-                    <div>📝 1 version</div>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button style="flex: 1; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">View</button>
-                    <button style="flex: 1; padding: 8px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
-                </div>
-            </div>
-        </div>
-        
-        <!-- NATIVE CREATIVE -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s;">
-            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
-                Native Ad Asset
-            </div>
-            <div style="padding: 16px;">
-                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">Sponsored Content</h4>
-                <div style="font-size: 12px; color: #5f6368; margin-bottom: 12px;">
-                    <div>📄 Native</div>
-                    <div>🖼️ 300x250</div>
-                    <div>📝 2 versions</div>
-                </div>
-                <div style="display: flex; gap: 8px;">
-                    <button style="flex: 1; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">View</button>
-                    <button style="flex: 1; padding: 8px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
-                </div>
-            </div>
-        </div>
+        {% else %}
+        <div class="muted" style="grid-column: 1 / -1;">No creatives found.</div>
+        {% endfor %}
     </div>
 </div>
 

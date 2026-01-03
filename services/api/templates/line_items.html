@@ -33,36 +33,23 @@
                 </tr>
             </thead>
             <tbody>
+                {% for item in line_items %}
                 <tr>
-                    <td><strong>Homepage - Standard</strong></td>
-                    <td><span class="pill">Standard</span></td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>500,000</td>
+                    <td><strong>{{ item.order_name }}</strong></td>
+                    <td><span class="pill">{{ item.order_type }}</span></td>
+                    <td>
+                        {% set status = (item.status or '').upper() %}
+                        {% if status == 'ACTIVE' %}<span class="badge badge-success">Active</span>{% elif status == 'PAUSED' %}<span class="badge badge-warning">Paused</span>{% elif status == 'COMPLETED' %}<span class="badge badge-info">Completed</span>{% else %}<span class="badge badge-neutral">{{ status }}</span>{% endif %}
+                    </td>
+                    <td>{{ "{:,}".format(item.delivered or 0) }}</td>
                     <td>CPM</td>
-                    <td>12</td>
-                    <td>Jan 1 - Dec 31</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                    <td>{{ item.pacing_rate or 0 }}%</td>
+                    <td>{{ item.start_date }} - {{ item.end_date }}</td>
+                    <td><span class="muted">CTR {{ item.ctr }}% · CPM ${{ item.cpm }}</span></td>
                 </tr>
-                <tr>
-                    <td><strong>Article - Sponsorship</strong></td>
-                    <td><span class="pill" style="background: #e8f0fe; color: #1967d2;">Sponsorship</span></td>
-                    <td><span class="badge badge-success">Active</span></td>
-                    <td>250,000</td>
-                    <td>Sponsorship</td>
-                    <td>14</td>
-                    <td>Jan 1 - Dec 31</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
-                </tr>
-                <tr>
-                    <td><strong>Video - Network</strong></td>
-                    <td><span class="pill" style="background: #fef7e0; color: #b45309;">Network</span></td>
-                    <td><span class="badge badge-warning">Paused</span></td>
-                    <td>100,000</td>
-                    <td>CPM</td>
-                    <td>8</td>
-                    <td>Jan 15 - Mar 15</td>
-                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
-                </tr>
+                {% else %}
+                <tr><td colspan="8" class="muted">No line items found.</td></tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

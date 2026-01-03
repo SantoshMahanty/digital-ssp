@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Study Hub - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Study Hub</h1>
+    <p class="subtitle">Organize learning pages and resources</p>
+    <div class="actions">
+        <a class="btn btn-primary" href="#">+ New Page</a>
+        <a class="btn btn-secondary" href="#">📂 Manage Sections</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Pages</h2>
+    </div>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Category</th>
+                    <th>Updated</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td colspan="5" class="muted">Add your study pages here.</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Quick Links</h2>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
+        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">📘 Docs</a>
+        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">🎓 Tutorials</a>
+        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">🧪 Labs</a>
+        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">📝 Notes</a>
+    </div>
+</div>
+{% endblock %}
