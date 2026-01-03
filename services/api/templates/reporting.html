@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}Reporting - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Reporting</h1>
+    <p class="subtitle">Analytics and performance reports</p>
+    <div class="actions">
+        <button class="btn btn-primary">+ New Report</button>
+        <button class="btn btn-secondary">Download CSV</button>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Impressions</div>
+        <div class="stat-value">1.2M</div>
+        <div class="stat-change positive">↑ 12%</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Clicks</div>
+        <div class="stat-value">24.5K</div>
+        <div class="stat-change positive">↑ 8%</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Click-Through Rate</div>
+        <div class="stat-value">2.04%</div>
+        <div class="stat-change negative">↓ 0.3%</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">$48.5K</div>
+        <div class="stat-change positive">↑ 15%</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Performance by Order</h2>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order Name</th>
+                    <th>Impressions</th>
+                    <th>Clicks</th>
+                    <th>CTR</th>
+                    <th>Revenue</th>
+                    <th>CPM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Premium Brand Campaign Q1</td>
+                    <td>485,230</td>
+                    <td>11,160</td>
+                    <td>2.30%</td>
+                    <td>$19,850</td>
+                    <td>$40.89</td>
+                </tr>
+                <tr>
+                    <td>Tech Partners Direct</td>
+                    <td>321,450</td>
+                    <td>5,785</td>
+                    <td>1.80%</td>
+                    <td>$13,630</td>
+                    <td>$42.43</td>
+                </tr>
+                <tr>
+                    <td>Sports Goods Network</td>
+                    <td>156,789</td>
+                    <td>2,352</td>
+                    <td>1.50%</td>
+                    <td>$6,280</td>
+                    <td>$40.05</td>
+                </tr>
+                <tr>
+                    <td>Brand Direct Campaign</td>
+                    <td>235,412</td>
+                    <td>5,248</td>
+                    <td>2.23%</td>
+                    <td>$8,740</td>
+                    <td>$37.12</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

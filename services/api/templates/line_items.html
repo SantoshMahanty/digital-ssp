@@ -1,0 +1,503 @@
+{% extends "base.html" %}
+
+{% block title %}Line Items - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Line Items</h1>
+    <p class="subtitle">Create and manage line items for Order #ORD-2024-001</p>
+    <div class="actions">
+        <button class="btn btn-primary" onclick="showCreateLineItemModal()">+ New Line Item</button>
+        <button class="btn btn-secondary">Clone Line Item</button>
+    </div>
+</div>
+
+<!-- LINE ITEMS TABLE -->
+<div class="card">
+    <div class="card-header">
+        <h2>Line Items</h2>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Line Item</th>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Impressions</th>
+                    <th>Rate Type</th>
+                    <th>Priority</th>
+                    <th>Dates</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Homepage - Standard</strong></td>
+                    <td><span class="pill">Standard</span></td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>500,000</td>
+                    <td>CPM</td>
+                    <td>12</td>
+                    <td>Jan 1 - Dec 31</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Article - Sponsorship</strong></td>
+                    <td><span class="pill" style="background: #e8f0fe; color: #1967d2;">Sponsorship</span></td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>250,000</td>
+                    <td>Sponsorship</td>
+                    <td>14</td>
+                    <td>Jan 1 - Dec 31</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Video - Network</strong></td>
+                    <td><span class="pill" style="background: #fef7e0; color: #b45309;">Network</span></td>
+                    <td><span class="badge badge-warning">Paused</span></td>
+                    <td>100,000</td>
+                    <td>CPM</td>
+                    <td>8</td>
+                    <td>Jan 15 - Mar 15</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- LINE ITEM DETAILS CARD -->
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 24px;">
+    <div class="card">
+        <div class="card-header">
+            <h2>Delivery Forecast</h2>
+        </div>
+        
+        <div style="padding: 20px;">
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Homepage - Standard</span>
+                    <span>450K / 500K (90%)</span>
+                </div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar success" style="width: 90%;"></div>
+                </div>
+                <div style="font-size: 12px; color: #5f6368; margin-top: 8px;">
+                    📈 Pacing: On-target | 🎯 Competitive Index: 1.2
+                </div>
+            </div>
+            
+            <div class="progress-container" style="margin-top: 20px;">
+                <div class="progress-label">
+                    <span>Article - Sponsorship</span>
+                    <span>175K / 250K (70%)</span>
+                </div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar" style="width: 70%;"></div>
+                </div>
+                <div style="font-size: 12px; color: #5f6368; margin-top: 8px;">
+                    📉 Pacing: Lagging | 🎯 Competitive Index: 0.8
+                </div>
+            </div>
+            
+            <div class="progress-container" style="margin-top: 20px;">
+                <div class="progress-label">
+                    <span>Video - Network</span>
+                    <span>45K / 100K (45%)</span>
+                </div>
+                <div class="progress-bar-wrapper">
+                    <div class="progress-bar warning" style="width: 45%;"></div>
+                </div>
+                <div style="font-size: 12px; color: #5f6368; margin-top: 8px;">
+                    ⚠️ Pacing: Significantly behind | 🎯 Competitive Index: 0.5
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 24px;">
+        <!-- PRIORITY & PACING -->
+        <div class="card">
+            <div class="card-header">
+                <h2 style="font-size: 16px;">Priority Levels</h2>
+            </div>
+            <div style="padding: 20px; font-size: 13px;">
+                <div style="margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 500;">P16-P14 (Sponsorship)</span>
+                        <span class="badge badge-info">Highest</span>
+                    </div>
+                    <div style="color: #5f6368; font-size: 12px;">Guaranteed delivery</div>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 500;">P12-P10 (Standard)</span>
+                        <span class="badge badge-success">High</span>
+                    </div>
+                    <div style="color: #5f6368; font-size: 12px;">Best-effort delivery</div>
+                </div>
+                
+                <div style="margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 500;">P8-P6 (Network)</span>
+                        <span class="badge badge-neutral">Medium</span>
+                    </div>
+                    <div style="color: #5f6368; font-size: 12px;">Remnant inventory</div>
+                </div>
+                
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                        <span style="font-weight: 500;">P4-P1 (Bulk)</span>
+                        <span class="badge badge-neutral">Low</span>
+                    </div>
+                    <div style="color: #5f6368; font-size: 12px;">Bulk discount rates</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- PACING STRATEGIES -->
+        <div class="card">
+            <div class="card-header">
+                <h2 style="font-size: 16px;">Pacing Strategy</h2>
+            </div>
+            <div style="padding: 20px; font-size: 13px;">
+                <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e8eaed;">
+                    <div style="font-weight: 500; margin-bottom: 4px;">📊 Even</div>
+                    <div style="color: #5f6368; font-size: 12px;">Spread impressions equally across flight period</div>
+                </div>
+                
+                <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #e8eaed;">
+                    <div style="font-weight: 500; margin-bottom: 4px;">🚀 Frontloaded</div>
+                    <div style="color: #5f6368; font-size: 12px;">Deliver more in first 50% of campaign</div>
+                </div>
+                
+                <div>
+                    <div style="font-weight: 500; margin-bottom: 4px;">⏰ Asap</div>
+                    <div style="color: #5f6368; font-size: 12px;">Deliver as fast as possible</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CREATE LINE ITEM MODAL -->
+<div id="createLineItemModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; overflow-y: auto;">
+    <div style="background: #fff; border-radius: 8px; width: 100%; max-width: 900px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin: 20px auto;">
+        <h2 style="margin-bottom: 4px;">Create Line Item</h2>
+        <p class="muted" style="margin-bottom: 24px;">Configure targeting, creatives, and delivery settings</p>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 30px;">
+            <!-- BASIC INFO SECTION -->
+            <div>
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #202124; text-transform: uppercase; letter-spacing: 0.5px;">Basic Information</h3>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Line Item Name *</label>
+                    <input type="text" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="e.g., Homepage - Standard">
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Line Item Type *</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                        <option>Standard</option>
+                        <option>Sponsorship</option>
+                        <option>Network</option>
+                        <option>Bulk</option>
+                        <option>Price Priority</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Priority Level *</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                        <option>P16 - Highest (Sponsorship)</option>
+                        <option>P14 - Very High (Sponsorship)</option>
+                        <option>P12 - High (Standard)</option>
+                        <option>P10 - Standard</option>
+                        <option>P8 - Medium (Network)</option>
+                        <option>P6 - Low (Network)</option>
+                        <option>P4 - Very Low (Bulk)</option>
+                        <option>P1 - Lowest (Bulk)</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Pacing Strategy *</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                        <option>Even</option>
+                        <option>Frontloaded</option>
+                        <option>ASAP</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- DELIVERY & RATE SECTION -->
+            <div>
+                <h3 style="font-size: 14px; font-weight: 600; margin-bottom: 16px; color: #202124; text-transform: uppercase; letter-spacing: 0.5px;">Delivery & Rates</h3>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Booked Impressions *</label>
+                    <input type="number" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="500000">
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Rate Type *</label>
+                    <select style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                        <option>CPM - Cost Per Mille</option>
+                        <option>CPC - Cost Per Click</option>
+                        <option>CPA - Cost Per Action</option>
+                        <option>Sponsorship - Fixed</option>
+                    </select>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Rate Value *</label>
+                    <div style="display: flex; gap: 8px;">
+                        <span style="display: flex; align-items: center; color: #5f6368; font-weight: 500;">$</span>
+                        <input type="number" required step="0.01" style="flex: 1; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="25.00">
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px;">Start Date *</label>
+                        <input type="date" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px;">End Date *</label>
+                        <input type="date" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- TABS FOR TARGETING -->
+        <div style="border-top: 1px solid #e8eaed; padding-top: 24px; margin-bottom: 24px;">
+            <div style="display: flex; gap: 24px; margin-bottom: 20px; border-bottom: 2px solid #e8eaed;">
+                <button class="targeting-tab active" data-tab="inventory" style="background: none; border: none; padding: 12px 0; padding-bottom: 10px; border-bottom: 3px solid #1967d2; color: #1967d2; font-weight: 500; cursor: pointer;">📦 Inventory</button>
+                <button class="targeting-tab" data-tab="geo" style="background: none; border: none; padding: 12px 0; padding-bottom: 10px; color: #5f6368; font-weight: 500; cursor: pointer;">🌍 Geography</button>
+                <button class="targeting-tab" data-tab="device" style="background: none; border: none; padding: 12px 0; padding-bottom: 10px; color: #5f6368; font-weight: 500; cursor: pointer;">📱 Device</button>
+                <button class="targeting-tab" data-tab="custom" style="background: none; border: none; padding: 12px 0; padding-bottom: 10px; color: #5f6368; font-weight: 500; cursor: pointer;">🔧 Custom KV</button>
+                <button class="targeting-tab" data-tab="frequency" style="background: none; border: none; padding: 12px 0; padding-bottom: 10px; color: #5f6368; font-weight: 500; cursor: pointer;">🔁 Frequency Cap</button>
+            </div>
+            
+            <!-- INVENTORY TARGETING -->
+            <div id="tab-inventory" class="targeting-content" style="display: block;">
+                <h4 style="margin-bottom: 12px; font-weight: 500;">Ad Units</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" checked>
+                        <span>/home/leaderboard (728x90, 970x90)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" checked>
+                        <span>/article/sidebar (300x250, 300x600)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox">
+                        <span>/category/featured (728x90)</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox">
+                        <span>/video/preroll (640x480)</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- GEOGRAPHY TARGETING -->
+            <div id="tab-geo" class="targeting-content" style="display: none;">
+                <h4 style="margin-bottom: 12px; font-weight: 500;">Countries & Regions</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px;">Include Countries</label>
+                        <input type="text" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="US, CA, UK (comma-separated)">
+                    </div>
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 8px;">Exclude Countries</label>
+                        <input type="text" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="CN, RU (comma-separated)">
+                    </div>
+                </div>
+                <div style="margin-top: 12px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" checked>
+                        <span>Include all countries by default</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- DEVICE TARGETING -->
+            <div id="tab-device" class="targeting-content" style="display: none;">
+                <h4 style="margin-bottom: 12px; font-weight: 500;">Device Types</h4>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" checked>
+                        <span>🖥️ Desktop</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" checked>
+                        <span>📱 Mobile</span>
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox">
+                        <span>⌚ Tablet</span>
+                    </label>
+                </div>
+            </div>
+            
+            <!-- CUSTOM KV TARGETING -->
+            <div id="tab-custom" class="targeting-content" style="display: none;">
+                <h4 style="margin-bottom: 12px; font-weight: 500;">Custom Key-Value Pairs</h4>
+                <div id="kvPairs" style="display: flex; flex-direction: column; gap: 12px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px;">
+                        <input type="text" placeholder="Key (e.g., category)" style="padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                        <input type="text" placeholder="Value (e.g., sports,news)" style="padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                        <button type="button" style="padding: 10px 16px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer;">Remove</button>
+                    </div>
+                </div>
+                <button type="button" onclick="addKVPair()" style="margin-top: 12px; padding: 10px 16px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; font-weight: 500;">+ Add Custom KV</button>
+            </div>
+
+            <!-- FREQUENCY CAPPING -->
+            <div id="tab-frequency" class="targeting-content" style="display: none;">
+                <h4 style="margin-bottom: 16px; font-weight: 500;">🔁 Frequency Capping Rules</h4>
+                
+                <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 16px;">
+                    <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">What is frequency capping?</div>
+                    <div style="font-size: 11px; color: #5f6368;">Limit how many times the same user sees your ad (prevent ad fatigue)</div>
+                </div>
+
+                <!-- Per-User Capping -->
+                <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #dadce0;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <input type="checkbox" checked id="perUserCap" onchange="togglePerUserCap()">
+                        <label for="perUserCap" style="font-weight: 500; cursor: pointer;">Enable Per-User Frequency Cap</label>
+                    </div>
+                    <div id="perUserCapFields" style="margin-left: 28px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 12px;">Max Impressions</label>
+                                <input type="number" value="3" min="1" max="20" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 12px;">Time Period</label>
+                                <select style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                                    <option>Per Day</option>
+                                    <option>Per Week</option>
+                                    <option>Per Month</option>
+                                    <option>Per Campaign Lifetime</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="font-size: 11px; color: #5f6368; background: #fff3e0; padding: 8px; border-radius: 4px;">
+                            💡 Example: "3 per day" = each user sees this ad max 3 times daily
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cross-Device Capping -->
+                <div style="margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid #dadce0;">
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <input type="checkbox" id="crossDeviceCap" onchange="toggleCrossDeviceCap()">
+                        <label for="crossDeviceCap" style="font-weight: 500; cursor: pointer;">Cross-Device Frequency Capping</label>
+                    </div>
+                    <div id="crossDeviceCapFields" style="margin-left: 28px; display: none;">
+                        <div style="background: #e6f4ea; padding: 8px; border-radius: 4px; font-size: 11px; color: #137333; margin-bottom: 12px;">
+                            ✅ Advanced: Count impressions across desktop, mobile, and tablet as the same user
+                        </div>
+                        <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                            <input type="checkbox" checked>
+                            <span style="font-size: 12px;">Use ID5 Universal ID for cross-device matching</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Household Capping -->
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                        <input type="checkbox" id="householdCap" onchange="toggleHouseholdCap()">
+                        <label for="householdCap" style="font-weight: 500; cursor: pointer;">Household-Level Frequency Capping</label>
+                    </div>
+                    <div id="householdCapFields" style="margin-left: 28px; display: none;">
+                        <div style="background: #e6f4ea; padding: 8px; border-radius: 4px; font-size: 11px; color: #137333; margin-bottom: 12px;">
+                            ✅ Premium: Cap impressions per household ID (all members combined)
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 12px;">Max Household Impressions</label>
+                                <input type="number" value="5" min="1" max="50" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 12px;">Time Period</label>
+                                <select style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                                    <option>Per Day</option>
+                                    <option>Per Week</option>
+                                    <option>Per Month</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- ACTIONS -->
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button type="button" onclick="hideCreateLineItemModal()" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Create Line Item</button>
+        </div>
+    </div>
+</div>
+
+<script>
+function showCreateLineItemModal() {
+    document.getElementById('createLineItemModal').style.display = 'block';
+}
+
+function hideCreateLineItemModal() {
+    document.getElementById('createLineItemModal').style.display = 'none';
+}
+
+document.querySelectorAll('.targeting-tab').forEach(tab => {
+    tab.addEventListener('click', function() {
+        document.querySelectorAll('.targeting-tab').forEach(t => {
+            t.style.color = '#5f6368';
+            t.style.borderBottom = 'none';
+        });
+        document.querySelectorAll('.targeting-content').forEach(c => c.style.display = 'none');
+        
+        this.style.color = '#1967d2';
+        this.style.borderBottom = '3px solid #1967d2';
+        document.getElementById('tab-' + this.dataset.tab).style.display = 'block';
+    });
+});
+
+function addKVPair() {
+    const newPair = document.createElement('div');
+    newPair.style.cssText = 'display: grid; grid-template-columns: 1fr 1fr auto; gap: 12px;';
+    newPair.innerHTML = `
+        <input type="text" placeholder="Key" style="padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+        <input type="text" placeholder="Value" style="padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+        <button type="button" style="padding: 10px 16px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer;">Remove</button>
+    `;
+    document.getElementById('kvPairs').appendChild(newPair);
+}
+
+function togglePerUserCap() {
+    const checkbox = document.getElementById('perUserCap');
+    document.getElementById('perUserCapFields').style.display = checkbox.checked ? 'block' : 'none';
+}
+
+function toggleCrossDeviceCap() {
+    const checkbox = document.getElementById('crossDeviceCap');
+    document.getElementById('crossDeviceCapFields').style.display = checkbox.checked ? 'block' : 'none';
+}
+
+function toggleHouseholdCap() {
+    const checkbox = document.getElementById('householdCap');
+    document.getElementById('householdCapFields').style.display = checkbox.checked ? 'block' : 'none';
+}
+</script>
+{% endblock %}

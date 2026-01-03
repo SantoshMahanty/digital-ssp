@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Ad Manager 360{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/console.css">
+</head>
+<body>
+    <!-- TOP HEADER -->
+    <div class="top-header">
+        <div class="logo-container">
+            <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+            </svg>
+            <span class="logo-text">Ad Manager <strong>360</strong></span>
+        </div>
+        <div class="search-container">
+            <input type="text" placeholder="Search orders, line items, ad units..." class="search-input">
+        </div>
+        <div class="header-actions">
+            <span class="network-badge">DEMO NETWORK</span>
+            <div class="user-menu">👤</div>
+        </div>
+    </div>
+
+    <!-- MAIN LAYOUT -->
+    <div class="layout-container">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Main</div>
+                <a href="/console" class="sidebar-item {% if active_nav.lower() in ['home', 'dashboard'] %}active{% endif %}">
+                    <span class="icon">📊</span>Home
+                </a>
+                <a href="/console/delivery" class="sidebar-item {% if active_nav.lower() == 'delivery' %}active{% endif %}">
+                    <span class="icon">📤</span>Delivery
+                </a>
+                <div class="sidebar-subsection" style="display: {% if active_nav.lower() in ['orders', 'line items', 'creatives', 'pacing', 'programmatic'] %}block{% else %}none{% endif %};">
+                    <a href="/console/orders" class="sidebar-item-sub {% if active_nav.lower() == 'orders' %}active{% endif %}">
+                        <span class="icon">📋</span>Orders
+                    </a>
+                    <a href="/console/line-items" class="sidebar-item-sub {% if active_nav.lower() == 'line items' %}active{% endif %}">
+                        <span class="icon">📝</span>Line Items
+                    </a>
+                    <a href="/console/creatives" class="sidebar-item-sub {% if active_nav.lower() == 'creatives' %}active{% endif %}">
+                        <span class="icon">🎨</span>Creatives
+                    </a>
+                    <a href="/console/pacing" class="sidebar-item-sub {% if active_nav.lower() == 'pacing' %}active{% endif %}">
+                        <span class="icon">⏱️</span>Pacing
+                    </a>
+                    <a href="/console/programmatic" class="sidebar-item-sub {% if active_nav.lower() == 'programmatic' %}active{% endif %}">
+                        <span class="icon">🤖</span>Programmatic
+                    </a>
+                </div>
+                <a href="/console/audiences" class="sidebar-item {% if active_nav.lower() == 'audiences' %}active{% endif %}">
+                    <span class="icon">👥</span>Audiences
+                </a>
+                <a href="/console/creative-health-check" class="sidebar-item {% if active_nav.lower() == 'creative health' %}active{% endif %}">
+                    <span class="icon">🏥</span>Creative QA
+                </a>
+                <a href="/console/inventory" class="sidebar-item {% if active_nav.lower() == 'inventory' %}active{% endif %}">
+                    <span class="icon">📦</span>Inventory
+                </a>
+                <a href="/console/reporting" class="sidebar-item {% if active_nav.lower() == 'reporting' %}active{% endif %}">
+                    <span class="icon">📈</span>Reporting
+                </a>
+                <a href="/console/optimization" class="sidebar-item {% if active_nav.lower() == 'optimization' %}active{% endif %}">
+                    <span class="icon">⚙️</span>Optimization
+                </a>
+                <a href="/console/admin" class="sidebar-item {% if active_nav.lower() == 'admin' %}active{% endif %}">
+                    <span class="icon">🛡️</span>Admin
+                </a>
+                <a href="/console/privacy" class="sidebar-item {% if active_nav.lower() == 'privacy' %}active{% endif %}">
+                    <span class="icon">🔒</span>Privacy
+                </a>
+                <a href="/console/tools" class="sidebar-item {% if active_nav.lower() == 'tools' %}active{% endif %}">
+                    <span class="icon">🔧</span>Tools
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-section-title">Help</div>
+                <a href="/docs" class="sidebar-item">
+                    <span class="icon">📘</span>API Docs
+                </a>
+                <a href="/examples" class="sidebar-item">
+                    <span class="icon">💡</span>Examples
+                </a>
+            </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+</body>
+</html>

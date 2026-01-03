@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Orders - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Orders</h1>
+    <p class="subtitle">Manage advertiser orders and campaigns</p>
+    <div class="actions">
+        <button class="btn btn-primary" onclick="showCreateOrderModal()">+ New Order</button>
+        <button class="btn btn-secondary">📊 Export</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Active Orders</h2>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Advertiser</th>
+                    <th>Status</th>
+                    <th>Line Items</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Budget</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>#ORD-2024-001</strong></td>
+                    <td>Premium Brand Co.</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>5</td>
+                    <td>Jan 1, 2024</td>
+                    <td>Dec 31, 2024</td>
+                    <td>$125,000</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-2024-002</strong></td>
+                    <td>Tech Solutions Inc.</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                    <td>3</td>
+                    <td>Jan 15, 2024</td>
+                    <td>Mar 15, 2024</td>
+                    <td>$50,000</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-2024-003</strong></td>
+                    <td>Retail Partners</td>
+                    <td><span class="badge badge-warning">Paused</span></td>
+                    <td>2</td>
+                    <td>Feb 1, 2024</td>
+                    <td>May 31, 2024</td>
+                    <td>$75,000</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+                <tr>
+                    <td><strong>#ORD-2024-004</strong></td>
+                    <td>Financial Services</td>
+                    <td><span class="badge badge-info">Pending Approval</span></td>
+                    <td>4</td>
+                    <td>Feb 15, 2024</td>
+                    <td>Apr 15, 2024</td>
+                    <td>$200,000</td>
+                    <td><a href="#" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- CREATE ORDER MODAL -->
+<div id="createOrderModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center;">
+    <div style="background: #fff; border-radius: 8px; width: 90%; max-width: 600px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+        <h2 style="margin-bottom: 4px;">Create New Order</h2>
+        <p class="muted" style="margin-bottom: 24px;">Set up a new advertiser order and line items</p>
+        
+        <form onsubmit="handleCreateOrder(event)">
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Advertiser Name *</label>
+                <input type="text" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="e.g., Premium Brand Co.">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Total Budget *</label>
+                <div style="display: flex; gap: 12px;">
+                    <span style="display: flex; align-items: center; color: #5f6368; font-weight: 500;">$</span>
+                    <input type="number" required step="0.01" style="flex: 1; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="100,000">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Start Date *</label>
+                    <input type="date" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">End Date *</label>
+                    <input type="date" required style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Notes</label>
+                <textarea style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px; resize: vertical; min-height: 80px;" placeholder="Order notes and requirements..."></textarea>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="hideCreateOrderModal()" class="btn btn-secondary">Cancel</button>
+                <button type="submit" class="btn btn-primary">Create Order</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function showCreateOrderModal() {
+    document.getElementById('createOrderModal').style.display = 'flex';
+}
+
+function hideCreateOrderModal() {
+    document.getElementById('createOrderModal').style.display = 'none';
+}
+
+function handleCreateOrder(event) {
+    event.preventDefault();
+    alert('Order created successfully! Redirecting to line items...');
+    hideCreateOrderModal();
+}
+</script>
+{% endblock %}

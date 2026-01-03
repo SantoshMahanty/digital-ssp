@@ -1,0 +1,444 @@
+{% extends "base.html" %}
+
+{% block title %}Audience Management - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>👥 Audience Management</h1>
+    <p class="subtitle">Create and manage first-party audience segments for premium targeting</p>
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+        <button style="padding: 8px 16px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">+ New Segment</button>
+        <button style="padding: 8px 16px; background: #f1f3f4; color: #202124; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">📤 Import CSV</button>
+    </div>
+</div>
+
+<!-- AUDIENCE INSIGHTS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
+    <!-- Total Segments -->
+    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div>
+                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">ACTIVE SEGMENTS</div>
+                <div style="font-size: 28px; font-weight: 600; color: #202124;">24</div>
+            </div>
+            <div style="font-size: 28px;">📊</div>
+        </div>
+        <div style="font-size: 11px; color: #5f6368;">
+            <div>12 first-party segments</div>
+            <div>8 lookalike audiences</div>
+            <div>4 exclusion lists</div>
+        </div>
+    </div>
+
+    <!-- Total Reach -->
+    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div>
+                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">TOTAL REACH</div>
+                <div style="font-size: 28px; font-weight: 600; color: #202124;">48.2M</div>
+            </div>
+            <div style="font-size: 28px;">📍</div>
+        </div>
+        <div style="font-size: 11px; color: #5f6368;">
+            <div>Unique users matched to segments</div>
+            <div>↑ 12% from last month</div>
+        </div>
+    </div>
+
+    <!-- Premium Inventory CPM Lift -->
+    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div>
+                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">CPM LIFT</div>
+                <div style="font-size: 28px; font-weight: 600; color: #34a853;">+23%</div>
+            </div>
+            <div style="font-size: 28px;">💰</div>
+        </div>
+        <div style="font-size: 11px; color: #5f6368;">
+            <div>Audience-targeted vs. non-targeted</div>
+            <div>Avg CPM: $8.50 vs $6.90</div>
+        </div>
+    </div>
+
+    <!-- Quality Score -->
+    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
+            <div>
+                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">AVG QUALITY SCORE</div>
+                <div style="font-size: 28px; font-weight: 600; color: #34a853;">8.3/10</div>
+            </div>
+            <div style="font-size: 28px;">⭐</div>
+        </div>
+        <div style="font-size: 11px; color: #5f6368;">
+            <div>Based on conversion rates</div>
+            <div>✅ High-quality segments</div>
+        </div>
+    </div>
+</div>
+
+<!-- AUDIENCE LIBRARY -->
+<div class="card" style="margin-bottom: 24px;">
+    <h2>📚 Audience Library</h2>
+    <p class="subtitle">All created audience segments and their performance</p>
+    
+    <div style="margin-top: 20px; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+                <tr style="border-bottom: 2px solid #dadce0;">
+                    <th style="text-align: left; padding: 12px 0; font-weight: 600; color: #202124;">Segment Name</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Type</th>
+                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">Size</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Quality</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Created</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Last Used</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Avg CPM</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Segment 1: High-Value Users -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>🎯 High-Value Users</strong></td>
+                    <td style="text-align: center;">
+                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
+                    </td>
+                    <td style="text-align: right; color: #202124;"><strong>2.3M</strong></td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                                <div style="height: 100%; background: #34a853; width: 92%;"></div>
+                            </div>
+                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">9.2</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center; color: #5f6368;">Jan 1</td>
+                    <td style="text-align: center; color: #5f6368;">2 min ago</td>
+                    <td style="text-align: center; color: #202124; font-weight: 600;">$9.50</td>
+                    <td style="text-align: center;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Segment 2: Tech Enthusiasts -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>💻 Tech Enthusiasts</strong></td>
+                    <td style="text-align: center;">
+                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
+                    </td>
+                    <td style="text-align: right; color: #202124;"><strong>3.8M</strong></td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                                <div style="height: 100%; background: #34a853; width: 87%;"></div>
+                            </div>
+                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">8.7</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center; color: #5f6368;">Dec 28</td>
+                    <td style="text-align: center; color: #5f6368;">5 min ago</td>
+                    <td style="text-align: center; color: #202124; font-weight: 600;">$8.25</td>
+                    <td style="text-align: center;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Segment 3: Active Mobile Users -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>📱 Active Mobile Users</strong></td>
+                    <td style="text-align: center;">
+                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
+                    </td>
+                    <td style="text-align: right; color: #202124;"><strong>5.2M</strong></td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                                <div style="height: 100%; background: #fbbc04; width: 78%;"></div>
+                            </div>
+                            <span style="font-size: 10px; color: #f57c00; font-weight: 600;">7.8</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center; color: #5f6368;">Dec 25</td>
+                    <td style="text-align: center; color: #5f6368;">1 hour ago</td>
+                    <td style="text-align: center; color: #202124; font-weight: 600;">$6.50</td>
+                    <td style="text-align: center;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Segment 4: Brand Researchers -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>🔍 Brand Researchers</strong></td>
+                    <td style="text-align: center;">
+                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
+                    </td>
+                    <td style="text-align: right; color: #202124;"><strong>1.5M</strong></td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                                <div style="height: 100%; background: #34a853; width: 95%;"></div>
+                            </div>
+                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">9.5</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center; color: #5f6368;">Dec 20</td>
+                    <td style="text-align: center; color: #5f6368;">15 min ago</td>
+                    <td style="text-align: center; color: #202124; font-weight: 600;">$10.75</td>
+                    <td style="text-align: center;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Segment 5: Lookalike -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>🔗 Lookalike: High-Value</strong></td>
+                    <td style="text-align: center;">
+                        <span style="background: #fff3e0; color: #f57c00; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">Lookalike</span>
+                    </td>
+                    <td style="text-align: right; color: #202124;"><strong>8.5M</strong></td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                                <div style="height: 100%; background: #fbbc04; width: 82%;"></div>
+                            </div>
+                            <span style="font-size: 10px; color: #f57c00; font-weight: 600;">8.2</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center; color: #5f6368;">Dec 15</td>
+                    <td style="text-align: center; color: #5f6368;">20 min ago</td>
+                    <td style="text-align: center; color: #202124; font-weight: 600;">$7.80</td>
+                    <td style="text-align: center;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Segment 6: Exclusion List -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>❌ Recent Converters (Exclude)</strong></td>
+                    <td style="text-align: center;">
+                        <span style="background: #ffebee; color: #d33527; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">Exclusion</span>
+                    </td>
+                    <td style="text-align: right; color: #202124;"><strong>850K</strong></td>
+                    <td style="text-align: center;">
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
+                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                                <div style="height: 100%; background: #34a853; width: 88%;"></div>
+                            </div>
+                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">8.8</span>
+                        </div>
+                    </td>
+                    <td style="text-align: center; color: #5f6368;">Dec 10</td>
+                    <td style="text-align: center; color: #5f6368;">3 hours ago</td>
+                    <td style="text-align: center; color: #202124; font-weight: 600;">N/A</td>
+                    <td style="text-align: center;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- AUDIENCE INSIGHTS & OVERLAP -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-bottom: 24px;">
+    <!-- Audience Trends -->
+    <div class="card">
+        <h2>📈 Audience Growth Trends</h2>
+        <p class="subtitle">Size change over last 30 days</p>
+        
+        <div style="margin-top: 20px;">
+            <div style="margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 600; color: #202124;">High-Value Users</span>
+                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+15%</span>
+                </div>
+                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
+                    <div style="height: 100%; background: #34a853; width: 85%;"></div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">2.0M → 2.3M users</div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 600; color: #202124;">Tech Enthusiasts</span>
+                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+22%</span>
+                </div>
+                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
+                    <div style="height: 100%; background: #34a853; width: 92%;"></div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">3.1M → 3.8M users</div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 600; color: #202124;">Active Mobile Users</span>
+                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+8%</span>
+                </div>
+                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
+                    <div style="height: 100%; background: #34a853; width: 78%;"></div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">4.8M → 5.2M users</div>
+            </div>
+
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 600; color: #202124;">Brand Researchers</span>
+                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+3%</span>
+                </div>
+                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
+                    <div style="height: 100%; background: #34a853; width: 68%;"></div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">1.45M → 1.5M users</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Audience Overlap Matrix -->
+    <div class="card">
+        <h2>🎯 Audience Overlap Analysis</h2>
+        <p class="subtitle">Which segments have overlapping users</p>
+        
+        <div style="margin-top: 20px; background: #f1f3f4; padding: 12px; border-radius: 8px; overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+                <thead>
+                    <tr>
+                        <th style="padding: 8px; text-align: left; font-weight: 600; background: #fff;">Segment A</th>
+                        <th style="padding: 8px; text-align: left; font-weight: 600; background: #fff;">Segment B</th>
+                        <th style="padding: 8px; text-align: center; font-weight: 600; background: #fff;">Overlap %</th>
+                        <th style="padding: 8px; text-align: right; font-weight: 600; background: #fff;">Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr style="border-bottom: 1px solid #dadce0;">
+                        <td style="padding: 8px;">High-Value Users</td>
+                        <td style="padding: 8px;">Tech Enthusiasts</td>
+                        <td style="padding: 8px; text-align: center; font-weight: 600;">45%</td>
+                        <td style="padding: 8px; text-align: right;">1.04M</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dadce0;">
+                        <td style="padding: 8px;">Tech Enthusiasts</td>
+                        <td style="padding: 8px;">Brand Researchers</td>
+                        <td style="padding: 8px; text-align: center; font-weight: 600;">62%</td>
+                        <td style="padding: 8px; text-align: right;">930K</td>
+                    </tr>
+                    <tr style="border-bottom: 1px solid #dadce0;">
+                        <td style="padding: 8px;">Active Mobile Users</td>
+                        <td style="padding: 8px;">High-Value Users</td>
+                        <td style="padding: 8px; text-align: center; font-weight: 600;">28%</td>
+                        <td style="padding: 8px; text-align: right;">644K</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 8px;">Brand Researchers</td>
+                        <td style="padding: 8px;">High-Value Users</td>
+                        <td style="padding: 8px; text-align: center; font-weight: 600;">71%</td>
+                        <td style="padding: 8px; text-align: right;">1.07M</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div style="margin-top: 12px; font-size: 11px; color: #5f6368;">
+            <div style="padding: 12px; background: #fff3e0; border-radius: 4px;">
+                <strong>💡 Tip:</strong> High overlap (>50%) means audiences are similar. Use for lookalike modeling. Low overlap (<30%) means complementary audiences. Combine for broader reach.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SEGMENT CREATION ASSISTANT -->
+<div class="card">
+    <h2>✨ Create New Segment</h2>
+    <p class="subtitle">Build a custom audience based on user behavior and attributes</p>
+    
+    <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <!-- Behavior-Based -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">📊 Behavior-Based</h4>
+            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users matching specific behaviors</p>
+            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Example rules:</div>
+                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
+                    <li>Visited pricing page 3+ times</li>
+                    <li>Spent 5+ min on product page</li>
+                    <li>Added to cart but didn't purchase</li>
+                </ul>
+            </div>
+            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Behavior Segment</button>
+        </div>
+
+        <!-- Demographic-Based -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">🎂 Demographics</h4>
+            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users matching age, gender, income</p>
+            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Available options:</div>
+                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
+                    <li>Age: 18-34, 35-54, 55+</li>
+                    <li>Gender: M/F</li>
+                    <li>Income: Low/Mid/High</li>
+                </ul>
+            </div>
+            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Demographic Segment</button>
+        </div>
+
+        <!-- Interest-Based -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">💭 Interests</h4>
+            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users interested in topics/categories</p>
+            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Example interests:</div>
+                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
+                    <li>Technology & Gadgets</li>
+                    <li>Finance & Investing</li>
+                    <li>Travel & Vacation</li>
+                </ul>
+            </div>
+            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Interest Segment</button>
+        </div>
+
+        <!-- Lookalike -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">🔗 Lookalike</h4>
+            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users similar to existing segment</p>
+            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Create from:</div>
+                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
+                    <li>Converters (past buyers)</li>
+                    <li>High-value users</li>
+                    <li>Existing segments</li>
+                </ul>
+            </div>
+            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Create Lookalike</button>
+        </div>
+
+        <!-- Upload CSV -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">📤 Upload List</h4>
+            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Import custom user list (CSV)</p>
+            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Supported formats:</div>
+                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
+                    <li>Email, Phone, Cookie ID</li>
+                    <li>Max 10M users/upload</li>
+                    <li>Encrypted in transit</li>
+                </ul>
+            </div>
+            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Upload CSV</button>
+        </div>
+
+        <!-- Combination -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">⚙️ Combination Rules</h4>
+            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Merge multiple segments with AND/OR</p>
+            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Example logic:</div>
+                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
+                    <li>(High-Value AND Tech) OR Mobile</li>
+                    <li>NOT Recent-Converters</li>
+                    <li>Nested rules supported</li>
+                </ul>
+            </div>
+            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Combination</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

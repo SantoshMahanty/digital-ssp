@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Dashboard</h1>
+    <p class="subtitle">Overview of your ad delivery and performance</p>
+</div>
+
+<!-- STATS GRID -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Impressions</div>
+        <div class="stat-value">1.2M</div>
+        <div class="stat-change positive">↑ 12% from last week</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">$48.5K</div>
+        <div class="stat-change positive">↑ 8% from last week</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">CPM Average</div>
+        <div class="stat-value">$42.50</div>
+        <div class="stat-change negative">↓ 3% from last week</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Fill Rate</div>
+        <div class="stat-value">87.3%</div>
+        <div class="stat-change positive">↑ 2.1% from last week</div>
+    </div>
+</div>
+
+<!-- DELIVERY PERFORMANCE -->
+<div class="card">
+    <div class="card-header">
+        <h2>Delivery Performance</h2>
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-label">
+            <span>Homepage Leaderboard</span>
+            <span>95/100 (95%)</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar success" style="width: 95%"></div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label">
+            <span>Article Pages</span>
+            <span>78/100 (78%)</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar" style="width: 78%"></div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label">
+            <span>Category Pages</span>
+            <span>61/100 (61%)</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar warning" style="width: 61%"></div>
+        </div>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-label">
+            <span>Mobile Pages</span>
+            <span>45/100 (45%)</span>
+        </div>
+        <div class="progress-bar-wrapper">
+            <div class="progress-bar danger" style="width: 45%"></div>
+        </div>
+    </div>
+</div>
+
+<!-- RECENT REQUESTS -->
+<div class="card">
+    <div class="card-header">
+        <h2>Recent Ad Requests</h2>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Ad Unit</th>
+                    <th>Sizes</th>
+                    <th>Status</th>
+                    <th>Line Item</th>
+                    <th>CPM</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code style="font-size:11px;">req_a1b2c3</code></td>
+                    <td>/home/leaderboard</td>
+                    <td>728x90, 300x250</td>
+                    <td><span class="badge badge-success">Filled</span></td>
+                    <td>Premium Brand Campaign</td>
+                    <td>$65.00</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:11px;">req_d4e5f6</code></td>
+                    <td>/article/tech-news</td>
+                    <td>300x600</td>
+                    <td><span class="badge badge-success">Filled</span></td>
+                    <td>Tech Partners Direct</td>
+                    <td>$48.50</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:11px;">req_g7h8i9</code></td>
+                    <td>/category/sports</td>
+                    <td>728x90</td>
+                    <td><span class="badge badge-warning">Partial</span></td>
+                    <td>Sports Goods Network</td>
+                    <td>$32.00</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:11px;">req_j0k1l2</code></td>
+                    <td>/mobile/home</td>
+                    <td>320x50</td>
+                    <td><span class="badge badge-danger">Unfilled</span></td>
+                    <td>—</td>
+                    <td>—</td>
+                </tr>
+                <tr>
+                    <td><code style="font-size:11px;">req_m3n4o5</code></td>
+                    <td>/home/leaderboard</td>
+                    <td>728x90</td>
+                    <td><span class="badge badge-success">Filled</span></td>
+                    <td>Brand Direct Campaign</td>
+                    <td>$55.75</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

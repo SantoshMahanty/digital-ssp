@@ -1,0 +1,569 @@
+{% extends "base.html" %}
+
+{% block title %}Programmatic Delivery - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Programmatic Delivery</h1>
+    <p class="subtitle">Manage automated demand: PG deals, preferred deals, and open auctions</p>
+</div>
+
+<!-- PROGRAMMATIC DEAL TYPES OVERVIEW -->
+<div class="card">
+    <h2>🤖 Programmatic Deal Types</h2>
+    <p class="subtitle">Three ways to deliver inventory to programmatic buyers</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 24px;">
+        <!-- PROGRAMMATIC GUARANTEED -->
+        <div style="border: 2px solid #1967d2; border-radius: 8px; padding: 20px; background: #e8f0fe;">
+            <div style="font-size: 32px; margin-bottom: 12px;">🔒</div>
+            <h3 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #1967d2;">Programmatic Guaranteed (PG)</h3>
+            <p style="font-size: 13px; color: #5f6368; margin: 0 0 16px 0; line-height: 1.6;">
+                Seller commits to deliver X impressions at fixed CPM. Buyer gets guaranteed volume with automated delivery.
+            </p>
+            <div style="background: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #1967d2; font-weight: 600; margin-bottom: 4px;">🎯 Key Points</div>
+                <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px;">
+                    <li>100% guaranteed delivery</li>
+                    <li>Fixed CPM (pre-negotiated)</li>
+                    <li>Seller bears shortfall risk</li>
+                    <li>Highest priority tier</li>
+                    <li>Reserved inventory</li>
+                </ul>
+            </div>
+            <div style="font-size: 11px; color: #1967d2; font-weight: 600; padding: 8px; background: #fff; border-radius: 3px; text-align: center;">
+                ⭐ Use for: Premium buyer partnerships
+            </div>
+        </div>
+
+        <!-- PREFERRED DEALS -->
+        <div style="border: 2px solid #fbbc04; border-radius: 8px; padding: 20px; background: #fff3e0;">
+            <div style="font-size: 32px; margin-bottom: 12px;">📋</div>
+            <h3 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #f57c00;">Preferred Deals</h3>
+            <p style="font-size: 13px; color: #5f6368; margin: 0 0 16px 0; line-height: 1.6;">
+                Seller offers inventory at floor price. Buyer gets first look, must bid floor or higher to win.
+            </p>
+            <div style="background: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #f57c00; font-weight: 600; margin-bottom: 4px;">🎯 Key Points</div>
+                <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px;">
+                    <li>Right of first refusal</li>
+                    <li>Floor price enforcement</li>
+                    <li>Best-effort delivery</li>
+                    <li>No guarantee if buyer declines</li>
+                    <li>Goes to open auction if declined</li>
+                </ul>
+            </div>
+            <div style="font-size: 11px; color: #f57c00; font-weight: 600; padding: 8px; background: #fff; border-radius: 3px; text-align: center;">
+                ⭐ Use for: Preferred inventory access
+            </div>
+        </div>
+
+        <!-- OPEN AUCTION -->
+        <div style="border: 2px solid #34a853; border-radius: 8px; padding: 20px; background: #e6f4ea;">
+            <div style="font-size: 32px; margin-bottom: 12px;">🏆</div>
+            <h3 style="margin: 0 0 12px 0; font-size: 15px; font-weight: 600; color: #137333;">Open Auction</h3>
+            <p style="font-size: 13px; color: #5f6368; margin: 0 0 16px 0; line-height: 1.6;">
+                All remaining inventory to highest bidder. Competitive marketplace where buyers bid in real-time.
+            </p>
+            <div style="background: #fff; padding: 12px; border-radius: 4px; margin-bottom: 12px;">
+                <div style="font-size: 11px; color: #137333; font-weight: 600; margin-bottom: 4px;">🎯 Key Points</div>
+                <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px;">
+                    <li>Highest bidder wins</li>
+                    <li>Competitive market pricing</li>
+                    <li>No guarantee</li>
+                    <li>Maximum yield potential</li>
+                    <li>All buyers compete equally</li>
+                </ul>
+            </div>
+            <div style="font-size: 11px; color: #137333; font-weight: 600; padding: 8px; background: #fff; border-radius: 3px; text-align: center;">
+                ⭐ Use for: Remnant fill & yield
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UNIFIED AUCTION TIER SYSTEM -->
+<div class="card" style="margin-top: 24px;">
+    <h2>📊 Unified Auction Tier System</h2>
+    <p class="subtitle">How impressions are allocated when multiple deal types compete</p>
+    
+    <div style="margin-top: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+            <!-- TIER 1 -->
+            <div style="background: linear-gradient(135deg, #ff6b6b 0%, #ff8787 100%); color: #fff; padding: 16px; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 8px;">🥇</div>
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Tier 1: Sponsorship (P16-14)</h4>
+                <ul style="font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                    <li>Highest priority</li>
+                    <li>100% guaranteed</li>
+                    <li>Direct campaigns only</li>
+                    <li>Always served first</li>
+                </ul>
+            </div>
+
+            <!-- TIER 2 -->
+            <div style="background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); color: #fff; padding: 16px; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 8px;">🥈</div>
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Tier 2: PG Deals</h4>
+                <ul style="font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                    <li>Guaranteed impressions</li>
+                    <li>Fixed CPM</li>
+                    <li>Auto-fill enabled</li>
+                    <li>Seller committed</li>
+                </ul>
+            </div>
+
+            <!-- TIER 3 -->
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: #fff; padding: 16px; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 8px;">🥉</div>
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Tier 3: Standard (P12-10)</h4>
+                <ul style="font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                    <li>Direct guaranteed</li>
+                    <li>If inventory available</li>
+                    <li>Multiple line items</li>
+                    <li>Priority over network</li>
+                </ul>
+            </div>
+
+            <!-- TIER 4 -->
+            <div style="background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); color: #fff; padding: 16px; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 8px;">4️⃣</div>
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Tier 4: Preferred Deals</h4>
+                <ul style="font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                    <li>First refusal right</li>
+                    <li>Floor price bid</li>
+                    <li>Buyer signals interest</li>
+                    <li>Goes to auction if decline</li>
+                </ul>
+            </div>
+
+            <!-- TIER 5 -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: #fff; padding: 16px; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 8px;">5️⃣</div>
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Tier 5: Open Auction</h4>
+                <ul style="font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6;">
+                    <li>All buyers compete</li>
+                    <li>Highest bidder wins</li>
+                    <li>Market pricing</li>
+                    <li>Maximum yield</li>
+                </ul>
+            </div>
+
+            <!-- TIER 6 -->
+            <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #202124; padding: 16px; border-radius: 8px;">
+                <div style="font-size: 24px; margin-bottom: 8px;">6️⃣</div>
+                <h4 style="margin: 0 0 8px 0; font-weight: 600;">Tier 6: Network (P8-6)</h4>
+                <ul style="font-size: 12px; margin: 0; padding-left: 16px; line-height: 1.6; color: #5f6368;">
+                    <li>Direct line items</li>
+                    <li>Lower priority</li>
+                    <li>Premium inventory</li>
+                    <li>Best effort</li>
+                </ul>
+            </div>
+        </div>
+
+        <div style="margin-top: 20px; padding: 16px; background: #f1f3f4; border-radius: 8px; border-left: 4px solid #1967d2;">
+            <div style="font-size: 12px; color: #202124; line-height: 1.8;">
+                <strong>📌 How It Works:</strong> When an ad request arrives, the system checks each tier from top to bottom. 
+                If a tier can serve (has eligible line items, meets caps, matches targeting), that tier wins. 
+                Only if tier cannot serve does the system move to the next tier.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ACTIVE PROGRAMMATIC DEALS -->
+<div class="card" style="margin-top: 24px;">
+    <h2>📈 Active Programmatic Deals</h2>
+    <p class="subtitle">Current PG deals, preferred deals, and auction configuration</p>
+    
+    <div style="margin-top: 16px; overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
+            <thead>
+                <tr style="border-bottom: 2px solid #dadce0;">
+                    <th style="text-align: left; padding: 12px 0; font-weight: 600; color: #202124;">Deal ID</th>
+                    <th style="text-align: left; padding: 12px 0; font-weight: 600; color: #202124;">Type</th>
+                    <th style="text-align: left; padding: 12px 0; font-weight: 600; color: #202124;">Buyer</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Guaranteed / Floor</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Delivered</th>
+                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">CPM / Price</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Status</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- PG Deal -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>PG-2024-001</strong></td>
+                    <td style="padding: 12px 0;">
+                        <span style="background: #1967d2; color: #fff; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">🔒 PG</span>
+                    </td>
+                    <td style="padding: 12px 0; color: #5f6368;">TechBuyer Inc</td>
+                    <td style="text-align: center; padding: 12px 0; color: #202124;">
+                        <div><strong>5M</strong></div>
+                        <div style="font-size: 10px; color: #5f6368;">impressions</div>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0; color: #202124;">
+                        <div><strong>4.85M</strong></div>
+                        <div style="font-size: 10px; color: #5f6368;">97%</div>
+                    </td>
+                    <td style="text-align: right; padding: 12px 0; color: #202124;">
+                        <strong>$8.50</strong>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0;">
+                        <span style="background: #e6f4ea; color: #137333; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">✅ Delivering</span>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Preferred Deal 1 -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>PREF-2024-045</strong></td>
+                    <td style="padding: 12px 0;">
+                        <span style="background: #fbbc04; color: #202124; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">📋 Preferred</span>
+                    </td>
+                    <td style="padding: 12px 0; color: #5f6368;">MediaBuy Corp</td>
+                    <td style="text-align: center; padding: 12px 0; color: #202124;">
+                        <div><strong>Floor: $6.25</strong></div>
+                        <div style="font-size: 10px; color: #5f6368;">/CPM</div>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0; color: #202124;">
+                        <div><strong>823K</strong></div>
+                        <div style="font-size: 10px; color: #5f6368;">of 2M</div>
+                    </td>
+                    <td style="text-align: right; padding: 12px 0; color: #202124;">
+                        <strong>$7.10</strong>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0;">
+                        <span style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">⏳ Active</span>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+
+                <!-- Open Auction Config -->
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>AUCTION-001</strong></td>
+                    <td style="padding: 12px 0;">
+                        <span style="background: #34a853; color: #fff; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">🏆 Open</span>
+                    </td>
+                    <td style="padding: 12px 0; color: #5f6368;">All Buyers</td>
+                    <td style="text-align: center; padding: 12px 0; color: #202124;">
+                        <div><strong>Floor: $4.00</strong></div>
+                        <div style="font-size: 10px; color: #5f6368;">minimum</div>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0; color: #202124;">
+                        <div><strong>15.2M</strong></div>
+                        <div style="font-size: 10px; color: #5f6368;">today</div>
+                    </td>
+                    <td style="text-align: right; padding: 12px 0; color: #202124;">
+                        <strong>$5.47</strong>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0;">
+                        <span style="background: #e6f4ea; color: #137333; padding: 4px 8px; border-radius: 3px; font-size: 11px; font-weight: 500;">✅ Running</span>
+                    </td>
+                    <td style="text-align: center; padding: 12px 0;">
+                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- BUYER MANAGEMENT -->
+<div class="card" style="margin-top: 24px;">
+    <h2>👥 Buyer Management</h2>
+    <p class="subtitle">Control which buyers can bid, and set buyer-specific rules</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-top: 20px;">
+        <!-- Allow List -->
+        <div>
+            <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600;">✅ Allowed Buyers</h3>
+            <p style="font-size: 12px; color: #5f6368; margin: 0 0 12px 0;">Only these buyers can access auctions</p>
+            
+            <div style="background: #f1f3f4; border: 1px solid #dadce0; border-radius: 8px; padding: 12px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 12px;">
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" checked style="margin-right: 8px;">
+                        <span style="font-size: 12px;">TechBuyer Inc</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" checked style="margin-right: 8px;">
+                        <span style="font-size: 12px;">MediaBuy Corp</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" checked style="margin-right: 8px;">
+                        <span style="font-size: 12px;">AdNetwork Pro</span>
+                    </label>
+                    <label style="display: flex; align-items: center; cursor: pointer;">
+                        <input type="checkbox" checked style="margin-right: 8px;">
+                        <span style="font-size: 12px;">Marketplace DSP</span>
+                    </label>
+                </div>
+                <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">+ Add Buyer</button>
+            </div>
+        </div>
+
+        <!-- Block List -->
+        <div>
+            <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600;">🚫 Blocked Buyers</h3>
+            <p style="font-size: 12px; color: #5f6368; margin: 0 0 12px 0;">These buyers cannot bid or access inventory</p>
+            
+            <div style="background: #ffebee; border: 1px solid #d33527; border-radius: 8px; padding: 12px;">
+                <div style="display: grid; grid-template-columns: 1fr; gap: 8px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; background: #fff; padding: 8px; border-radius: 3px;">
+                        <span>BadActor DSP</span>
+                        <button style="background: none; border: none; color: #d33527; cursor: pointer; font-weight: 600;">✕</button>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; background: #fff; padding: 8px; border-radius: 3px;">
+                        <span>SpamBid Inc</span>
+                        <button style="background: none; border: none; color: #d33527; cursor: pointer; font-weight: 600;">✕</button>
+                    </div>
+                </div>
+                <input type="text" placeholder="Enter buyer name to block..." style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FLOOR PRICE MANAGEMENT -->
+<div class="card" style="margin-top: 24px;">
+    <h2>💰 Floor Price Management</h2>
+    <p class="subtitle">Set minimum acceptable bid prices for different inventory</p>
+    
+    <div style="margin-top: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+            <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">Global Floor Price</h4>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">$</span>
+                    <input type="number" value="3.50" step="0.01" style="flex: 1; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">CPM</span>
+                </div>
+                <div style="font-size: 11px; color: #5f6368;">Minimum bid for all open auction inventory</div>
+            </div>
+
+            <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">Premium Inventory Floor</h4>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">$</span>
+                    <input type="number" value="8.75" step="0.01" style="flex: 1; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">CPM</span>
+                </div>
+                <div style="font-size: 11px; color: #5f6368;">Homepage, above-the-fold placements</div>
+            </div>
+
+            <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">Remnant Floor Price</h4>
+                <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">$</span>
+                    <input type="number" value="1.25" step="0.01" style="flex: 1; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">CPM</span>
+                </div>
+                <div style="font-size: 11px; color: #5f6368;">Unsold inventory, after all tiers</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 16px; background: #e8f0fe; padding: 16px; border-radius: 8px; border-left: 3px solid #1967d2;">
+            <div style="font-size: 12px; color: #1967d2; line-height: 1.6;">
+                <strong>📌 How Floor Prices Work:</strong> Any bid below the floor is automatically rejected. 
+                For Preferred Deals, buyers must bid AT OR ABOVE the floor price to win. Open Auction uses global floor to reject low bids.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- PROGRAMMATIC SETTINGS -->
+<div class="card" style="margin-top: 24px;">
+    <h2>⚙️ Programmatic Delivery Settings</h2>
+    <p class="subtitle">Configure auction behavior and deal requirements</p>
+    
+    <div style="margin-top: 20px; border-top: 1px solid #e8eaed; padding-top: 20px;">
+        <h3 style="margin: 0 0 16px 0; font-size: 13px; font-weight: 600;">Auction Priority Settings</h3>
+        
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="margin-bottom: 16px;">
+                <label style="display: flex; align-items: flex-start; cursor: pointer; margin-bottom: 12px;">
+                    <input type="checkbox" checked style="margin-right: 12px; margin-top: 2px;">
+                    <div>
+                        <div style="font-weight: 500; color: #202124; font-size: 13px;">Prioritize Direct Guaranteed Line Items</div>
+                        <div style="font-size: 11px; color: #5f6368; margin-top: 4px;">Serve all Sponsorship & Standard line items before programmatic</div>
+                    </div>
+                </label>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <label style="display: flex; align-items: flex-start; cursor: pointer; margin-bottom: 12px;">
+                    <input type="checkbox" checked style="margin-right: 12px; margin-top: 2px;">
+                    <div>
+                        <div style="font-weight: 500; color: #202124; font-size: 13px;">Enforce PG Deal Guarantees</div>
+                        <div style="font-size: 11px; color: #5f6368; margin-top: 4px;">Never allow PG deals to under-deliver (catch-up if needed)</div>
+                    </div>
+                </label>
+            </div>
+
+            <div style="margin-bottom: 0;">
+                <label style="display: flex; align-items: flex-start; cursor: pointer;">
+                    <input type="checkbox" checked style="margin-right: 12px; margin-top: 2px;">
+                    <div>
+                        <div style="font-weight: 500; color: #202124; font-size: 13px;">Enable Preferred Deal First-Look</div>
+                        <div style="font-size: 11px; color: #5f6368; margin-top: 4px;">Give preferred deals right of refusal before open auction</div>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <h3 style="margin: 0 0 16px 0; font-size: 13px; font-weight: 600;">Auction Timeout Settings</h3>
+        
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; font-weight: 500; color: #202124; margin-bottom: 8px; font-size: 12px;">Bid Request Timeout</label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="number" value="100" style="width: 80px; padding: 8px; border: 1px solid #dadce0; border-radius: 4px; font-size: 12px;">
+                    <span style="font-size: 12px; color: #5f6368;">milliseconds</span>
+                </div>
+                <div style="font-size: 11px; color: #5f6368; margin-top: 4px;">Max time to wait for buyer response (default: 100ms)</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DEAL TARGETING VISIBILITY -->
+<div class="card" style="margin-top: 24px;">
+    <h2>🔍 Deal Targeting Visibility</h2>
+    <p class="subtitle">What targeting is visible to each deal type</p>
+    
+    <div style="margin-top: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;">
+            <!-- PG Visibility -->
+            <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">🔒 Programmatic Guaranteed</h4>
+                <div style="font-size: 12px; color: #5f6368; line-height: 1.8;">
+                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                        <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Buyer Sees:</div>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>Full inventory details</li>
+                            <li>All targeting parameters</li>
+                            <li>Expected impressions</li>
+                            <li>Historical performance</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">💡 Why:</div>
+                        <span>Buyer needs full visibility for guaranteed commitment</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preferred Visibility -->
+            <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">📋 Preferred Deals</h4>
+                <div style="font-size: 12px; color: #5f6368; line-height: 1.8;">
+                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                        <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Buyer Sees:</div>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>Inventory category</li>
+                            <li>Floor price</li>
+                            <li>Estimated volume</li>
+                            <li>General targeting</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">💡 Why:</div>
+                        <span>Seller wants to keep some details confidential</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Open Auction Visibility -->
+            <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
+                <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">🏆 Open Auction</h4>
+                <div style="font-size: 12px; color: #5f6368; line-height: 1.8;">
+                    <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                        <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Buyer Sees:</div>
+                        <ul style="margin: 0; padding-left: 16px;">
+                            <li>Basic inventory info</li>
+                            <li>Placement size</li>
+                            <li>Floor price</li>
+                            <li>Recent CPM trends</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">💡 Why:</div>
+                        <span>Standard marketplace transparency</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- DELIVERY PERFORMANCE BY DEAL TYPE -->
+<div class="card" style="margin-top: 24px;">
+    <h2>📊 Delivery Performance by Deal Type</h2>
+    <p class="subtitle">How each deal type is performing today</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin-top: 20px;">
+        <!-- PG Performance -->
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600;">🔒 PG Deals</h4>
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 500;">Fulfillment Rate</span>
+                    <span style="font-size: 12px; font-weight: 600; color: #137333;">97.3%</span>
+                </div>
+                <div style="height: 8px; background: #e8eaed; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; background: #34a853; width: 97.3%;"></div>
+                </div>
+            </div>
+            <div style="font-size: 11px; color: #5f6368;">
+                <div>3 active deals</div>
+                <div>18.5M of 19M guaranteed</div>
+                <div>Ave CPM: $8.42</div>
+            </div>
+        </div>
+
+        <!-- Preferred Performance -->
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600;">📋 Preferred Deals</h4>
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 500;">Acceptance Rate</span>
+                    <span style="font-size: 12px; font-weight: 600; color: #f57c00;">72.1%</span>
+                </div>
+                <div style="height: 8px; background: #e8eaed; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; background: #fbbc04; width: 72.1%;"></div>
+                </div>
+            </div>
+            <div style="font-size: 11px; color: #5f6368;">
+                <div>8 active deals</div>
+                <div>6.2M impressions served</div>
+                <div>Ave CPM: $6.87</div>
+            </div>
+        </div>
+
+        <!-- Open Auction Performance -->
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600;">🏆 Open Auction</h4>
+            <div style="margin-bottom: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <span style="font-size: 12px; font-weight: 500;">Fill Rate</span>
+                    <span style="font-size: 12px; font-weight: 600; color: #4285f4;">84.6%</span>
+                </div>
+                <div style="height: 8px; background: #e8eaed; border-radius: 4px; overflow: hidden;">
+                    <div style="height: 100%; background: #4285f4; width: 84.6%;"></div>
+                </div>
+            </div>
+            <div style="font-size: 11px; color: #5f6368;">
+                <div>15.2M impressions available</div>
+                <div>12.8M sold to buyers</div>
+                <div>Ave CPM: $5.47</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

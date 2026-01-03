@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Inventory - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Inventory</h1>
+    <p class="subtitle">Manage your ad units and inventory</p>
+    <div class="actions">
+        <button class="btn btn-primary">+ New Ad Unit</button>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>Ad Units</h2>
+    </div>
+    
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Ad Unit Path</th>
+                    <th>Sizes</th>
+                    <th>Traffic</th>
+                    <th>Revenue</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>/home/leaderboard</code></td>
+                    <td>728x90, 970x90</td>
+                    <td>High</td>
+                    <td>$12,450</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                    <td><code>/article/sidebar</code></td>
+                    <td>300x250, 300x600</td>
+                    <td>High</td>
+                    <td>$9,875</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                    <td><code>/category/featured</code></td>
+                    <td>728x90</td>
+                    <td>Medium</td>
+                    <td>$5,320</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                    <td><code>/mobile/home</code></td>
+                    <td>320x50, 320x100</td>
+                    <td>Very High</td>
+                    <td>$15,680</td>
+                    <td><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr>
+                    <td><code>/video/preroll</code></td>
+                    <td>640x480</td>
+                    <td>Low</td>
+                    <td>$2,140</td>
+                    <td><span class="badge badge-info">Inactive</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <div class="stat-label">Total Ad Units</div>
+        <div class="stat-value">12</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Active Units</div>
+        <div class="stat-value">10</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Total Revenue</div>
+        <div class="stat-value">$45.5K</div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-label">Avg Impressions/Day</div>
+        <div class="stat-value">2.1M</div>
+    </div>
+</div>
+{% endblock %}

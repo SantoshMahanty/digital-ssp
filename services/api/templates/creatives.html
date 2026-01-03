@@ -1,0 +1,292 @@
+{% extends "base.html" %}
+
+{% block title %}Creatives - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Creatives</h1>
+    <p class="subtitle">Manage creative assets and versions</p>
+    <div class="actions">
+        <button class="btn btn-primary" onclick="showUploadCreativeModal()">+ Upload Creative</button>
+        <button class="btn btn-secondary">Bulk Upload</button>
+    </div>
+</div>
+
+<!-- CREATIVE LIBRARY -->
+<div class="card">
+    <div class="card-header">
+        <h2>Creative Assets</h2>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; padding: 24px;">
+        <!-- DISPLAY CREATIVE -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s;">
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
+                728x90 Display Ad
+            </div>
+            <div style="padding: 16px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">Homepage Banner 2024</h4>
+                <div style="font-size: 12px; color: #5f6368; margin-bottom: 12px;">
+                    <div>📦 Display</div>
+                    <div>📐 728x90</div>
+                    <div>📝 3 versions</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="flex: 1; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">View</button>
+                    <button style="flex: 1; padding: 8px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- VIDEO CREATIVE -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s;">
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
+                640x480 Video
+            </div>
+            <div style="padding: 16px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">Product Demo Video</h4>
+                <div style="font-size: 12px; color: #5f6368; margin-bottom: 12px;">
+                    <div>🎬 Video</div>
+                    <div>⏱️ 30 seconds</div>
+                    <div>📝 1 version</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="flex: 1; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">View</button>
+                    <button style="flex: 1; padding: 8px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- NATIVE CREATIVE -->
+        <div style="border: 1px solid #dadce0; border-radius: 8px; overflow: hidden; background: #fff; transition: all 0.2s;">
+            <div style="width: 100%; height: 200px; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 14px; font-weight: 500;">
+                Native Ad Asset
+            </div>
+            <div style="padding: 16px;">
+                <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 500;">Sponsored Content</h4>
+                <div style="font-size: 12px; color: #5f6368; margin-bottom: 12px;">
+                    <div>📄 Native</div>
+                    <div>🖼️ 300x250</div>
+                    <div>📝 2 versions</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button style="flex: 1; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">View</button>
+                    <button style="flex: 1; padding: 8px; background: #f1f3f4; border: 1px solid #dadce0; border-radius: 4px; cursor: pointer; font-size: 12px;">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CREATIVE SPECIFICATIONS -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+    <div class="card">
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 500;">📦 Display Creative Specs</h3>
+        <div style="font-size: 13px; color: #5f6368; line-height: 1.6;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Supported Formats</div>
+                JPEG, PNG, GIF, WebP
+            </div>
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Max File Size</div>
+                150 KB
+            </div>
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Common Sizes</div>
+                728x90, 300x250, 300x600, 970x90, 320x50
+            </div>
+            <div>
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Animation Limit</div>
+                15 seconds (GIF/animated PNG)
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 500;">🎬 Video Creative Specs</h3>
+        <div style="font-size: 13px; color: #5f6368; line-height: 1.6;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Supported Formats</div>
+                MP4, WebM, FLV, MOV
+            </div>
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Max File Size</div>
+                500 MB
+            </div>
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Duration</div>
+                6 seconds - 10 minutes
+            </div>
+            <div>
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Resolution</div>
+                Min 640x360 (HD recommended)
+            </div>
+        </div>
+    </div>
+    
+    <div class="card">
+        <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 500;">📄 Native Creative Specs</h3>
+        <div style="font-size: 13px; color: #5f6368; line-height: 1.6;">
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Required Fields</div>
+                Headline, Description, Image, Click URL
+            </div>
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Image Dimensions</div>
+                Min 300x200, Max 1200x628
+            </div>
+            <div style="margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e8eaed;">
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">Text Limits</div>
+                Headline: 50 chars, Desc: 150 chars
+            </div>
+            <div>
+                <div style="font-weight: 500; color: #202124; margin-bottom: 4px;">JSON Metadata</div>
+                Optional structured data
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- UPLOAD CREATIVE MODAL -->
+<div id="uploadCreativeModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; padding: 20px; overflow-y: auto;">
+    <div style="background: #fff; border-radius: 8px; width: 100%; max-width: 800px; padding: 32px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); margin: 20px auto;">
+        <h2 style="margin-bottom: 4px;">Upload Creative</h2>
+        <p class="muted" style="margin-bottom: 24px;">Add a new creative asset to your library</p>
+        
+        <!-- CREATIVE TYPE SELECTOR -->
+        <div style="margin-bottom: 24px;">
+            <label style="display: block; font-weight: 500; margin-bottom: 12px;">Creative Type *</label>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #dadce0; border-radius: 4px; cursor: pointer; background: #fff;">
+                    <input type="radio" name="creative-type" value="display" checked style="margin-right: 8px;">
+                    <span style="font-weight: 500;">📦 Display</span>
+                </label>
+                <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #dadce0; border-radius: 4px; cursor: pointer;">
+                    <input type="radio" name="creative-type" value="video" style="margin-right: 8px;">
+                    <span style="font-weight: 500;">🎬 Video</span>
+                </label>
+                <label style="display: flex; align-items: center; padding: 12px; border: 2px solid #dadce0; border-radius: 4px; cursor: pointer;">
+                    <input type="radio" name="creative-type" value="native" style="margin-right: 8px;">
+                    <span style="font-weight: 500;">📄 Native</span>
+                </label>
+            </div>
+        </div>
+        
+        <!-- DISPLAY UPLOAD SECTION -->
+        <div id="display-section" style="margin-bottom: 24px;">
+            <h3 style="margin-bottom: 16px; font-size: 14px; font-weight: 600;">Display Creative Details</h3>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Creative Name *</label>
+                <input type="text" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="e.g., Homepage Banner Q1">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Width (px) *</label>
+                    <input type="number" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="728">
+                </div>
+                <div>
+                    <label style="display: block; font-weight: 500; margin-bottom: 8px;">Height (px) *</label>
+                    <input type="number" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="90">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Image File *</label>
+                <div style="border: 2px dashed #dadce0; border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f3f4'" onmouseout="this.style.background='#fff'">
+                    <div style="font-size: 32px; margin-bottom: 8px;">📤</div>
+                    <div style="font-weight: 500; margin-bottom: 4px;">Drag and drop your image</div>
+                    <div style="font-size: 12px; color: #5f6368;">or click to select (Max 150 KB)</div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Click-Through URL *</label>
+                <input type="url" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="https://example.com/campaign">
+            </div>
+        </div>
+        
+        <!-- VIDEO UPLOAD SECTION -->
+        <div id="video-section" style="display: none; margin-bottom: 24px;">
+            <h3 style="margin-bottom: 16px; font-size: 14px; font-weight: 600;">Video Creative Details</h3>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Video Name *</label>
+                <input type="text" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="e.g., Product Demo">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Video File (MP4, WebM) *</label>
+                <div style="border: 2px dashed #dadce0; border-radius: 8px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='#f1f3f4'" onmouseout="this.style.background='#fff'">
+                    <div style="font-size: 32px; margin-bottom: 8px;">🎬</div>
+                    <div style="font-weight: 500; margin-bottom: 4px;">Drag and drop your video</div>
+                    <div style="font-size: 12px; color: #5f6368;">or click to select (Max 500 MB)</div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Thumbnail Image</label>
+                <input type="file" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Click-Through URL *</label>
+                <input type="url" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="https://example.com/campaign">
+            </div>
+        </div>
+        
+        <!-- NATIVE UPLOAD SECTION -->
+        <div id="native-section" style="display: none; margin-bottom: 24px;">
+            <h3 style="margin-bottom: 16px; font-size: 14px; font-weight: 600;">Native Creative Details</h3>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Headline *</label>
+                <input type="text" maxlength="50" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="Headline (max 50 chars)">
+                <div style="font-size: 11px; color: #5f6368; margin-top: 4px;">0/50 characters</div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Description *</label>
+                <textarea maxlength="150" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px; resize: vertical; min-height: 80px;" placeholder="Description (max 150 chars)"></textarea>
+                <div style="font-size: 11px; color: #5f6368; margin-top: 4px;">0/150 characters</div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Image (300x200 - 1200x628) *</label>
+                <input type="file" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 8px;">Click-Through URL *</label>
+                <input type="url" style="width: 100%; padding: 10px; border: 1px solid #dadce0; border-radius: 4px; font-size: 14px;" placeholder="https://example.com">
+            </div>
+        </div>
+        
+        <!-- ACTIONS -->
+        <div style="display: flex; gap: 12px; justify-content: flex-end;">
+            <button type="button" onclick="hideUploadCreativeModal()" class="btn btn-secondary">Cancel</button>
+            <button type="submit" class="btn btn-primary">Upload Creative</button>
+        </div>
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('input[name="creative-type"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+        document.getElementById('display-section').style.display = 'none';
+        document.getElementById('video-section').style.display = 'none';
+        document.getElementById('native-section').style.display = 'none';
+        document.getElementById(this.value + '-section').style.display = 'block';
+    });
+});
+
+function showUploadCreativeModal() {
+    document.getElementById('uploadCreativeModal').style.display = 'block';
+}
+
+function hideUploadCreativeModal() {
+    document.getElementById('uploadCreativeModal').style.display = 'none';
+}
+</script>
+{% endblock %}

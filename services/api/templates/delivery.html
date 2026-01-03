@@ -1,0 +1,327 @@
+{% extends "base.html" %}
+
+{% block title %}Delivery Management - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Delivery Management</h1>
+    <p class="subtitle">Campaign execution: inventory allocation, targeting, pacing, and creative delivery</p>
+</div>
+
+<!-- DELIVERY PIPELINE OVERVIEW -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px;">
+    <!-- ORDERS CARD -->
+    <a href="/console/orders" style="text-decoration: none; color: inherit;">
+        <div class="card" style="cursor: pointer; transition: all 0.2s; height: 100%;">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">📋</div>
+                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Orders</h3>
+            </div>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.6; text-align: center; margin-bottom: 12px;">
+                Commercial containers for campaigns
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
+                    <div style="font-weight: 600; color: #202124;">12</div>
+                    <div style="color: #5f6368;">Active</div>
+                </div>
+                <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
+                    <div style="font-weight: 600; color: #202124;">3</div>
+                    <div style="color: #5f6368;">Paused</div>
+                </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e8eaed;">
+                <div style="color: #1967d2; font-weight: 500; font-size: 12px;">Manage Orders →</div>
+            </div>
+        </div>
+    </a>
+
+    <!-- LINE ITEMS CARD -->
+    <a href="/console/line-items" style="text-decoration: none; color: inherit;">
+        <div class="card" style="cursor: pointer; transition: all 0.2s; height: 100%;">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">📝</div>
+                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Line Items</h3>
+            </div>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.6; text-align: center; margin-bottom: 12px;">
+                Delivery rules & targeting logic
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
+                    <div style="font-weight: 600; color: #202124;">47</div>
+                    <div style="color: #5f6368;">Total</div>
+                </div>
+                <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
+                    <div style="font-weight: 600; color: #202124;">38</div>
+                    <div style="color: #5f6368;">Delivering</div>
+                </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e8eaed;">
+                <div style="color: #1967d2; font-weight: 500; font-size: 12px;">Manage Line Items →</div>
+            </div>
+        </div>
+    </a>
+
+    <!-- CREATIVES CARD -->
+    <a href="/console/creatives" style="text-decoration: none; color: inherit;">
+        <div class="card" style="cursor: pointer; transition: all 0.2s; height: 100%;">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <div style="font-size: 48px; margin-bottom: 12px;">🎨</div>
+                <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600;">Creatives</h3>
+            </div>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.6; text-align: center; margin-bottom: 12px;">
+                Upload & manage ad assets
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
+                <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
+                    <div style="font-weight: 600; color: #202124;">156</div>
+                    <div style="color: #5f6368;">Assets</div>
+                </div>
+                <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
+                    <div style="font-weight: 600; color: #202124;">3</div>
+                    <div style="color: #5f6368;">Formats</div>
+                </div>
+            </div>
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e8eaed;">
+                <div style="color: #1967d2; font-weight: 500; font-size: 12px;">Manage Creatives →</div>
+            </div>
+        </div>
+    </a>
+</div>
+
+<!-- DELIVERY PIPELINE EXPLANATION -->
+<div class="card">
+    <h2>📦 The Delivery Pipeline</h2>
+    <p class="subtitle">How ads move from contracts to users</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 24px;">
+        <!-- ORDERS SECTION -->
+        <div>
+            <h3 style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #1967d2; color: #1967d2;">1️⃣ Orders</h3>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.8;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">📋 Purpose</div>
+                    Commercial container for campaigns (Sales & Ad Ops)
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">✨ Functions</div>
+                    <ul style="margin: 0; padding-left: 16px;">
+                        <li>Create/edit orders</li>
+                        <li>Link advertiser & salesperson</li>
+                        <li>Set dates & budgets</li>
+                        <li>Group line items</li>
+                        <li>Track delivery status</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- LINE ITEMS SECTION -->
+        <div>
+            <h3 style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #d33527; color: #d33527;">2️⃣ Line Items</h3>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.8;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">⚠️ Core of Delivery</div>
+                    Actual rules for how ads deliver
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">📊 Types</div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 12px;">
+                        <span style="background: #f1f3f4; padding: 4px 8px; border-radius: 3px;">Sponsorship (P16)</span>
+                        <span style="background: #f1f3f4; padding: 4px 8px; border-radius: 3px;">Standard (P12)</span>
+                        <span style="background: #f1f3f4; padding: 4px 8px; border-radius: 3px;">Network (P8)</span>
+                        <span style="background: #f1f3f4; padding: 4px 8px; border-radius: 3px;">Bulk (P4)</span>
+                        <span style="background: #f1f3f4; padding: 4px 8px; border-radius: 3px;">Price Priority</span>
+                        <span style="background: #f1f3f4; padding: 4px 8px; border-radius: 3px;">Programmatic</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TARGETING SECTION -->
+        <div>
+            <h3 style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #4285f4; color: #4285f4;">3️⃣ Targeting</h3>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.8;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">🎯 Decide Who Sees Ads</div>
+                    AND/OR logic with includes/excludes
+                </div>
+                <div style="margin-bottom: 0;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">🔗 Options</div>
+                    <ul style="margin: 0; padding-left: 16px;">
+                        <li>Inventory (ad units, placements)</li>
+                        <li>Geography (country, city)</li>
+                        <li>Device (mobile, desktop, OS)</li>
+                        <li>Audience (1st/3rd party)</li>
+                        <li>Custom key-values</li>
+                        <li>Time & bandwidth</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ADVANCED DELIVERY CONTROLS -->
+<div class="card" style="margin-top: 24px;">
+    <h2>⚙️ Advanced Delivery Controls</h2>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; margin-top: 24px;">
+        <!-- PACING -->
+        <div>
+            <h3 style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #fbbc04; color: #fbbc04;">⏱️ Pacing</h3>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.8;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">Control Delivery Speed</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div style="background: #f1f3f4; padding: 12px; border-radius: 4px; text-align: center;">
+                        <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">📊 Even</div>
+                        <div style="font-size: 11px;">Spread evenly over duration</div>
+                    </div>
+                    <div style="background: #f1f3f4; padding: 12px; border-radius: 4px; text-align: center;">
+                        <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">🚀 Frontloaded</div>
+                        <div style="font-size: 11px;">50% in first half</div>
+                    </div>
+                    <div style="background: #f1f3f4; padding: 12px; border-radius: 4px; text-align: center;">
+                        <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">⚡ ASAP</div>
+                        <div style="font-size: 11px;">Deliver as fast as possible</div>
+                    </div>
+                    <div style="background: #f1f3f4; padding: 12px; border-radius: 4px; text-align: center;">
+                        <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">🔧 Custom</div>
+                        <div style="font-size: 11px;">Daily/lifetime caps</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FORECASTING -->
+        <div>
+            <h3 style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #34a853; color: #34a853;">📈 Forecasting</h3>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.8;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">Predict Delivery Capability</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 8px;">
+                    <div style="background: #e6f4ea; padding: 10px; border-left: 3px solid #34a853; border-radius: 3px;">
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">✅ Availability</div>
+                        <div style="font-size: 11px; color: #5f6368;">Can you deliver these impressions?</div>
+                    </div>
+                    <div style="background: #fff3e0; padding: 10px; border-left: 3px solid #fbbc04; border-radius: 3px;">
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">⚠️ Conflicts</div>
+                        <div style="font-size: 11px; color: #5f6368;">Other line items competing for inventory</div>
+                    </div>
+                    <div style="background: #ffebee; padding: 10px; border-left: 3px solid #d33527; border-radius: 3px;">
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">❌ Overbooking</div>
+                        <div style="font-size: 11px; color: #5f6368;">Inventory exceeded alerts</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FREQUENCY CAPPING -->
+        <div>
+            <h3 style="margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid #ea4335; color: #ea4335;">🔄 Frequency Cap</h3>
+            <div style="font-size: 13px; color: #5f6368; line-height: 1.8;">
+                <div style="margin-bottom: 12px;">
+                    <div style="font-weight: 600; color: #202124; margin-bottom: 4px;">Limit User Exposure</div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr; gap: 8px;">
+                    <div style="background: #f1f3f4; padding: 10px; border-radius: 3px;">
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">👤 Per-User</div>
+                        <div style="font-size: 11px;">Max impressions per user</div>
+                    </div>
+                    <div style="background: #f1f3f4; padding: 10px; border-radius: 3px;">
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">📅 Time-Based</div>
+                        <div style="font-size: 11px;">Per day/week/month limits</div>
+                    </div>
+                    <div style="background: #f1f3f4; padding: 10px; border-radius: 3px;">
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">📱 Cross-Device</div>
+                        <div style="font-size: 11px;">Cap across all user devices</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CREATIVE MANAGEMENT -->
+<div class="card" style="margin-top: 24px;">
+    <h2>🎨 Creative Management</h2>
+    <p class="subtitle" style="margin-bottom: 16px;">What actually renders on the page</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <div style="font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 14px;">📤 Upload Creatives</div>
+            <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px; line-height: 1.8;">
+                <li>Display ads (JPG, PNG, GIF, WebP)</li>
+                <li>Video (MP4, WebM, FLV)</li>
+                <li>Native assets (headline, image, desc)</li>
+            </ul>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <div style="font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 14px;">🔄 Creative Rotation</div>
+            <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px; line-height: 1.8;">
+                <li>Even rotation (equal impressions)</li>
+                <li>Optimized (by CTR/CPA)</li>
+                <li>Sequential (show in order)</li>
+            </ul>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <div style="font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 14px;">⚡ Advanced Features</div>
+            <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px; line-height: 1.8;">
+                <li>Creative-level targeting</li>
+                <li>3rd-party tags & macros</li>
+                <li>VAST/VPAID validation</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- DELIVERY DASHBOARD -->
+<div class="card" style="margin-top: 24px;">
+    <h2>📊 Current Delivery Status</h2>
+    <p class="subtitle">Real-time campaign performance</p>
+    
+    <div style="margin-top: 16px;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #dadce0;">
+                    <th style="text-align: left; padding: 12px 0; font-weight: 600; color: #202124;">Order / Line Item</th>
+                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">Type</th>
+                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">Booked</th>
+                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">Delivered</th>
+                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">% Complete</th>
+                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>Brand Co - Q1 Campaign</strong></td>
+                    <td style="text-align: right; color: #5f6368;">Sponsorship</td>
+                    <td style="text-align: right; color: #5f6368;">10M</td>
+                    <td style="text-align: right; color: #5f6368;">9.2M</td>
+                    <td style="text-align: right; color: #5f6368;">92%</td>
+                    <td style="text-align: center;"><span style="background: #e6f4ea; color: #137333; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">On Track</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>Tech Inc - Display Campaign</strong></td>
+                    <td style="text-align: right; color: #5f6368;">Standard</td>
+                    <td style="text-align: right; color: #5f6368;">5M</td>
+                    <td style="text-align: right; color: #5f6368;">3.8M</td>
+                    <td style="text-align: right; color: #5f6368;">76%</td>
+                    <td style="text-align: center;"><span style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">Lagging</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #e8eaed;">
+                    <td style="padding: 12px 0; color: #202124;"><strong>Startup Labs - Video Campaign</strong></td>
+                    <td style="text-align: right; color: #5f6368;">Programmatic</td>
+                    <td style="text-align: right; color: #5f6368;">2M</td>
+                    <td style="text-align: right; color: #5f6368;">450K</td>
+                    <td style="text-align: right; color: #5f6368;">22%</td>
+                    <td style="text-align: center;"><span style="background: #ffebee; color: #c5221f; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">Behind</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

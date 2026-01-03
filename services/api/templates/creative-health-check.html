@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block title %}Creative Health Check - Ad Manager 360{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>🏥 Creative Health Check</h1>
+    <p class="subtitle">Quality assurance and approval workflow for ad creatives</p>
+</div>
+
+<!-- CREATIVE SELECTION -->
+<div class="card" style="margin-bottom: 24px;">
+    <h2>Select Creative to Audit</h2>
+    <p class="subtitle">Choose a creative to run full QA checks</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 20px;">
+        <!-- Creative 1 -->
+        <div style="border: 2px solid #dadce0; border-radius: 8px; padding: 16px; cursor: pointer;" onclick="selectCreative('CR-5742', 'Video', 'Brand Co', 'approved')" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); height: 120px; border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;">
+                🎬
+            </div>
+            <div style="font-weight: 600; color: #202124; font-size: 13px; margin-bottom: 4px;">CR-5742 - Brand Campaign Video</div>
+            <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Brand Co | Video | 30s</div>
+            <div style="display: flex; gap: 8px;">
+                <span style="background: #e6f4ea; color: #137333; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500;">✅ Approved</span>
+                <span style="background: #f1f3f4; color: #5f6368; padding: 3px 8px; border-radius: 3px; font-size: 10px;">2 days old</span>
+            </div>
+        </div>
+
+        <!-- Creative 2 - Needs Review -->
+        <div style="border: 2px solid #fbbc04; border-radius: 8px; padding: 16px; cursor: pointer;" onclick="selectCreative('CR-5743', 'Display', 'Tech Inc', 'pending')" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); height: 120px; border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;">
+                🖼️
+            </div>
+            <div style="font-weight: 600; color: #202124; font-size: 13px; margin-bottom: 4px;">CR-5743 - Tech Showcase Banner</div>
+            <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Tech Inc | Display | 728x90</div>
+            <div style="display: flex; gap: 8px;">
+                <span style="background: #fff3e0; color: #f57c00; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500;">⏳ Pending</span>
+                <span style="background: #f1f3f4; color: #5f6368; padding: 3px 8px; border-radius: 3px; font-size: 10px;">Just uploaded</span>
+            </div>
+        </div>
+
+        <!-- Creative 3 - Issues -->
+        <div style="border: 2px solid #d33527; border-radius: 8px; padding: 16px; cursor: pointer;" onclick="selectCreative('CR-5744', 'Native', 'Finance Inc', 'rejected')" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+            <div style="background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%); height: 120px; border-radius: 6px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 24px;">
+                📱
+            </div>
+            <div style="font-weight: 600; color: #202124; font-size: 13px; margin-bottom: 4px;">CR-5744 - Finance App Promo</div>
+            <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Finance Inc | Native | Mobile</div>
+            <div style="display: flex; gap: 8px;">
+                <span style="background: #ffebee; color: #d33527; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 500;">🔴 Issues</span>
+                <span style="background: #f1f3f4; color: #5f6368; padding: 3px 8px; border-radius: 3px; font-size: 10px;">Resubmit needed</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- HEALTH CHECK REPORT -->
+<div class="card" id="healthCheckReport" style="display: none;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+        <div>
+            <h2 id="creativeName">Creative Health Check Report</h2>
+            <p class="subtitle" id="creativeDetails">Select a creative above to view QA report</p>
+        </div>
+        <div style="display: flex; gap: 8px;">
+            <button style="padding: 8px 16px; background: #e6f4ea; color: #137333; border: 1px solid #137333; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">✅ Approve</button>
+            <button style="padding: 8px 16px; background: #fff3e0; color: #f57c00; border: 1px solid #f57c00; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">🔄 Send for Review</button>
+            <button style="padding: 8px 16px; background: #ffebee; color: #d33527; border: 1px solid #d33527; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">❌ Reject</button>
+        </div>
+    </div>
+
+    <!-- TECHNICAL CHECKS -->
+    <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e8eaed;">
+        <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600;">🔧 Technical Validation</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+            <!-- File Size Check -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">File Size</div>
+                        <div style="font-size: 11px; color: #5f6368;">128 KB / 150 KB limit</div>
+                    </div>
+                </div>
+                <div style="height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
+                    <div style="height: 100%; background: #34a853; width: 85%;"></div>
+                </div>
+            </div>
+
+            <!-- Image Dimensions -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Dimensions</div>
+                        <div style="font-size: 11px; color: #5f6368;">728×90 (matches slot)</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Standard IAB size</div>
+            </div>
+
+            <!-- Load Time -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Load Time</div>
+                        <div style="font-size: 11px; color: #5f6368;">247ms (< 500ms)</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Fast loading creative</div>
+            </div>
+
+            <!-- Format Check -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">File Format</div>
+                        <div style="font-size: 11px; color: #5f6368;">JPG (supported)</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Format: JPG, PNG, GIF, MP4</div>
+            </div>
+
+            <!-- Brand Safety Check -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Brand Safety</div>
+                        <div style="font-size: 11px; color: #5f6368;">No policy violations</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Checked: Violence, Explicit, Ads</div>
+            </div>
+
+            <!-- Click URL -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Click URL</div>
+                        <div style="font-size: 11px; color: #5f6368;">Valid & accessible</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">HTTP 200, no redirects</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CREATIVE PREVIEW -->
+    <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e8eaed;">
+        <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600;">👁️ Creative Preview</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px;">
+            <!-- Desktop Preview -->
+            <div>
+                <div style="font-weight: 600; color: #202124; font-size: 12px; margin-bottom: 12px;">🖥️ Desktop View (1920×1080)</div>
+                <div style="border: 1px solid #dadce0; border-radius: 6px; padding: 12px; background: #f9f9f9;">
+                    <div style="background: #fff; width: 100%; aspect-ratio: 4/3; border: 1px solid #dadce0; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 728 90'%3E%3Crect fill='%234285f4' width='728' height='90'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='24' fill='white'%3EBrand Campaign%3C/text%3E%3C/svg%3E" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Preview -->
+            <div>
+                <div style="font-weight: 600; color: #202124; font-size: 12px; margin-bottom: 12px;">📱 Mobile View (375×812)</div>
+                <div style="border: 1px solid #dadce0; border-radius: 6px; padding: 12px; background: #f9f9f9;">
+                    <div style="background: #fff; width: 100%; max-width: 375px; aspect-ratio: 9/16; border: 1px solid #dadce0; border-radius: 4px; display: flex; align-items: center; justify-content: center; overflow: hidden; margin: 0 auto;">
+                        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 375 812'%3E%3Crect fill='%234285f4' width='375' height='812'/%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-size='28' fill='white'%3EBrand Campaign%3C/text%3E%3C/svg%3E" style="width: 100%; height: auto;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPLIANCE CHECKS -->
+    <div style="margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e8eaed;">
+        <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600;">⚖️ Compliance & Approval</h3>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px;">
+            <!-- Advertiser Brand Safety -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Brand Safety Review</div>
+                        <div style="font-size: 11px; color: #5f6368;">Approved by Brand Co</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Advertiser confirmed content appropriateness</div>
+            </div>
+
+            <!-- Legal Review -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Legal Compliance</div>
+                        <div style="font-size: 11px; color: #5f6368;">No trademark/copyright issues</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Checked: IP rights, claims, disclaimers</div>
+            </div>
+
+            <!-- Age Restrictions -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Age Restrictions</div>
+                        <div style="font-size: 11px; color: #5f6368;">18+ content flagged & restricted</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">General audience friendly</div>
+            </div>
+
+            <!-- Expiration -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Expiration</div>
+                        <div style="font-size: 11px; color: #5f6368;">Expires in 45 days</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">Plenty of time before serving stops</div>
+            </div>
+
+            <!-- Trafficking Status -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #f1f3f4; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #202124; font-size: 12px;">Trafficking Status</div>
+                        <div style="font-size: 11px; color: #5f6368;">Ready to serve</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #5f6368;">All line items ready to activate</div>
+            </div>
+
+            <!-- Final Approval -->
+            <div style="border-left: 4px solid #34a853; padding: 12px; background: #e6f4ea; border-radius: 4px;">
+                <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                    <div style="font-size: 18px;">✅</div>
+                    <div>
+                        <div style="font-weight: 600; color: #137333; font-size: 12px;">Overall Status: APPROVED</div>
+                        <div style="font-size: 11px; color: #5f6368;">All checks passed - safe to serve</div>
+                    </div>
+                </div>
+                <div style="font-size: 10px; color: #137333; font-weight: 600;">Approved on Jan 3, 2026 by ops@admanager.local</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPROVAL HISTORY -->
+    <div>
+        <h3 style="margin: 0 0 16px 0; font-size: 14px; font-weight: 600;">📋 Approval History</h3>
+        
+        <div style="background: #f1f3f4; border-radius: 8px; padding: 0;">
+            <div style="padding: 12px; border-bottom: 1px solid #dadce0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="font-weight: 600; color: #202124; font-size: 12px;">✅ Approved</div>
+                    <div style="font-size: 11px; color: #5f6368;">Jan 3, 2026 - 2:30 PM</div>
+                </div>
+                <div style="font-size: 11px; color: #5f6368;">Approved by: ops@admanager.local</div>
+            </div>
+            <div style="padding: 12px; border-bottom: 1px solid #dadce0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="font-weight: 600; color: #202124; font-size: 12px;">🔄 Sent for Review</div>
+                    <div style="font-size: 11px; color: #5f6368;">Jan 3, 2026 - 1:15 PM</div>
+                </div>
+                <div style="font-size: 11px; color: #5f6368;">Requested by: Brand Co</div>
+            </div>
+            <div style="padding: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                    <div style="font-weight: 600; color: #202124; font-size: 12px;">📤 Uploaded</div>
+                    <div style="font-size: 11px; color: #5f6368;">Jan 3, 2026 - 1:00 PM</div>
+                </div>
+                <div style="font-size: 11px; color: #5f6368;">Uploaded by: Brand Co via API</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function selectCreative(id, type, advertiser, status) {
+    document.getElementById('healthCheckReport').style.display = 'block';
+    document.getElementById('creativeName').textContent = type + ' Creative Health Check: ' + id;
+    document.getElementById('creativeDetails').textContent = advertiser + ' | ' + type + ' | Status: ' + status.toUpperCase();
+    window.scrollTo({ top: document.getElementById('healthCheckReport').offsetTop - 100, behavior: 'smooth' });
+}
+</script>
+{% endblock %}
