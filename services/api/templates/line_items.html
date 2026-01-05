@@ -5,51 +5,51 @@
 {% block content %}
 <div class="page-header">
     <h1>Line Items</h1>
-    <p class="subtitle">Create and manage line items for Order #ORD-2024-001</p>
+    <p class="subtitle">Delivery rules, targeting logic, and performance metrics</p>
     <div class="actions">
         <button class="btn btn-primary" onclick="showCreateLineItemModal()">+ New Line Item</button>
-        <button class="btn btn-secondary">Clone Line Item</button>
     </div>
 </div>
 
 <!-- LINE ITEMS TABLE -->
 <div class="card">
     <div class="card-header">
-        <h2>Line Items</h2>
+        <h2>Active Line Items ({{ line_items|length }})</h2>
     </div>
     
     <div class="table-container">
         <table>
             <thead>
                 <tr>
-                    <th>Line Item</th>
+                    <th>Line Item Name</th>
                     <th>Type</th>
                     <th>Status</th>
-                    <th>Impressions</th>
-                    <th>Rate Type</th>
-                    <th>Priority</th>
+                    <th>Delivered</th>
+                    <th>CPM</th>
+                    <th>CTR</th>
                     <th>Dates</th>
-                    <th>Actions</th>
+                    <th>Details</th>
                 </tr>
             </thead>
             <tbody>
-                {% for item in line_items %}
-                <tr>
-                    <td><strong>{{ item.order_name }}</strong></td>
-                    <td><span class="pill">{{ item.order_type }}</span></td>
-                    <td>
-                        {% set status = (item.status or '').upper() %}
-                        {% if status == 'ACTIVE' %}<span class="badge badge-success">Active</span>{% elif status == 'PAUSED' %}<span class="badge badge-warning">Paused</span>{% elif status == 'COMPLETED' %}<span class="badge badge-info">Completed</span>{% else %}<span class="badge badge-neutral">{{ status }}</span>{% endif %}
-                    </td>
-                    <td>{{ "{:,}".format(item.delivered or 0) }}</td>
-                    <td>CPM</td>
-                    <td>{{ item.pacing_rate or 0 }}%</td>
-                    <td>{{ item.start_date }} - {{ item.end_date }}</td>
-                    <td><span class="muted">CTR {{ item.ctr }}% · CPM ${{ item.cpm }}</span></td>
-                </tr>
+                {% if line_items %}
+                    {% for item in line_items[:20] %}
+                    <tr>
+                        <td><strong>{{ item.order_name }}</strong></td>
+                        <td><span class="pill">{{ item.order_type }}</span></td>
+                        <td>
+                            {% if item.status == 'ACTIVE' %}<span class="badge badge-success">Active</span>{% elif item.status == 'PAUSED' %}<span class="badge badge-warning">Paused</span>{% else %}<span class="badge badge-neutral">{{ item.status }}</span>{% endif %}
+                        </td>
+                        <td>{{ "{:,}".format(item.delivered|int) }}</td>
+                        <td>${{ item.cpm }}</td>
+                        <td>{{ item.ctr }}%</td>
+                        <td>{{ item.start_date }} to {{ item.end_date }}</td>
+                        <td><span class="muted">{{ item.advertiser_name }}</span></td>
+                    </tr>
+                    {% endfor %}
                 {% else %}
-                <tr><td colspan="8" class="muted">No line items found.</td></tr>
-                {% endfor %}
+                <tr><td colspan="8" style="text-align: center; padding: 20px; color: #5f6368;">No line items found</td></tr>
+                {% endif %}
             </tbody>
         </table>
     </div>
@@ -485,6 +485,152 @@ function toggleCrossDeviceCap() {
 function toggleHouseholdCap() {
     const checkbox = document.getElementById('householdCap');
     document.getElementById('householdCapFields').style.display = checkbox.checked ? 'block' : 'none';
+}
+</script>
+
+<!-- CREATE LINE ITEM MODAL -->
+<div id="createLineItemModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 8px; padding: 24px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Create New Line Item</h2>
+            <button onclick="hideCreateLineItemModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">✕</button>
+        </div>
+        
+        <form id="createLineItemForm" onsubmit="handleCreateLineItem(event)">
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Line Item Name</label>
+                <input type="text" name="order_name" placeholder="e.g., Homepage Premium" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Campaign ID</label>
+                <input type="number" name="campaign_id" placeholder="Campaign ID" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Publisher ID</label>
+                <input type="number" name="publisher_id" placeholder="Publisher ID" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Line Item Type</label>
+                    <select name="order_type" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                        <option>GUARANTEED</option>
+                        <option>PREFERRED</option>
+                        <option>STANDARD</option>
+                        <option>PROGRAMMATIC</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Status</label>
+                    <select name="status" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                        <option>ACTIVE</option>
+                        <option>PAUSED</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Start Date</label>
+                    <input type="date" name="start_date" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">End Date</label>
+                    <input type="date" name="end_date" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Daily Budget</label>
+                    <input type="number" name="daily_budget" placeholder="0" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Lifetime Budget</label>
+                    <input type="number" name="lifetime_budget" placeholder="0" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Daily Impression Goal</label>
+                    <input type="number" name="daily_impression_goal" placeholder="0" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Lifetime Impression Goal</label>
+                    <input type="number" name="lifetime_impression_goal" placeholder="0" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="hideCreateLineItemModal()" class="btn btn-secondary" style="padding: 8px 16px;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Create Line Item</button>
+            </div>
+        </form>
+        <div id="createLineItemMessage" style="margin-top: 12px; padding: 12px; border-radius: 4px; display: none;"></div>
+    </div>
+</div>
+
+<script>
+function showCreateLineItemModal() {
+    document.getElementById('createLineItemModal').style.display = 'flex';
+}
+
+function hideCreateLineItemModal() {
+    document.getElementById('createLineItemModal').style.display = 'none';
+    document.getElementById('createLineItemForm').reset();
+    document.getElementById('createLineItemMessage').style.display = 'none';
+}
+
+async function handleCreateLineItem(event) {
+    event.preventDefault();
+    const form = event.target;
+    const msgDiv = document.getElementById('createLineItemMessage');
+    
+    try {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        
+        // Convert string values to appropriate types
+        data.campaign_id = parseInt(data.campaign_id);
+        data.publisher_id = parseInt(data.publisher_id);
+        data.daily_budget = parseFloat(data.daily_budget || 0);
+        data.lifetime_budget = parseFloat(data.lifetime_budget || 0);
+        data.daily_impression_goal = parseInt(data.daily_impression_goal || 0);
+        data.lifetime_impression_goal = parseInt(data.lifetime_impression_goal || 0);
+        data.pacing_rate = 100;
+        
+        const response = await fetch('/api/line-items/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            msgDiv.style.background = '#e6f4ea';
+            msgDiv.style.color = '#137333';
+            msgDiv.textContent = '✓ ' + result.message;
+            msgDiv.style.display = 'block';
+            setTimeout(() => {
+                hideCreateLineItemModal();
+                location.reload();
+            }, 1500);
+        } else {
+            msgDiv.style.background = '#ffebee';
+            msgDiv.style.color = '#c5221f';
+            msgDiv.textContent = '✕ ' + (result.error || 'Error creating line item');
+            msgDiv.style.display = 'block';
+        }
+    } catch (error) {
+        msgDiv.style.background = '#ffebee';
+        msgDiv.style.color = '#c5221f';
+        msgDiv.textContent = '✕ Error: ' + error.message;
+        msgDiv.style.display = 'block';
+    }
 }
 </script>
 {% endblock %}

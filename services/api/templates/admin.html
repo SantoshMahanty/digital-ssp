@@ -1,0 +1,1040 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Settings - Digital-SSP{% endblock %}
+
+{% block content %}
+<style>
+    .admin-container {
+        width: 100%;
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+        font-size: 28px;
+        font-weight: 400;
+        color: #202124;
+        margin-bottom: 8px;
+    }
+
+    .page-header .subtitle {
+        font-size: 14px;
+        color: #5f6368;
+    }
+    
+    .admin-tabs {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        margin-bottom: 32px;
+    }
+    
+    .admin-tab-btn {
+        padding: 12px 10px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 11px;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    
+    .admin-tab-btn:hover {
+        border-color: #2196F3;
+        background: #e8f4fd;
+    }
+    
+    .admin-tab-btn.active {
+        border-color: #2196F3;
+        background: #2196F3;
+        color: white;
+    }
+    
+    .admin-sections-wrapper {
+        width: 100%;
+        min-height: 500px;
+    }
+
+    .admin-section {
+        display: none;
+    }
+    
+    .admin-section.active {
+        display: block;
+    }
+    
+    .setting-group {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+    
+    .setting-group h3 {
+        margin: 0 0 20px 0;
+        color: #202124;
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .setting-item {
+        display: grid;
+        grid-template-columns: 250px 1fr;
+        gap: 20px;
+        padding: 16px;
+        border-bottom: 1px solid #f0f0f0;
+        align-items: center;
+    }
+    
+    .setting-item:last-child {
+        border-bottom: none;
+    }
+    
+    .setting-label {
+        font-weight: 600;
+        color: #202124;
+        font-size: 14px;
+    }
+    
+    .setting-description {
+        font-size: 12px;
+        color: #5f6368;
+        margin-top: 4px;
+    }
+    
+    .setting-input {
+        padding: 10px 14px;
+        border: 1px solid #dadce0;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+    
+    .toggle-switch {
+        position: relative;
+        width: 50px;
+        height: 28px;
+        background: #ccc;
+        border-radius: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .toggle-switch.active {
+        background: #2196F3;
+    }
+    
+    .toggle-slider {
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        width: 24px;
+        height: 24px;
+        background: white;
+        border-radius: 50%;
+        transition: all 0.2s;
+    }
+    
+    .toggle-switch.active .toggle-slider {
+        left: 24px;
+    }
+    
+    .pill-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    
+    .pill {
+        background: #e8f4fd;
+        border: 1px solid #2196F3;
+        color: #1976D2;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .pill:hover {
+        background: #2196F3;
+        color: white;
+    }
+    
+    .pill.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: #2196F3;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #1976D2;
+    }
+
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #202124;
+    }
+
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .btn-outline {
+        background: white;
+        border: 1px solid #dadce0;
+        color: #202124;
+    }
+
+    .btn-outline:hover {
+        background: #f8f9fa;
+        border-color: #2196F3;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 4px 10px;
+        border-radius: 12px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .badge-success {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    table th {
+        text-align: left;
+        padding: 12px;
+        color: #5f6368;
+        font-size: 12px;
+        font-weight: 600;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    table td {
+        padding: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+    }
+</style>
+
+<div class="page-header">
+    <h1>⚙️ Admin Settings</h1>
+    <p class="subtitle">Network-wide configuration, access control, and compliance</p>
+</div>
+
+<div class="admin-tabs">
+        <button class="admin-tab-btn active" onclick="switchAdminTab(event, 'network')">1️⃣ Network Settings</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'users')">2️⃣ Users & Roles</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'companies')">3️⃣ Companies</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'labels')">4️⃣ Labels</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'rules')">5️⃣ Ad Rules</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'privacy')">6️⃣ Privacy & Consent</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'targeting')">7️⃣ Targeting Keys</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'integrations')">8️⃣ Integrations</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'yield')">9️⃣ Yield Controls</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'creative')">🔟 Creative Controls</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'video')">1️⃣1️⃣ Video & CTV</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'alerts')">1️⃣2️⃣ Notifications</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'reporting')">1️⃣3️⃣ Reporting</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'api')">1️⃣4️⃣ API & Automation</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab(event, 'billing')">1️⃣5️⃣ Billing & Finance</button>
+    </div>
+
+    <div class="admin-sections-wrapper">
+        <!-- 1️⃣ Network Settings -->
+        <div id="network" class="admin-section active">
+    <div class="setting-group">
+        <h3>📋 Network Details</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Network Name</div>
+                <div class="setting-description">Your GAM network identifier</div>
+            </div>
+            <input type="text" class="setting-input" placeholder="Digital-SSP Network" value="Digital-SSP Network" readonly>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Network Code</div>
+                <div class="setting-description">Unique network identifier</div>
+            </div>
+            <input type="text" class="setting-input" placeholder="12345" value="12345" readonly>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Currency</div>
+                <div class="setting-description">Default currency for all orders</div>
+            </div>
+            <select class="setting-input">
+                <option selected>USD ($)</option>
+                <option>EUR (€)</option>
+                <option>GBP (£)</option>
+                <option>JPY (¥)</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Time Zone</div>
+                <div class="setting-description">For reporting and delivery</div>
+            </div>
+            <select class="setting-input">
+                <option selected>America/New_York (EST)</option>
+                <option>America/Chicago (CST)</option>
+                <option>America/Los_Angeles (PST)</option>
+                <option>Europe/London (GMT)</option>
+                <option>Asia/Tokyo (JST)</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Default Language</div>
+                <div class="setting-description">UI language for new users</div>
+            </div>
+            <select class="setting-input">
+                <option selected>English</option>
+                <option>Spanish</option>
+                <option>French</option>
+                <option>German</option>
+                <option>Japanese</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🔒 Inventory Defaults</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">SSL Enforcement</div>
+                <div class="setting-description">Require HTTPS for all ad serving</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Default Ad Sizes</div>
+                <div class="setting-description">Most common ad formats</div>
+            </div>
+            <div class="pill-group">
+                <div class="pill">728x90</div>
+                <div class="pill">300x250</div>
+                <div class="pill">160x600</div>
+                <div class="pill">300x600</div>
+                <div class="pill">970x250</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 2️⃣ Users & Roles -->
+<div id="users" class="admin-section">
+    <div class="setting-group">
+        <h3>👥 User Management</h3>
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-primary" style="margin-bottom: 16px;">+ Invite User</button>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #e0e0e0;">
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Email</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Role</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Status</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Last Active</th>
+                    <th style="text-align: center; padding: 12px; color: #5f6368;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px;">admin@example.com</td>
+                    <td style="padding: 12px;"><span class="pill" style="background: #fff3cd; border-color: #ffc107; color: #856404;">Admin</span></td>
+                    <td style="padding: 12px;"><span class="badge badge-success">Active</span></td>
+                    <td style="padding: 12px; color: #5f6368;">Today 2:30 PM</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button class="btn btn-sm btn-outline">Edit</button>
+                    </td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px;">trafficker@example.com</td>
+                    <td style="padding: 12px;"><span class="pill">Trafficker</span></td>
+                    <td style="padding: 12px;"><span class="badge badge-success">Active</span></td>
+                    <td style="padding: 12px; color: #5f6368;">Jan 4, 4:15 PM</td>
+                    <td style="padding: 12px; text-align: center;">
+                        <button class="btn btn-sm btn-outline">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🔑 Predefined Roles</h3>
+        <div class="pill-group">
+            <div class="pill" style="background: #fff3cd; border-color: #ffc107; color: #856404;">👑 Admin - Full access</div>
+            <div class="pill">📊 Sales - Orders & reports only</div>
+            <div class="pill">📋 Trafficker - Order setup & delivery</div>
+            <div class="pill">👁️ Read-only - View only</div>
+        </div>
+    </div>
+</div>
+
+<!-- 3️⃣ Companies -->
+<div id="companies" class="admin-section">
+    <div class="setting-group">
+        <h3>🏢 Company Management</h3>
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-primary" style="margin-bottom: 16px;">+ Add Company</button>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #e0e0e0;">
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Company Name</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Type</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Contact</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px; font-weight: 600;">Acme Inc</td>
+                    <td style="padding: 12px;"><span class="pill">Advertiser</span></td>
+                    <td style="padding: 12px; color: #5f6368;">sales@acme.com</td>
+                    <td style="padding: 12px;"><span class="badge badge-success">Active</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px; font-weight: 600;">Tech Agency Group</td>
+                    <td style="padding: 12px;"><span class="pill" style="background: #e8f5e9; border-color: #4caf50; color: #2e7d32;">Agency</span></td>
+                    <td style="padding: 12px; color: #5f6368;">contact@techagency.com</td>
+                    <td style="padding: 12px;"><span class="badge badge-success">Active</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🏷️ Company Types</h3>
+        <div class="pill-group">
+            <div class="pill">Advertisers</div>
+            <div class="pill">Agencies</div>
+            <div class="pill">Networks</div>
+            <div class="pill">Buyers</div>
+            <div class="pill">Third-party Vendors</div>
+        </div>
+    </div>
+</div>
+
+<!-- 4️⃣ Labels -->
+<div id="labels" class="admin-section">
+    <div class="setting-group">
+        <h3>🏷️ Label Management</h3>
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-primary" style="margin-bottom: 16px;">+ Create Label</button>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+            <p style="margin: 0; font-weight: 600; color: #202124; margin-bottom: 8px;">💡 Competitive Exclusion Labels</p>
+            <p style="margin: 0; color: #5f6368; font-size: 13px;">Prevent competitor ads from showing together on the same page</p>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+            <p style="margin: 0; font-weight: 600; color: #202124; margin-bottom: 8px;">🚫 Ad Exclusion Labels</p>
+            <p style="margin: 0; color: #5f6368; font-size: 13px;">Block ads from appearing on sensitive or protected pages</p>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #202124; margin-bottom: 8px;">🛡️ Inventory Protection Labels</p>
+            <p style="margin: 0; color: #5f6368; font-size: 13px;">Mark premium inventory for brand safety and quality control</p>
+        </div>
+    </div>
+</div>
+
+<!-- 5️⃣ Global Ad Rules & Protections -->
+<div id="rules" class="admin-section">
+    <div class="setting-group">
+        <h3>🚫 Competitive Exclusions</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Block Same Advertiser</div>
+                <div class="setting-description">Prevent same advertiser on same page</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Block Same Brand</div>
+                <div class="setting-description">Prevent same brand family on same page</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>📋 Ad Blocking Rules</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Category Blocks</div>
+                <div class="setting-description">Blocked content categories</div>
+            </div>
+            <div class="pill-group">
+                <div class="pill">Adult Content</div>
+                <div class="pill">Weapons</div>
+                <div class="pill">Profanity</div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Domain Blocking</div>
+                <div class="setting-description">Blocked advertiser domains</div>
+            </div>
+            <input type="text" class="setting-input" placeholder="Add domains to block...">
+        </div>
+    </div>
+</div>
+
+<!-- 6️⃣ Privacy & Consent -->
+<div id="privacy" class="admin-section">
+    <div class="setting-group">
+        <h3>🔐 GDPR & Privacy</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">GDPR Enforcement</div>
+                <div class="setting-description">Restrict personalized ads in EU</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">CCPA / US Privacy</div>
+                <div class="setting-description">California Consumer Privacy Act</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Limited Ads Mode</div>
+                <div class="setting-description">Reduce targeting for opted-out users</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>👶 Child-Directed Treatment</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">COPPA Compliance</div>
+                <div class="setting-description">Children's Online Privacy Protection</div>
+            </div>
+            <div class="toggle-switch" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 7️⃣ Data Management & Key-Values -->
+<div id="targeting" class="admin-section">
+    <div class="setting-group">
+        <h3>🔑 Custom Targeting Keys</h3>
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-primary" style="margin-bottom: 16px;">+ Create Key</button>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #e0e0e0;">
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Key Name</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Type</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Values Count</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Reporting Enabled</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px; font-weight: 600;">region</td>
+                    <td style="padding: 12px;"><span class="pill">String</span></td>
+                    <td style="padding: 12px; color: #5f6368;">50 values</td>
+                    <td style="padding: 12px;"><span class="badge badge-success">Yes</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px; font-weight: 600;">purchase_value</td>
+                    <td style="padding: 12px;"><span class="pill" style="background: #e3f2fd; border-color: #2196F3; color: #1976D2;">Number</span></td>
+                    <td style="padding: 12px; color: #5f6368;">Unlimited</td>
+                    <td style="padding: 12px;"><span class="badge badge-success">Yes</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 8️⃣ Integrations -->
+<div id="integrations" class="admin-section">
+    <div class="setting-group">
+        <h3>🔗 Linked Products</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Google Ad Exchange</div>
+                <div class="setting-description">Programmatic demand integration</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Google Analytics</div>
+                <div class="setting-description">Audience data synchronization</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">DV360 (Display & Video 360)</div>
+                <div class="setting-description">Buyer platform integration</div>
+            </div>
+            <div class="toggle-switch" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🤝 Third-Party Partners</h3>
+        <div class="pill-group">
+            <div class="pill">Open Bidding SSPs</div>
+            <div class="pill">Measurement Vendors</div>
+            <div class="pill">Viewability Partners</div>
+            <div class="pill">Brand Safety Tools</div>
+        </div>
+    </div>
+</div>
+
+<!-- 9️⃣ Programmatic & Yield -->
+<div id="yield" class="admin-section">
+    <div class="setting-group">
+        <h3>💰 Unified Pricing Rules</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Global Floor Price</div>
+                <div class="setting-description">Minimum CPM across all inventory</div>
+            </div>
+            <input type="number" class="setting-input" placeholder="$5.00" value="5.00" step="0.01">
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Enable Geo-Based Pricing</div>
+                <div class="setting-description">Different prices by region</div>
+            </div>
+            <div class="toggle-switch" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Mobile CPM Adjustment</div>
+                <div class="setting-description">Mobile multiplier vs desktop</div>
+            </div>
+            <select class="setting-input">
+                <option>0.5x (50% of desktop)</option>
+                <option selected>0.8x (80% of desktop)</option>
+                <option>1.0x (Same as desktop)</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🔄 Open Bidding</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Enable Open Bidding</div>
+                <div class="setting-description">Multi-SSP auctions</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Auction Timeout (ms)</div>
+                <div class="setting-description">Time to wait for bids</div>
+            </div>
+            <input type="number" class="setting-input" placeholder="300" value="300">
+        </div>
+    </div>
+</div>
+
+<!-- 🔟 Creative Controls -->
+<div id="creative" class="admin-section">
+    <div class="setting-group">
+        <h3>✅ Creative Review & Approval</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Require Manual Review</div>
+                <div class="setting-description">All creatives reviewed by admin</div>
+            </div>
+            <div class="toggle-switch" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Auto-Approval for Pre-Approved Creatives</div>
+                <div class="setting-description">Speed up workflow</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🎨 Ad Quality Standards</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">SSL/HTTPS Required</div>
+                <div class="setting-description">Force secure ad serving</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Max File Size</div>
+                <div class="setting-description">Creative file size limit</div>
+            </div>
+            <select class="setting-input">
+                <option>1 MB</option>
+                <option selected>2 MB</option>
+                <option>5 MB</option>
+                <option>10 MB</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">SafeFrame Enforcement</div>
+                <div class="setting-description">Sandbox creatives for safety</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 1️⃣1️⃣ Video & CTV -->
+<div id="video" class="admin-section">
+    <div class="setting-group">
+        <h3>📹 Video Settings</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">VAST Version</div>
+                <div class="setting-description">Video Ad Serving Template version</div>
+            </div>
+            <select class="setting-input">
+                <option>VAST 2.0</option>
+                <option selected>VAST 3.0</option>
+                <option>VAST 4.0</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Companion Ads</div>
+                <div class="setting-description">Allow companion display ads</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Skippable Ads</div>
+                <div class="setting-description">Allow user skip after 5 seconds</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>📺 CTV & SSAI (Server-Side Ad Insertion)</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">CTV Ad Pod Length</div>
+                <div class="setting-description">Seconds of ads per break</div>
+            </div>
+            <select class="setting-input">
+                <option>30s</option>
+                <option selected>60s</option>
+                <option>90s</option>
+                <option>120s</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Competitive Separation in Pods</div>
+                <div class="setting-description">Minimum distance between competitors</div>
+            </div>
+            <select class="setting-input">
+                <option selected>1 ad apart</option>
+                <option>2 ads apart</option>
+                <option>3 ads apart</option>
+            </select>
+        </div>
+    </div>
+</div>
+
+<!-- 1️⃣2️⃣ Notifications -->
+<div id="alerts" class="admin-section">
+    <div class="setting-group">
+        <h3>🔔 Alert Triggers</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Delivery Issues Alert</div>
+                <div class="setting-description">Notify on underdelivery</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Revenue Drop Alert</div>
+                <div class="setting-description">Alert on significant revenue drop</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Policy Violation Alert</div>
+                <div class="setting-description">Notify on policy breaches</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>📧 Email Recipients</h3>
+        <div style="margin-bottom: 16px;">
+            <input type="email" class="setting-input" placeholder="admin@example.com" style="width: 100%;">
+            <button class="btn btn-primary" style="margin-top: 12px;">+ Add Email</button>
+        </div>
+    </div>
+</div>
+
+<!-- 1️⃣3️⃣ Reporting -->
+<div id="reporting" class="admin-section">
+    <div class="setting-group">
+        <h3>📊 Report Defaults</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Time Zone</div>
+                <div class="setting-description">For all reports</div>
+            </div>
+            <select class="setting-input">
+                <option selected>America/New_York</option>
+                <option>America/Los_Angeles</option>
+                <option>Europe/London</option>
+                <option>Asia/Tokyo</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Currency</div>
+                <div class="setting-description">Report currency</div>
+            </div>
+            <select class="setting-input">
+                <option selected>USD ($)</option>
+                <option>EUR (€)</option>
+                <option>GBP (£)</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>🔓 Data Access</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">API Report Access</div>
+                <div class="setting-description">Users can download via API</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Scheduled Reports</div>
+                <div class="setting-description">Allow automated report scheduling</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 1️⃣4️⃣ API & Automation -->
+<div id="api" class="admin-section">
+    <div class="setting-group">
+        <h3>🔑 API Access</h3>
+        <div style="margin-bottom: 20px;">
+            <button class="btn btn-primary" style="margin-bottom: 16px;">+ Generate API Key</button>
+        </div>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr style="border-bottom: 2px solid #e0e0e0;">
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">API Key</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Created</th>
+                    <th style="text-align: left; padding: 12px; color: #5f6368;">Last Used</th>
+                    <th style="text-align: center; padding: 12px; color: #5f6368;">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid #f0f0f0;">
+                    <td style="padding: 12px; font-family: monospace; font-size: 12px;">sk_live_abc123def456...</td>
+                    <td style="padding: 12px; color: #5f6368;">Jan 1, 2026</td>
+                    <td style="padding: 12px; color: #5f6368;">Today 1:30 PM</td>
+                    <td style="padding: 12px; text-align: center;"><span class="badge badge-success">Active</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="setting-group">
+        <h3>⚙️ Automation Controls</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Bulk Actions via API</div>
+                <div class="setting-description">Allow programmatic order updates</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">External Trafficking</div>
+                <div class="setting-description">Allow third-party trafficking systems</div>
+            </div>
+            <div class="toggle-switch" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 1️⃣5️⃣ Billing & Finance -->
+<div id="billing" class="admin-section">
+    <div class="setting-group">
+        <h3>💳 Revenue Settings</h3>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Revenue Calculation Method</div>
+                <div class="setting-description">How to compute CPM/revenue</div>
+            </div>
+            <select class="setting-input">
+                <option selected>CPM (Cost Per Thousand Impressions)</option>
+                <option>CPC (Cost Per Click)</option>
+                <option>CPA (Cost Per Action)</option>
+                <option>Fixed</option>
+            </select>
+        </div>
+        <div class="setting-item">
+            <div>
+                <div class="setting-label">Estimated Revenue Display</div>
+                <div class="setting-description">Show projected revenue in UI</div>
+            </div>
+            <div class="toggle-switch active" onclick="toggleSwitch(this)">
+                <div class="toggle-slider"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="setting-group">
+        <h3>📤 Billing Data Export</h3>
+        <div style="margin-bottom: 12px;">
+            <button class="btn btn-primary" style="margin-right: 8px;">Export Billing Data</button>
+            <button class="btn btn-secondary">View Invoices</button>
+        </div>
+        <p style="color: #5f6368; font-size: 13px; margin: 0;">⚠️ Most invoicing is handled outside GAM. Use this section to export data for external billing systems.</p>
+    </div>
+</div>
+
+</div><!-- Close admin-sections-wrapper -->
+
+<script>
+function switchAdminTab(event, sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.admin-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Remove active class from all buttons
+    document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected section
+    document.getElementById(sectionId).classList.add('active');
+    
+    // Add active class to clicked button
+    event.target.classList.add('active');
+}
+
+function toggleSwitch(element) {
+    element.classList.toggle('active');
+}
+</script>
+
+{% endblock %}

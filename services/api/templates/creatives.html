@@ -237,6 +237,79 @@
     </div>
 </div>
 
+<!-- CREATE CREATIVE MODAL -->
+<div id="uploadCreativeModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 8px; padding: 24px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Upload New Creative</h2>
+            <button onclick="hideUploadCreativeModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">✕</button>
+        </div>
+        
+        <form id="createCreativeForm" onsubmit="handleCreateCreative(event)">
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Creative Name</label>
+                <input type="text" name="creative_name" placeholder="e.g., Q1 Hero Banner" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Campaign ID</label>
+                <input type="number" name="campaign_id" placeholder="Campaign ID" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Creative Type</label>
+                    <select name="creative_type" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                        <option>BANNER</option>
+                        <option>VIDEO</option>
+                        <option>NATIVE</option>
+                        <option>RICH_MEDIA</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Status</label>
+                    <select name="status" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                        <option>ACTIVE</option>
+                        <option>PAUSED</option>
+                        <option>ARCHIVED</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Width (px)</label>
+                    <input type="number" name="width" placeholder="300" value="300" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Height (px)</label>
+                    <input type="number" name="height" placeholder="250" value="250" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">File URL</label>
+                <input type="url" name="file_url" placeholder="https://cdn.example.com/creative.jpg" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Approval Status</label>
+                <select name="approval_status" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                    <option>APPROVED</option>
+                    <option>PENDING_REVIEW</option>
+                    <option>REJECTED</option>
+                </select>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="hideUploadCreativeModal()" class="btn btn-secondary" style="padding: 8px 16px;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Upload Creative</button>
+            </div>
+        </form>
+        <div id="createCreativeMessage" style="margin-top: 12px; padding: 12px; border-radius: 4px; display: none;"></div>
+    </div>
+</div>
+
 <script>
 document.querySelectorAll('input[name="creative-type"]').forEach(radio => {
     radio.addEventListener('change', function() {
@@ -248,11 +321,59 @@ document.querySelectorAll('input[name="creative-type"]').forEach(radio => {
 });
 
 function showUploadCreativeModal() {
-    document.getElementById('uploadCreativeModal').style.display = 'block';
+    document.getElementById('uploadCreativeModal').style.display = 'flex';
 }
 
 function hideUploadCreativeModal() {
     document.getElementById('uploadCreativeModal').style.display = 'none';
+    document.getElementById('createCreativeForm').reset();
+    document.getElementById('createCreativeMessage').style.display = 'none';
+}
+
+async function handleCreateCreative(event) {
+    event.preventDefault();
+    const form = event.target;
+    const msgDiv = document.getElementById('createCreativeMessage');
+    
+    try {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        
+        // Convert string values to appropriate types
+        data.campaign_id = parseInt(data.campaign_id);
+        data.width = parseInt(data.width || 300);
+        data.height = parseInt(data.height || 250);
+        data.file_size = 0;
+        
+        const response = await fetch('/api/creatives/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            msgDiv.style.background = '#e6f4ea';
+            msgDiv.style.color = '#137333';
+            msgDiv.textContent = '✓ ' + result.message;
+            msgDiv.style.display = 'block';
+            setTimeout(() => {
+                hideUploadCreativeModal();
+                location.reload();
+            }, 1500);
+        } else {
+            msgDiv.style.background = '#ffebee';
+            msgDiv.style.color = '#c5221f';
+            msgDiv.textContent = '✕ ' + (result.error || 'Error uploading creative');
+            msgDiv.style.display = 'block';
+        }
+    } catch (error) {
+        msgDiv.style.background = '#ffebee';
+        msgDiv.style.color = '#c5221f';
+        msgDiv.textContent = '✕ Error: ' + error.message;
+        msgDiv.style.display = 'block';
+    }
 }
 </script>
 {% endblock %}

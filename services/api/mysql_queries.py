@@ -30,7 +30,7 @@ def get_connection():
         return None
 
 def execute_query(query: str, params: tuple = None) -> List[Dict[str, Any]]:
-    """Execute SELECT query and return results as list of dicts"""
+    """Execute query (SELECT, INSERT, UPDATE, DELETE) and return results for SELECT"""
     conn = get_connection()
     if not conn:
         return []
@@ -41,13 +41,23 @@ def execute_query(query: str, params: tuple = None) -> List[Dict[str, Any]]:
             cursor.execute(query, params)
         else:
             cursor.execute(query)
-        results = cursor.fetchall()
-        cursor.close()
-        conn.close()
-        return results
+        
+        # For SELECT queries, fetch and return results
+        if query.strip().upper().startswith('SELECT'):
+            results = cursor.fetchall()
+            cursor.close()
+            conn.close()
+            return results
+        else:
+            # For INSERT/UPDATE/DELETE, commit the transaction
+            conn.commit()
+            cursor.close()
+            conn.close()
+            return []
     except Error as e:
         print(f"Query error: {e}")
         if conn:
+            conn.rollback()
             conn.close()
         return []
 
@@ -211,17 +221,17 @@ def get_orders_list(limit: int = 50) -> List[Dict[str, Any]]:
         JOIN publishers p ON o.publisher_id = p.publisher_id
         LEFT JOIN impressions i ON i.order_id = o.order_id
         GROUP BY o.order_id
-        ORDER BY o.updated_at DESC
+        ORDER BY o.order_id DESC
         LIMIT {limit}
     '''
     rows = execute_query(query)
     for row in rows:
-        delivered = row.get('delivered', 0) or 0
-        goal = row.get('lifetime_impression_goal', 0) or 0
+        delivered = int(row.get('delivered', 0) or 0)
+        goal = int(row.get('lifetime_impression_goal', 0) or 0)
         row['pct_complete'] = round((delivered / goal * 100), 1) if goal else 0
         revenue = float(row.get('revenue', 0) or 0)
         row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
-        clicks = row.get('clicks', 0) or 0
+        clicks = int(row.get('clicks', 0) or 0)
         row['ctr'] = round((clicks / max(delivered, 1) * 100), 2)
     return rows
 
@@ -253,14 +263,15 @@ def get_creatives_list(limit: int = 50) -> List[Dict[str, Any]]:
         JOIN advertisers a ON cmp.advertiser_id = a.advertiser_id
         LEFT JOIN impressions i ON i.creative_id = c.creative_id
         GROUP BY c.creative_id
-        ORDER BY c.updated_at DESC
+        ORDER BY c.creative_id DESC
         LIMIT {limit}
     '''
     rows = execute_query(query)
     for row in rows:
-        delivered = row.get('delivered', 0) or 0
+        delivered = int(row.get('delivered', 0) or 0)
         revenue = float(row.get('revenue', 0) or 0)
-        row['ctr'] = round(((row.get('clicks', 0) or 0) / max(delivered, 1) * 100), 2)
+        clicks = int(row.get('clicks', 0) or 0)
+        row['ctr'] = round((clicks / max(delivered, 1) * 100), 2)
         row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
         row['size'] = f"{row.get('width') or 0}x{row.get('height') or 0}" if row.get('width') and row.get('height') else "—"
     return rows
@@ -325,9 +336,21 @@ def get_line_items_for_engine(limit: int = 200):
         start_ts = None
         end_ts = None
         if r.get('start_date'):
-            start_ts = r['start_date'].timestamp()
+            date_obj = r['start_date']
+            # Convert date to datetime if needed
+            if hasattr(date_obj, 'timestamp'):
+                start_ts = date_obj.timestamp()
+            else:
+                from datetime import datetime
+                start_ts = datetime.combine(date_obj, datetime.min.time()).timestamp()
         if r.get('end_date'):
-            end_ts = r['end_date'].timestamp()
+            date_obj = r['end_date']
+            # Convert date to datetime if needed
+            if hasattr(date_obj, 'timestamp'):
+                end_ts = date_obj.timestamp()
+            else:
+                from datetime import datetime
+                end_ts = datetime.combine(date_obj, datetime.min.time()).timestamp()
 
         creatives_dom = []
         for cr in creative_map.get(r.get('campaign_id'), []):
@@ -343,7 +366,6 @@ def get_line_items_for_engine(limit: int = 200):
         hydrated.append(
             LineItem(
                 id=str(r['order_id']),
-                name=r.get('order_name'),
                 priority=int(r.get('priority') or 8),
                 cpm=float(r.get('cpm') or 0),
                 targeting=targeting or {},

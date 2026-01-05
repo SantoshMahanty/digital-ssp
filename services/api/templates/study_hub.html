@@ -3,46 +3,861 @@
 {% block title %}Study Hub - Digital-SSP{% endblock %}
 
 {% block content %}
+<style>
+    .tab-nav {
+        display: flex;
+        gap: 8px;
+        border-bottom: 2px solid #e0e0e0;
+        margin-bottom: 24px;
+    }
+    .tab-nav button {
+        padding: 12px 24px;
+        background: none;
+        border: none;
+        border-bottom: 3px solid transparent;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 500;
+        color: #5f6368;
+        transition: all 0.2s;
+    }
+    .tab-nav button:hover {
+        background: #f5f5f5;
+        color: #2196F3;
+    }
+    .tab-nav button.active {
+        color: #2196F3;
+        border-bottom-color: #2196F3;
+    }
+    .capability-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 16px;
+    }
+    .capability-card h3 {
+        margin: 0 0 12px 0;
+        color: #202124;
+        font-size: 18px;
+    }
+    .capability-card p {
+        margin: 0;
+        color: #5f6368;
+        line-height: 1.6;
+    }
+    .opportunity-card {
+        background: #f8f9fa;
+        border-left: 4px solid #2196F3;
+        padding: 20px;
+        margin-bottom: 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .opportunity-card:hover {
+        background: #e8f4fd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .opportunity-card h4 {
+        margin: 0 0 8px 0;
+        color: #1976D2;
+        font-size: 16px;
+    }
+    .benefit-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 24px 0;
+    }
+    .benefit-item {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .benefit-item h3 {
+        margin: 0 0 12px 0;
+        font-size: 18px;
+    }
+    .benefit-item p {
+        margin: 0;
+        opacity: 0.95;
+        line-height: 1.5;
+    }
+    .quiz-container {
+        background: #f1f3f4;
+        border-radius: 8px;
+        padding: 24px;
+        margin-top: 32px;
+    }
+    .quiz-option {
+        background: white;
+        border: 2px solid #e0e0e0;
+        padding: 16px;
+        margin: 12px 0;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .quiz-option:hover {
+        border-color: #2196F3;
+        background: #e8f4fd;
+    }
+    .video-placeholder {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 80px 40px;
+        border-radius: 12px;
+        text-align: center;
+        margin: 24px 0;
+    }
+</style>
+
 <div class="page-header">
-    <h1>Study Hub</h1>
-    <p class="subtitle">Organize learning pages and resources</p>
-    <div class="actions">
-        <a class="btn btn-primary" href="#">+ New Page</a>
-        <a class="btn btn-secondary" href="#">📂 Manage Sections</a>
+    <h1>📚 Study Hub</h1>
+    <p class="subtitle">Learn Google Ad Manager concepts and best practices</p>
+</div>
+
+<!-- Module Title -->
+<div class="card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-bottom: 24px;">
+    <h1 style="margin: 0 0 16px 0; font-size: 32px;">1. Get acquainted with Google Ad Manager</h1>
+    <p style="font-size: 18px; margin: 0; opacity: 0.95;">Create a thriving business with the power and versatility of Ad Manager.</p>
+    <p style="margin: 16px 0 0 0; opacity: 0.9;">In this module, you'll learn the key concepts of Ad Manager and its benefits as a full-stack advertising solution.</p>
+</div>
+
+<!-- Ad Manager Overview -->
+<div class="card">
+    <h2>📊 Ad Manager Overview</h2>
+    <p style="line-height: 1.8; color: #5f6368;">Ad Manager is a platform to grow your digital ad revenue in all the new ways and places people are watching, playing, and engaging. Our unified platform leverages Google technology to help you run your business more efficiently and keep your brand safe.</p>
+    
+    <h3 style="margin: 32px 0 20px 0; color: #202124;">Our Mission</h3>
+    <p style="margin-bottom: 24px; color: #5f6368;">Help our partners sustain growth and create thriving businesses by providing:</p>
+    
+    <div class="benefit-list">
+        <div class="benefit-item">
+            <h3>🌐 More Access</h3>
+            <p>To advertisers however they're buying</p>
+        </div>
+        <div class="benefit-item" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <h3>📈 More Places</h3>
+            <p>To grow your business today and in the future</p>
+        </div>
+        <div class="benefit-item" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <h3>💡 More Insights</h3>
+            <p>And optimizations for better decision-making</p>
+        </div>
+        <div class="benefit-item" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <h3>🛡️ More Protections</h3>
+            <p>For your audience, advertisers and brand</p>
+        </div>
+        <div class="benefit-item" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <h3>⏰ More Time</h3>
+            <p>To focus on things that matter</p>
+        </div>
     </div>
 </div>
 
+<!-- Capabilities -->
 <div class="card">
-    <div class="card-header">
-        <h2>Pages</h2>
+    <h2>🎯 Capabilities</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">Ad Manager helps users take control of their ad experience through a variety of features.</p>
+    
+    <div class="tab-nav">
+        <button class="active" onclick="showCapability('format')">Format</button>
+        <button onclick="showCapability('video')">Video</button>
+        <button onclick="showCapability('yield')">Yield Management</button>
+        <button onclick="showCapability('insights')">Data and Insights</button>
+        <button onclick="showCapability('safety')">Brand Safety</button>
     </div>
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Title</th>
-                    <th>Category</th>
-                    <th>Updated</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td colspan="5" class="muted">Add your study pages here.</td></tr>
-            </tbody>
-        </table>
+    
+    <div id="capability-format" class="capability-content">
+        <div class="capability-card">
+            <h3>✨ Make every ad fit</h3>
+            <p>Deliver ads that match the site's look, feel, and function with customizable native ads.</p>
+        </div>
+        <div class="capability-card">
+            <h3>💰 Sell any way you want</h3>
+            <p>Apply data-driven and programmatic ad buying to every format.</p>
+        </div>
+        <div class="capability-card">
+            <h3>🚀 Stay ahead of the curve</h3>
+            <p>Deliver engagement through a wide variety of ad formats, such as out-stream videos, reward ads, and more.</p>
+        </div>
+        <div style="background: #f1f3f4; padding: 24px; border-radius: 8px; text-align: center; margin-top: 16px;">
+            <p style="margin: 0; color: #5f6368; font-style: italic;">Ad Manager interface showing the Native tab under Inventory</p>
+        </div>
+    </div>
+    
+    <div id="capability-video" class="capability-content" style="display: none;">
+        <p style="margin-bottom: 20px; color: #5f6368; font-weight: 500;">Ad Manager can help you monetize video, wherever people are watching.</p>
+        <div class="capability-card">
+            <h3>📺 Engage audiences with video everywhere</h3>
+            <p>Make the most from every impression with a variety of video ad formats, including in-stream, out-stream, vertical, and rewarded video. For additional reach, bring high-performing YouTube formats — like bumpers and TrueView — to sites and apps.</p>
+        </div>
+        <div class="capability-card">
+            <h3>📡 Bring the best of digital to TV</h3>
+            <p>Effortlessly monetize premium video content across digital, over-the-top, and linear streams.</p>
+        </div>
+        <div class="capability-card">
+            <h3>📊 Make ads measure up</h3>
+            <p>Access new signals and viewability metrics from streaming devices to effectively measure ads. Rich video insights help optimize ad strategy with a holistic view of all audiences.</p>
+        </div>
+    </div>
+    
+    <div id="capability-yield" class="capability-content" style="display: none;">
+        <p style="margin-bottom: 20px; color: #5f6368; font-weight: 500;">Ad Manager provides tools to take control of inventory, all from one platform.</p>
+        <div class="capability-card">
+            <h3>🎯 Improve revenue and customer experience</h3>
+            <p>Revenue shouldn't come at the expense of user experience. Manage demand sources from one place and maximize competition for inventory, without compromising the speed or security of the site.</p>
+        </div>
+        <div class="capability-card">
+            <h3>🤖 Harness the power of programmatic</h3>
+            <p>From reservations to open auctions, Ad Manager uses data-driven insights and automation to help users capture advertising revenue more efficiently across all of your inventory.</p>
+        </div>
+        <div class="capability-card">
+            <h3>📈 Ramp up reservations</h3>
+            <p>Gain more control, add value to inventory, and lock in revenue with direct-booked campaigns or Programmatic Guaranteed.</p>
+        </div>
+        <div class="capability-card">
+            <h3>🧠 Automatically optimize ads</h3>
+            <p>Use Google's machine learning expertise to grow advertising revenue and automatically optimize every impression — without the need for an in-house data scientist.</p>
+        </div>
+    </div>
+    
+    <div id="capability-insights" class="capability-content" style="display: none;">
+        <p style="margin-bottom: 20px; color: #5f6368; font-weight: 500;">Our powerful analytics and proactive advertising insights can help users make smarter decisions.</p>
+        <div class="capability-card">
+            <h3>💡 Easily surface advertising insights</h3>
+            <p>Get actionable insights delivered straight to the Ad Manager dashboard.</p>
+        </div>
+        <div class="capability-card">
+            <h3>📅 Plan ahead</h3>
+            <p>Know exactly what ad inventory is available and how to maximize sales across devices with next-generation forecasting capabilities.</p>
+        </div>
+        <div class="capability-card">
+            <h3>🔗 Bring your data together</h3>
+            <p>Connect data with integrated tools, including Google Analytics, Data Studio, and BigQuery to see the big picture and make smarter decisions.</p>
+        </div>
+        <div class="capability-card">
+            <h3>📊 Power up your reports</h3>
+            <p>Segment and report on both past and future performance with the Query Tool. Access raw, event-level data with the Data Transfer tool.</p>
+        </div>
+    </div>
+    
+    <div id="capability-safety" class="capability-content" style="display: none;">
+        <p style="margin-bottom: 20px; color: #5f6368; font-weight: 500;">Protect sites and apps with strong advertising policies, publisher controls, and comprehensive ad reviews.</p>
+        <div class="capability-card">
+            <h3>🛡️ Create a safer experience</h3>
+            <p>We provide protection against unsuitable ads and invalid activity. The Trustworthy Accountability Group has certified Google against piracy, fraud, and malware. Google is also a strong supporter of industry initiatives, such as IAB Tech Lab's Ads.txt, Better Ads Standards, and others to create a safer web for all.</p>
+        </div>
+        <div class="capability-card">
+            <h3>✅ Serve safer ads</h3>
+            <p>Our policies require advertisers to adhere to specific guidelines to make advertising safer, such as using the HTTPS protocol and delivering ads in SafeFrames.</p>
+        </div>
+        <div class="capability-card">
+            <h3>🎨 Control creatives</h3>
+            <p>Access to 30+ controls to select ad types that users want to appear on their site or app. Google's automated systems block the rest.</p>
+        </div>
+        <div class="capability-card">
+            <h3>👁️ Review all ads in one place</h3>
+            <p>Review ad creatives, allow or block ads from appearing, and report any inappropriate ads to our review teams.</p>
+        </div>
     </div>
 </div>
 
+<!-- Partner Solutions -->
 <div class="card">
-    <div class="card-header">
-        <h2>Quick Links</h2>
-    </div>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px;">
-        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">📘 Docs</a>
-        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">🎓 Tutorials</a>
-        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">🧪 Labs</a>
-        <a class="btn btn-secondary" style="justify-content: flex-start;" href="#">📝 Notes</a>
+    <h2>🤝 Partner Solutions</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">Ad Manager offers capabilities that scale to the needs of your business and advertisers — whether you're focused on apps, TV and broadcast, commerce, news and publishing, or small business.</p>
+    
+    <div style="display: grid; gap: 20px;">
+        <!-- Apps -->
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 32px; border-radius: 12px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 24px;">📱 Apps</h3>
+            <p style="font-size: 18px; font-weight: 600; margin: 0 0 20px 0;">Keep engaged and grow app revenue.</p>
+            <ul style="line-height: 1.9; font-size: 15px; margin: 0; padding-left: 24px;">
+                <li>Manage app ad sales across all ad sources on one, easy-to-use platform.</li>
+                <li>Create immersive ad experiences with rich, flexible formats, including advanced native advertising and rewarded video app solutions.</li>
+                <li>Bring the power of real-time pricing to the app; maximize app revenue from ad partners in a unified auction.</li>
+            </ul>
+        </div>
+        
+        <!-- TV and Broadcast -->
+        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 32px; border-radius: 12px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 24px;">📺 TV and Broadcast</h3>
+            <p style="font-size: 18px; font-weight: 600; margin: 0 0 20px 0;">Ensure audiences get relevant ads across every screen.</p>
+            <ul style="line-height: 1.9; font-size: 15px; margin: 0; padding-left: 24px;">
+                <li>Use Dynamic Ad Insertion to deliver ads across live, linear, and on-demand video streams without buffering or quality degradation, wherever people are watching.</li>
+                <li>Maximize revenue with ads optimized in real-time for every viewer in each ad break, while maintaining full control and brand safety protections.</li>
+                <li>Reach more advertisers and get the value of inventory in a personalized programmatic marketplace. Use Programmatic Guaranteed to simplify cross-screen reservations business.</li>
+                <li>Personalize ad experiences and measure the impact that advertisers are having on audiences.</li>
+            </ul>
+        </div>
+        
+        <!-- Commerce -->
+        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 32px; border-radius: 12px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 24px;">🛒 Commerce</h3>
+            <p style="font-size: 18px; font-weight: 600; margin: 0 0 20px 0;">Get actionable insights to help grow your business.</p>
+            <ul style="line-height: 1.9; font-size: 15px; margin: 0; padding-left: 24px;">
+                <li>Deliver a higher ROI to brand partners with ads that are better placed and more engaging.</li>
+                <li>Better understand what happens after a customer interacts with an ad — to evaluate the effectiveness of on- and off-site campaigns.</li>
+                <li>Surface and manage audience insights across all shop fronts, apps, and sites from one centralized platform.</li>
+                <li>Earn from window shoppers to make the most of each visit. Deliver ads in a wide variety of formats to seamlessly fit their browsing experience.</li>
+            </ul>
+        </div>
+        
+        <!-- News and Publishing -->
+        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 32px; border-radius: 12px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 24px;">📰 News and Publishing</h3>
+            <p style="font-size: 18px; font-weight: 600; margin: 0 0 20px 0;">Scale and monetize storytelling across every customer interaction.</p>
+            <ul style="line-height: 1.9; font-size: 15px; margin: 0; padding-left: 24px;">
+                <li>Protect brand and keep audiences satisfied across all sites and apps with non-intrusive experiences, such as native ads, that drive engagement and retention.</li>
+                <li>Better understand your audience using reporting tools and integrations with Google Analytics, BigQuery, and Data Studio.</li>
+            </ul>
+            <p style="margin: 16px 0 0 0; font-size: 14px; opacity: 0.95; font-style: italic;">💡 Check out the Google News Initiative, which is Google's effort to help journalism thrive in a digital age with access to information, tools, and support.</p>
+        </div>
+        
+        <!-- Small Businesses -->
+        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 32px; border-radius: 12px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 24px;">🏢 Small Businesses</h3>
+            <p style="font-size: 18px; font-weight: 600; margin: 0 0 20px 0;">Ready-to-use business advertising solutions help grow revenue and reach audiences across devices.</p>
+            <ul style="line-height: 1.9; font-size: 15px; margin: 0; padding-left: 24px;">
+                <li>Monetize content across all screens from one place.</li>
+                <li>Supplement direct reservations with ads from millions of advertisers across Google's network.</li>
+                <li>Monetize video content on all platforms with seamless pre-roll, mid-roll, and post-roll ad formats. Earn revenue on non-video content with built-in out-stream video ads.</li>
+            </ul>
+        </div>
     </div>
 </div>
+
+<!-- Opportunities -->
+<div class="card">
+    <h2>💡 Opportunities</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">Opportunities are weekly suggestions for how you might earn more revenue, such as changing a pricing rule or unblocking a general Ad Manager category. You can view the projected revenue impact and decide whether to implement the suggested change.</p>
+    
+    <div class="opportunity-card" onclick="toggleOpportunity('opp1')">
+        <h4>📉 Lower Open Auction Floor Prices</h4>
+        <div id="opp1" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dadce0;">
+            <p style="font-weight: 600; margin: 8px 0; color: #202124;">How this opportunity works:</p>
+            <p style="margin: 8px 0; color: #5f6368;">You can simulate an auction with different floor prices to measure how much revenue you'd gain from changing the floor price.</p>
+            <p style="margin: 8px 0; color: #1976D2; font-weight: 500;">Ad Manager provides recommendations for the floor prices that resulted in a positive revenue lift.</p>
+        </div>
+    </div>
+    
+    <div class="opportunity-card" onclick="toggleOpportunity('opp2')">
+        <h4>🎯 Optimized Competition</h4>
+        <div id="opp2" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dadce0;">
+            <p style="font-weight: 600; margin: 8px 0; color: #202124;">How this opportunity works:</p>
+            <p style="margin: 8px 0; color: #5f6368;">Optimized competition allows auction buyers to win impressions that would've previously gone to a reservation line item when they're willing to pay high prices relative to reservations.</p>
+            <p style="margin: 8px 0; color: #1976D2; font-weight: 500;">Increased competition results in auction buyers winning impressions that would've previously gone to a reservation line item, but the low fill rate (typically under 1%) results in limited impact to reservation delivery.</p>
+        </div>
+    </div>
+    
+    <div class="opportunity-card" onclick="toggleOpportunity('opp3')">
+        <h4>💰 Enable Target CPM</h4>
+        <div id="opp3" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #dadce0;">
+            <p style="font-weight: 600; margin: 8px 0; color: #202124;">How this opportunity works:</p>
+            <p style="margin: 8px 0; color: #5f6368;">Ad Manager uses target CPM as a guide to make automatic adjustments to pricing rules. This may lead to higher fill rates and increased revenue.</p>
+            <p style="margin: 8px 0; color: #1976D2; font-weight: 500;">Target CPM-enabled rules, on average across inventory, maintain the same (or higher) CPM.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Experiments -->
+<div class="card">
+    <h2>🧪 Experiments</h2>
+    <p style="color: #5f6368;">Experiments let you use actual network traffic to test how applying an opportunity suggestion will impact revenue. You set a fixed impression traffic percentage to see how your change performs compared with the rest of your traffic.</p>
+</div>
+
+<!-- Navigate the UI -->
+<div class="card">
+    <h2>🖥️ Navigate the User Interface</h2>
+    <div class="video-placeholder">
+        <div style="font-size: 64px; margin-bottom: 16px;">▶️</div>
+        <p style="font-size: 18px; margin: 0;">Video Tutorial: Navigating Ad Manager Interface</p>
+        <p style="margin: 8px 0 0 0; opacity: 0.8;">Duration: 4:56</p>
+    </div>
+</div>
+
+<!-- Quiz -->
+<div class="card">
+    <h2>✅ Check Your Knowledge</h2>
+    <div class="quiz-container">
+        <p style="font-weight: 600; margin: 0 0 16px 0; color: #202124;">Which of the following statements are true?</p>
+        
+        <div class="quiz-option" onclick="selectQuizOption(this, false)">
+            <input type="radio" name="quiz" style="margin-right: 12px;">
+            Ad Manager allows you to grow your revenue on any device.
+        </div>
+        
+        <div class="quiz-option" onclick="selectQuizOption(this, false)">
+            <input type="radio" name="quiz" style="margin-right: 12px;">
+            Ad Manager gives you access to more data and insights with consolidated reporting.
+        </div>
+        
+        <div class="quiz-option" onclick="selectQuizOption(this, false)">
+            <input type="radio" name="quiz" style="margin-right: 12px;">
+            Ad Manager protects your audience from malware and ads from bad actors.
+        </div>
+        
+        <div class="quiz-option" onclick="selectQuizOption(this, true)">
+            <input type="radio" name="quiz" style="margin-right: 12px;">
+            <strong>All of the above</strong>
+        </div>
+        
+        <button class="btn btn-primary" onclick="submitQuiz()" style="margin-top: 20px;">Submit Answer</button>
+        
+        <div id="quiz-feedback" style="display: none; margin-top: 20px; padding: 16px; border-radius: 8px;"></div>
+    </div>
+</div>
+
+<script>
+function showCapability(capability) {
+    // Hide all capability contents
+    document.querySelectorAll('.capability-content').forEach(content => {
+        content.style.display = 'none';
+    });
+    
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-nav button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // Show selected capability
+    document.getElementById('capability-' + capability).style.display = 'block';
+    
+    // Add active class to clicked tab
+    event.target.classList.add('active');
+}
+
+function toggleOpportunity(id) {
+    const element = document.getElementById(id);
+    element.style.display = element.style.display === 'none' ? 'block' : 'none';
+}
+
+let selectedAnswer = null;
+
+function selectQuizOption(element, isCorrect) {
+    // Clear previous selections
+    document.querySelectorAll('.quiz-option').forEach(opt => {
+        opt.style.borderColor = '#e0e0e0';
+        opt.style.background = 'white';
+    });
+    
+    // Highlight selected
+    element.style.borderColor = '#2196F3';
+    element.style.background = '#e8f4fd';
+    
+    // Check the radio button
+    element.querySelector('input').checked = true;
+    
+    selectedAnswer = isCorrect;
+}
+
+function submitQuiz() {
+    const feedback = document.getElementById('quiz-feedback');
+    
+    if (selectedAnswer === null) {
+        feedback.innerHTML = '<p style="margin: 0; color: #ea4335;">⚠️ Please select an answer before submitting.</p>';
+        feedback.style.background = '#fce8e6';
+        feedback.style.display = 'block';
+        return;
+    }
+    
+    if (selectedAnswer) {
+        feedback.innerHTML = '<p style="margin: 0; color: #34a853; font-weight: 600;">✅ Correct! All of these statements are true about Ad Manager.</p><p style="margin: 8px 0 0 0; color: #5f6368;">Ad Manager provides a comprehensive platform for growing revenue across devices, with powerful insights, reporting, and brand safety protections.</p>';
+        feedback.style.background = '#e6f4ea';
+    } else {
+        feedback.innerHTML = '<p style="margin: 0; color: #ea4335; font-weight: 600;">❌ Not quite right. Try again!</p><p style="margin: 8px 0 0 0; color: #5f6368;">Hint: Ad Manager offers all of these benefits and more.</p>';
+        feedback.style.background = '#fce8e6';
+    }
+    
+    feedback.style.display = 'block';
+}
+
+/* Metrics Pipeline Styles */
+.metrics-pipeline {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px;
+    margin: 24px 0;
+}
+
+.metric-card {
+    position: relative;
+    padding: 32px;
+    border-radius: 12px;
+    color: white;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    transition: all 0.3s;
+}
+
+.metric-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+}
+
+.metric-card h3 {
+    margin: 0 0 16px 0;
+    font-size: 32px;
+}
+
+.metric-card .metric-label {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 8px 0;
+}
+
+.metric-card .metric-description {
+    font-size: 14px;
+    opacity: 0.95;
+    line-height: 1.6;
+    margin: 12px 0 0 0;
+}
+
+.metric-card .metric-flow-arrow {
+    margin-top: 16px;
+    font-size: 24px;
+}
+
+.pipeline-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin: 32px 0;
+    flex-wrap: wrap;
+}
+
+.pipeline-arrow {
+    font-size: 32px;
+    color: #2196F3;
+}
+</style>
+
+<!-- Key Metrics Pipeline -->
+<div class="card">
+    <h2>📊 The Ad Request Pipeline: Understanding Key Metrics</h2>
+    <p style="color: #5f6368; margin-bottom: 24px;">Every impression journey follows a path through four critical metrics. Understanding this pipeline is essential to optimizing your ad revenue and business growth.</p>
+    
+    <div class="metrics-pipeline">
+        <div class="metric-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div style="font-size: 48px; margin-bottom: 12px;">📨</div>
+            <div class="metric-label">Ad Requests</div>
+            <p style="margin: 0 0 12px 0; font-size: 24px; font-weight: 700; opacity: 1;">SCALE</p>
+            <div class="metric-description">
+                <p style="margin: 0 0 12px 0; font-weight: 600;">The volume of inventory available</p>
+                <p style="margin: 0;">Total number of ad impressions your site or app generates. This represents your total addressable market and the foundation of your advertising business.</p>
+            </div>
+        </div>
+        
+        <div class="pipeline-arrow" style="grid-column: 1/-1; text-align: center;">⬇️</div>
+        
+        <div class="metric-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+            <div style="font-size: 48px; margin-bottom: 12px;">💰</div>
+            <div class="metric-label">Bid Requests</div>
+            <p style="margin: 0 0 12px 0; font-size: 24px; font-weight: 700; opacity: 1;">MONETIZATION OPPORTUNITY</p>
+            <div class="metric-description">
+                <p style="margin: 0 0 12px 0; font-weight: 600;">The demand-side participation</p>
+                <p style="margin: 0;">Requests sent to advertisers and demand partners. Shows what percentage of your inventory is generating bidding interest from advertisers — your actual monetization potential.</p>
+            </div>
+        </div>
+        
+        <div class="pipeline-arrow" style="grid-column: 1/-1; text-align: center;">⬇️</div>
+        
+        <div class="metric-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div style="font-size: 48px; margin-bottom: 12px;">🏆</div>
+            <div class="metric-label">Bid Responses</div>
+            <p style="margin: 0 0 12px 0; font-size: 24px; font-weight: 700; opacity: 1;">COMPETITION</p>
+            <div class="metric-description">
+                <p style="margin: 0 0 12px 0; font-weight: 600;">The competitive landscape</p>
+                <p style="margin: 0;">Actual bids received from advertisers competing for your inventory. More bid responses indicate stronger competition, which drives prices up and maximizes revenue potential.</p>
+            </div>
+        </div>
+        
+        <div class="pipeline-arrow" style="grid-column: 1/-1; text-align: center;">⬇️</div>
+        
+        <div class="metric-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+            <div style="font-size: 48px; margin-bottom: 12px;">💵</div>
+            <div class="metric-label">Impressions</div>
+            <p style="margin: 0 0 12px 0; font-size: 24px; font-weight: 700; opacity: 1;">ACTUAL REVENUE</p>
+            <div class="metric-description">
+                <p style="margin: 0 0 12px 0; font-weight: 600;">The winning conversions</p>
+                <p style="margin: 0;">Ads actually delivered to users. This is where revenue is generated. Track impressions, CPM, and revenue metrics to measure business success.</p>
+            </div>
+        </div>
+    </div>
+    
+    <div style="background: #f1f3f4; padding: 28px; border-radius: 12px; margin-top: 32px;">
+        <h3 style="margin: 0 0 16px 0; color: #202124;">🔑 Key Insights</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px;">
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #2196F3;">
+                <p style="margin: 0; font-weight: 600; color: #2196F3;">Scale Optimization</p>
+                <p style="margin: 4px 0 0 0; color: #5f6368; font-size: 14px;">Increase ad requests by improving site traffic and user engagement</p>
+            </div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #f5576c;">
+                <p style="margin: 0; font-weight: 600; color: #f5576c;">Monetization Growth</p>
+                <p style="margin: 4px 0 0 0; color: #5f6368; font-size: 14px;">Expand advertiser partnerships to increase bid requests on inventory</p>
+            </div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #00f2fe;">
+                <p style="margin: 0; font-weight: 600; color: #00f2fe;">Competition Boost</p>
+                <p style="margin: 4px 0 0 0; color: #5f6368; font-size: 14px;">Attract more bidders through better audience targeting and inventory transparency</p>
+            </div>
+            <div style="background: white; padding: 16px; border-radius: 8px; border-left: 4px solid #34a853;">
+                <p style="margin: 0; font-weight: 600; color: #34a853;">Revenue Maximization</p>
+                <p style="margin: 4px 0 0 0; color: #5f6368; font-size: 14px;">Monitor CPM and fill rate to ensure maximum revenue per impression</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Module 2: Learn How to Manage Settings -->
+<div class="card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; margin: 48px 0 24px 0;">
+    <h1 style="margin: 0 0 16px 0; font-size: 32px;">2. Learn how to manage settings</h1>
+    <p style="font-size: 18px; margin: 0; opacity: 0.95;">Set up your network for success by managing the settings in the Admin tab.</p>
+    <p style="margin: 16px 0 0 0; opacity: 0.9;">In this module, you'll learn how to configure network settings, add users, and comply with EU User Consent Policy.</p>
+</div>
+
+<div class="card">
+    <h2>⚙️ Network Settings Overview</h2>
+    <p style="line-height: 1.8; color: #5f6368;">Use the Global Settings option under the Admin tab to view and control your network settings and other administrative aspects of your network, such as the network display name, time zone, currency, linked accounts, and more. On this page, you can also view your network information, and enable or disable features within your account.</p>
+    
+    <h3 style="margin: 32px 0 20px 0; color: #202124;">You'll discover how to:</h3>
+    <ul style="line-height: 2; color: #5f6368;">
+        <li>✅ Configure network settings in Ad Manager</li>
+        <li>✅ Add a new user to your Ad Manager network</li>
+        <li>✅ Comply with EU User Consent Policy</li>
+        <li>✅ Link your exchange and AdSense accounts</li>
+    </ul>
+</div>
+
+<!-- Exchange Rates Section -->
+<div class="card">
+    <h2>💱 Refresh Exchange Rates</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">If your Ad Manager network has the Exchange Rate Refresh feature enabled, you can adjust the frequency at which the exchange rate is refreshed.</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-top: 24px;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 24px; border-radius: 12px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">📌</div>
+            <h3 style="margin: 0 0 12px 0; color: white;">Fixed</h3>
+            <p style="margin: 0; opacity: 0.95;">Enter the exchange rate manually, and change it as often as you'd like. Perfect for stable currency environments or when you need precise control.</p>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 24px; border-radius: 12px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">🕐</div>
+            <h3 style="margin: 0 0 12px 0; color: white;">Daily</h3>
+            <p style="margin: 0; opacity: 0.95;">Default setting. Refreshes at 7am of the current day in your time zone. The exchange rate is not an average, but taken from this specific point in time.</p>
+        </div>
+        
+        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 24px; border-radius: 12px;">
+            <div style="font-size: 36px; margin-bottom: 12px;">📅</div>
+            <h3 style="margin: 0 0 12px 0; color: white;">Monthly</h3>
+            <p style="margin: 0; opacity: 0.95;">Refreshes at 7am on the first day of the current month in your time zone. Rate applies for entire month based on first day snapshot.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Linking Accounts -->
+<div class="card">
+    <h2>🔗 Link Your Ad Exchange and AdSense Accounts</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">An important step in configuring your network settings is to link your Ad Manager account to your ad exchange and/or AdSense accounts.</p>
+    
+    <div class="opportunity-card" onclick="this.querySelector('.expand-content').style.display = this.querySelector('.expand-content').style.display === 'none' ? 'block' : 'none'">
+        <h4>📝 Step-by-Step Linking Process</h4>
+        <p style="margin: 0; color: #5f6368;">Click to expand detailed instructions</p>
+        <div class="expand-content" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+            <ol style="line-height: 2; color: #5f6368;">
+                <li><strong>Navigate to Admin → Linked Accounts</strong><br>Scroll to the bottom of the Global Settings page to find the accounts you can link to Ad Manager.</li>
+                <li><strong>Select New Link</strong><br>Choose either "New AdSense link" or "New ad exchange link" (do them separately).</li>
+                <li><strong>Enter Web Property Code</strong><br>
+                    • For display: <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px;">ca-pub-1234567890</code><br>
+                    • For mobile apps: <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px;">ca-mb-app-pub-1234567890</code><br>
+                    • For video: <code style="background: #f5f5f5; padding: 2px 6px; border-radius: 4px;">ca-video-pub-1234567890</code>
+                </li>
+                <li><strong>Enter Display Name</strong><br>This is what you'll select when creating line items.</li>
+                <li><strong>Enter Email Address</strong><br>Use the same email you use to sign in to your exchange/AdSense account.</li>
+                <li><strong>Validate Your Account</strong><br>Use either postal code or last 5 digits of phone number from billing info.</li>
+                <li><strong>Save and Enable</strong><br>Log into AdSense or exchange to enable the link from their side.</li>
+            </ol>
+        </div>
+    </div>
+    
+    <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 4px; margin-top: 20px;">
+        <h4 style="margin: 0 0 8px 0; color: #856404;">⚠️ Common Troubleshooting Tip</h4>
+        <p style="margin: 0; color: #856404;">If AdSense isn't appearing as an option in Delivery after linking, remember to enable it from the AdSense account side. Both accounts must accept the link!</p>
+    </div>
+</div>
+
+<!-- User Management -->
+<div class="card">
+    <h2>👥 Enable Access and Authorization</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">The Access & Authorization page under the Admin tab allows you to create and edit users in your network, as well as their permissions.</p>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 24px; border-radius: 8px;">
+            <h3 style="margin: 0 0 12px 0; color: #2e7d32;">👤 Users</h3>
+            <p style="margin: 0; color: #5f6368;">People who can view or manage the orders, line items, and other items in your Ad Manager network. Each user must have a Google account.</p>
+        </div>
+        
+        <div style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 24px; border-radius: 8px;">
+            <h3 style="margin: 0 0 12px 0; color: #1976D2;">🔑 Roles</h3>
+            <p style="margin: 0; color: #5f6368;">Define which permissions a user has within your network. Common roles include Administrator, Trafficker, and Read-only access.</p>
+        </div>
+    </div>
+    
+    <h3 style="margin: 32px 0 20px 0; color: #202124;">How to Add a User</h3>
+    <div class="opportunity-card" onclick="this.querySelector('.expand-content').style.display = this.querySelector('.expand-content').style.display === 'none' ? 'block' : 'none'">
+        <h4>📋 Adding User Process</h4>
+        <p style="margin: 0; color: #5f6368;">Click to expand step-by-step instructions</p>
+        <div class="expand-content" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+            <ol style="line-height: 2; color: #5f6368;">
+                <li><strong>Navigate to Users page</strong><br>Found under Admin → Access & Authorization</li>
+                <li><strong>Click "New User" button</strong><br>Opens the user creation form</li>
+                <li><strong>Enter user information</strong><br>Name and email address (must be a Google account)</li>
+                <li><strong>Select user role</strong><br>Roles are prepopulated - hover over the question mark icon for definitions</li>
+                <li><strong>Save and invite</strong><br>User receives an email invitation with an expiration date</li>
+            </ol>
+            <div style="background: #fff3cd; padding: 16px; border-radius: 8px; margin-top: 16px;">
+                <p style="margin: 0; color: #856404; font-size: 14px;"><strong>⏰ Important:</strong> If the recipient doesn't respond by the expiration date, the user will be deleted and you'll need to start over.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EU User Consent Policy -->
+<div class="card">
+    <h2>🇪🇺 EU User Consent Policy</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">Under Google's updated EU user consent policy, you must make certain disclosures to your users in the European Economic Area (EEA) and obtain their consent for cookies and personal data collection.</p>
+    
+    <div style="background: #e8f4fd; border: 2px solid #2196F3; padding: 24px; border-radius: 12px; margin-bottom: 24px;">
+        <h3 style="margin: 0 0 12px 0; color: #1976D2;">📍 What is the EEA?</h3>
+        <p style="margin: 0; color: #5f6368;">The European Economic Area includes EU member states plus Iceland, Liechtenstein, and Norway. Ad serving behavior is based on the user's IP address.</p>
+    </div>
+    
+    <h3 style="margin: 32px 0 20px 0; color: #202124;">Ad Types Explained</h3>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin: 24px 0;">
+        <div style="border: 2px solid #4caf50; padding: 24px; border-radius: 12px;">
+            <h3 style="margin: 0 0 12px 0; color: #2e7d32;">✨ Personalized Ads</h3>
+            <p style="margin: 0 0 12px 0; color: #5f6368;">Reach users based on their interests, demographics, and other criteria. Requires user consent for data collection.</p>
+            <ul style="margin: 0; color: #5f6368;">
+                <li>Interest-based targeting</li>
+                <li>Demographic targeting</li>
+                <li>Behavioral data used</li>
+            </ul>
+        </div>
+        
+        <div style="border: 2px solid #ff9800; padding: 24px; border-radius: 12px;">
+            <h3 style="margin: 0 0 12px 0; color: #e65100;">🎯 Non-Personalized Ads</h3>
+            <p style="margin: 0 0 12px 0; color: #5f6368;">Targeted using contextual information rather than past user behavior. Still requires consent for cookies.</p>
+            <ul style="margin: 0; color: #5f6368;">
+                <li>Contextual targeting only</li>
+                <li>Frequency capping allowed</li>
+                <li>Aggregated reporting enabled</li>
+            </ul>
+        </div>
+    </div>
+    
+    <h3 style="margin: 32px 0 20px 0; color: #202124;">Configuration Steps</h3>
+    <div class="opportunity-card" onclick="this.querySelector('.expand-content').style.display = this.querySelector('.expand-content').style.display === 'none' ? 'block' : 'none'">
+        <h4>⚙️ How to Configure EU User Consent</h4>
+        <p style="margin: 0; color: #5f6368;">Click to expand detailed configuration guide</p>
+        <div class="expand-content" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid #e0e0e0;">
+            <ol style="line-height: 2; color: #5f6368;">
+                <li><strong>Navigate to EU user consent</strong><br>Found in the Admin section</li>
+                <li><strong>Select ad type</strong><br>Choose between personalized ads, non-personalized ads, or both</li>
+                <li><strong>Select ad technology providers (ATPs)</strong><br>
+                    • Commonly used set (default)<br>
+                    • Custom set (select specific providers)
+                </li>
+                <li><strong>Select line item serving option</strong><br>
+                    • Don't limit line items (default - all eligible)<br>
+                    • Limit line items (manually enable per line item)
+                </li>
+                <li><strong>Set up consent gathering</strong><br>Create a message for your sites/apps requesting user consent</li>
+                <li><strong>Save your work</strong><br>You're now compliant with EU user consent policy!</li>
+            </ol>
+        </div>
+    </div>
+</div>
+
+<!-- Knowledge Check Quiz -->
+<div class="card" style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);">
+    <h2 style="margin: 0 0 24px 0;">📝 Check Your Knowledge</h2>
+    
+    <div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+        <p style="margin: 0 0 16px 0; font-weight: 600; color: #202124;">Which page in the Admin tab contains administrative features for your network, such as the network display name, time zone, currency, and linked accounts?</p>
+        <div class="quiz-option" onclick="alert('Try again! Change History tracks modifications.')">Change History</div>
+        <div class="quiz-option" onclick="alert('Try again! Access & Authorization is for user management.')">Access & Authorization</div>
+        <div class="quiz-option" onclick="alert('Try again! Ads.txt is for authorized seller verification.')">Ads.txt</div>
+        <div class="quiz-option" onclick="alert('✅ Correct! Network Settings (Global Settings) contains these administrative features.')">Network Settings</div>
+    </div>
+    
+    <div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+        <p style="margin: 0 0 16px 0; font-weight: 600; color: #202124;">By choosing Personalized Ads on the EU consent page, you are doing which one of the following?</p>
+        <div class="quiz-option" onclick="alert('Try again! This would be too restrictive.')">Allowing Google to show only personalized ads to users in the EEA</div>
+        <div class="quiz-option" onclick="alert('Try again! This is related to line item serving, not ad type.')">Allowing Google to serve ads from all eligible line items to users in the EEA</div>
+        <div class="quiz-option" onclick="alert('Try again! This is a separate step for ad technology providers.')">Choosing which ad technology providers to use</div>
+        <div class="quiz-option" onclick="alert('✅ Correct! This allows both personalized and non-personalized ads to EEA users.')">Allowing Google to show personalized ads and non-personalized ads to users in the EEA</div>
+    </div>
+    
+    <div style="background: white; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+        <p style="margin: 0 0 16px 0; font-weight: 600; color: #202124;">To add a new user, which link under the Admin tab would you select?</p>
+        <div class="quiz-option" onclick="alert('Try again! Global Settings is for network configuration.')">Global Settings</div>
+        <div class="quiz-option" onclick="alert('Try again! Network Settings is for general network options.')">Network Settings</div>
+        <div class="quiz-option" onclick="alert('Try again! Change History tracks changes, not user management.')">Change History</div>
+        <div class="quiz-option" onclick="alert('✅ Correct! Access & Authorization is where you manage users and roles.')">Access & Authorization</div>
+    </div>
+    
+    <div style="background: white; padding: 24px; border-radius: 12px;">
+        <p style="margin: 0 0 16px 0; font-weight: 600; color: #202124;">If you want to link your AdSense account with your Ad Manager account, you must enter your AdSense account information into Ad Manager and approve the request in your AdSense account.</p>
+        <div class="quiz-option" onclick="alert('Try again! Both steps are required.')">False</div>
+        <div class="quiz-option" onclick="alert('✅ Correct! You must complete the process in both Ad Manager AND AdSense.')">True</div>
+    </div>
+</div>
+
+<!-- Put it All Together -->
+<div class="card">
+    <h2>🎯 Put It All Together</h2>
+    <p style="margin-bottom: 24px; color: #5f6368;">Now you know how to set up your network for success by managing the settings in the Admin tab. You should feel comfortable configuring network settings, adding users, and complying with EU User Consent Policy.</p>
+    
+    <h3 style="margin: 24px 0 16px 0; color: #202124;">How to Apply What You've Learned:</h3>
+    <div style="background: #e8f5e9; border-left: 4px solid #4caf50; padding: 20px; border-radius: 8px; margin-bottom: 24px;">
+        <p style="margin: 0; color: #2e7d32;">Spend some time exploring the settings in the Admin tab. Talk with your Ad Manager administrator about any changes that you feel might make sense for your website or app.</p>
+    </div>
+    
+    <h3 style="margin: 24px 0 16px 0; color: #202124;">📚 Recommendations for Further Learning:</h3>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">📄 AdSense line items</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">📄 Ad exchange line items</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">⚙️ Network settings</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">💱 Currency settings</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">🔗 Link accounts</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">👥 Add and edit users</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">🔑 User role permissions</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">🏢 Manage companies</p>
+        </div>
+        <div style="background: #f5f5f5; padding: 16px; border-radius: 8px;">
+            <p style="margin: 0; font-weight: 600; color: #2196F3;">🇪🇺 EU user consent policy</p>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

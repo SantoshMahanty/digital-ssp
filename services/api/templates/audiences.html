@@ -3,442 +3,452 @@
 {% block title %}Audience Management - Digital-SSP{% endblock %}
 
 {% block content %}
+<style>
+.tab-navigation {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background: #f5f5f5;
+    color: #2196F3;
+}
+
+.tab-btn.active {
+    color: #2196F3;
+    border-bottom-color: #2196F3;
+}
+
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.kpi-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2196F3;
+    margin-bottom: 5px;
+}
+
+.kpi-label {
+    color: #666;
+    font-size: 14px;
+}
+</style>
+
 <div class="page-header">
     <h1>👥 Audience Management</h1>
-    <p class="subtitle">Create and manage first-party audience segments for premium targeting</p>
-    <div style="display: flex; gap: 12px; margin-top: 16px;">
-        <button style="padding: 8px 16px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">+ New Segment</button>
-        <button style="padding: 8px 16px; background: #f1f3f4; color: #202124; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">📤 Import CSV</button>
-    </div>
+    <p>Create and manage first-party audience segments for premium targeting</p>
 </div>
 
-<!-- AUDIENCE INSIGHTS -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px;">
-    <!-- Total Segments -->
-    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-            <div>
-                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">ACTIVE SEGMENTS</div>
-                <div style="font-size: 28px; font-weight: 600; color: #202124;">24</div>
-            </div>
-            <div style="font-size: 28px;">📊</div>
-        </div>
-        <div style="font-size: 11px; color: #5f6368;">
-            <div>12 first-party segments</div>
-            <div>8 lookalike audiences</div>
-            <div>4 exclusion lists</div>
-        </div>
-    </div>
-
-    <!-- Total Reach -->
-    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-            <div>
-                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">TOTAL REACH</div>
-                <div style="font-size: 28px; font-weight: 600; color: #202124;">48.2M</div>
-            </div>
-            <div style="font-size: 28px;">📍</div>
-        </div>
-        <div style="font-size: 11px; color: #5f6368;">
-            <div>Unique users matched to segments</div>
-            <div>↑ 12% from last month</div>
-        </div>
-    </div>
-
-    <!-- Premium Inventory CPM Lift -->
-    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-            <div>
-                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">CPM LIFT</div>
-                <div style="font-size: 28px; font-weight: 600; color: #34a853;">+23%</div>
-            </div>
-            <div style="font-size: 28px;">💰</div>
-        </div>
-        <div style="font-size: 11px; color: #5f6368;">
-            <div>Audience-targeted vs. non-targeted</div>
-            <div>Avg CPM: $8.50 vs $6.90</div>
-        </div>
-    </div>
-
-    <!-- Quality Score -->
-    <div style="background: #fff; border: 1px solid #dadce0; border-radius: 8px; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px;">
-            <div>
-                <div style="font-size: 12px; color: #5f6368; font-weight: 500; margin-bottom: 4px;">AVG QUALITY SCORE</div>
-                <div style="font-size: 28px; font-weight: 600; color: #34a853;">8.3/10</div>
-            </div>
-            <div style="font-size: 28px;">⭐</div>
-        </div>
-        <div style="font-size: 11px; color: #5f6368;">
-            <div>Based on conversion rates</div>
-            <div>✅ High-quality segments</div>
-        </div>
-    </div>
+<div class="tab-navigation">
+    <button class="tab-btn active" onclick="switchTab(event, 'audiences')">Audiences</button>
+    <button class="tab-btn" onclick="switchTab(event, 'segments')">Segments</button>
+    <button class="tab-btn" onclick="switchTab(event, 'analytics')">Analytics</button>
 </div>
 
-<!-- AUDIENCE LIBRARY -->
-<div class="card" style="margin-bottom: 24px;">
-    <h2>📚 Audience Library</h2>
-    <p class="subtitle">All created audience segments and their performance</p>
-    
-    <div style="margin-top: 20px; overflow-x: auto;">
-        <table style="width: 100%; border-collapse: collapse; font-size: 12px;">
-            <thead>
-                <tr style="border-bottom: 2px solid #dadce0;">
-                    <th style="text-align: left; padding: 12px 0; font-weight: 600; color: #202124;">Segment Name</th>
-                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Type</th>
-                    <th style="text-align: right; padding: 12px 0; font-weight: 600; color: #202124;">Size</th>
-                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Quality</th>
-                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Created</th>
-                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Last Used</th>
-                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Avg CPM</th>
-                    <th style="text-align: center; padding: 12px 0; font-weight: 600; color: #202124;">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Segment 1: High-Value Users -->
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>🎯 High-Value Users</strong></td>
-                    <td style="text-align: center;">
-                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
-                    </td>
-                    <td style="text-align: right; color: #202124;"><strong>2.3M</strong></td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
-                                <div style="height: 100%; background: #34a853; width: 92%;"></div>
-                            </div>
-                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">9.2</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: #5f6368;">Jan 1</td>
-                    <td style="text-align: center; color: #5f6368;">2 min ago</td>
-                    <td style="text-align: center; color: #202124; font-weight: 600;">$9.50</td>
-                    <td style="text-align: center;">
-                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
-                    </td>
-                </tr>
-
-                <!-- Segment 2: Tech Enthusiasts -->
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>💻 Tech Enthusiasts</strong></td>
-                    <td style="text-align: center;">
-                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
-                    </td>
-                    <td style="text-align: right; color: #202124;"><strong>3.8M</strong></td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
-                                <div style="height: 100%; background: #34a853; width: 87%;"></div>
-                            </div>
-                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">8.7</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: #5f6368;">Dec 28</td>
-                    <td style="text-align: center; color: #5f6368;">5 min ago</td>
-                    <td style="text-align: center; color: #202124; font-weight: 600;">$8.25</td>
-                    <td style="text-align: center;">
-                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
-                    </td>
-                </tr>
-
-                <!-- Segment 3: Active Mobile Users -->
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>📱 Active Mobile Users</strong></td>
-                    <td style="text-align: center;">
-                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
-                    </td>
-                    <td style="text-align: right; color: #202124;"><strong>5.2M</strong></td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
-                                <div style="height: 100%; background: #fbbc04; width: 78%;"></div>
-                            </div>
-                            <span style="font-size: 10px; color: #f57c00; font-weight: 600;">7.8</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: #5f6368;">Dec 25</td>
-                    <td style="text-align: center; color: #5f6368;">1 hour ago</td>
-                    <td style="text-align: center; color: #202124; font-weight: 600;">$6.50</td>
-                    <td style="text-align: center;">
-                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
-                    </td>
-                </tr>
-
-                <!-- Segment 4: Brand Researchers -->
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>🔍 Brand Researchers</strong></td>
-                    <td style="text-align: center;">
-                        <span style="background: #e8f0fe; color: #1967d2; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">1st Party</span>
-                    </td>
-                    <td style="text-align: right; color: #202124;"><strong>1.5M</strong></td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
-                                <div style="height: 100%; background: #34a853; width: 95%;"></div>
-                            </div>
-                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">9.5</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: #5f6368;">Dec 20</td>
-                    <td style="text-align: center; color: #5f6368;">15 min ago</td>
-                    <td style="text-align: center; color: #202124; font-weight: 600;">$10.75</td>
-                    <td style="text-align: center;">
-                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
-                    </td>
-                </tr>
-
-                <!-- Segment 5: Lookalike -->
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>🔗 Lookalike: High-Value</strong></td>
-                    <td style="text-align: center;">
-                        <span style="background: #fff3e0; color: #f57c00; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">Lookalike</span>
-                    </td>
-                    <td style="text-align: right; color: #202124;"><strong>8.5M</strong></td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
-                                <div style="height: 100%; background: #fbbc04; width: 82%;"></div>
-                            </div>
-                            <span style="font-size: 10px; color: #f57c00; font-weight: 600;">8.2</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: #5f6368;">Dec 15</td>
-                    <td style="text-align: center; color: #5f6368;">20 min ago</td>
-                    <td style="text-align: center; color: #202124; font-weight: 600;">$7.80</td>
-                    <td style="text-align: center;">
-                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
-                    </td>
-                </tr>
-
-                <!-- Segment 6: Exclusion List -->
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>❌ Recent Converters (Exclude)</strong></td>
-                    <td style="text-align: center;">
-                        <span style="background: #ffebee; color: #d33527; padding: 3px 8px; border-radius: 3px; font-size: 10px; font-weight: 600;">Exclusion</span>
-                    </td>
-                    <td style="text-align: right; color: #202124;"><strong>850K</strong></td>
-                    <td style="text-align: center;">
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 4px;">
-                            <div style="width: 60px; height: 4px; background: #e8eaed; border-radius: 2px; overflow: hidden;">
-                                <div style="height: 100%; background: #34a853; width: 88%;"></div>
-                            </div>
-                            <span style="font-size: 10px; color: #34a853; font-weight: 600;">8.8</span>
-                        </div>
-                    </td>
-                    <td style="text-align: center; color: #5f6368;">Dec 10</td>
-                    <td style="text-align: center; color: #5f6368;">3 hours ago</td>
-                    <td style="text-align: center; color: #202124; font-weight: 600;">N/A</td>
-                    <td style="text-align: center;">
-                        <button style="background: none; border: none; cursor: pointer; color: #1967d2; font-weight: 500; font-size: 11px;">⚙️ Edit</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+<!-- AUDIENCES Section -->
+<div id="audiences" class="tab-content" style="display: block; margin-bottom: 60px;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Audiences</h2>
+        <button class="btn btn-primary" onclick="openAudienceModal()">+ New Audience</button>
     </div>
-</div>
 
-<!-- AUDIENCE INSIGHTS & OVERLAP -->
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-bottom: 24px;">
-    <!-- Audience Trends -->
     <div class="card">
-        <h2>📈 Audience Growth Trends</h2>
-        <p class="subtitle">Size change over last 30 days</p>
-        
-        <div style="margin-top: 20px;">
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 600; color: #202124;">High-Value Users</span>
-                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+15%</span>
-                </div>
-                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
-                    <div style="height: 100%; background: #34a853; width: 85%;"></div>
-                </div>
-                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">2.0M → 2.3M users</div>
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 600; color: #202124;">Tech Enthusiasts</span>
-                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+22%</span>
-                </div>
-                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
-                    <div style="height: 100%; background: #34a853; width: 92%;"></div>
-                </div>
-                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">3.1M → 3.8M users</div>
-            </div>
-
-            <div style="margin-bottom: 16px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 600; color: #202124;">Active Mobile Users</span>
-                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+8%</span>
-                </div>
-                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
-                    <div style="height: 100%; background: #34a853; width: 78%;"></div>
-                </div>
-                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">4.8M → 5.2M users</div>
-            </div>
-
-            <div>
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <span style="font-size: 12px; font-weight: 600; color: #202124;">Brand Researchers</span>
-                    <span style="font-size: 12px; color: #34a853; font-weight: 600;">+3%</span>
-                </div>
-                <div style="height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden;">
-                    <div style="height: 100%; background: #34a853; width: 68%;"></div>
-                </div>
-                <div style="font-size: 10px; color: #5f6368; margin-top: 4px;">1.45M → 1.5M users</div>
-            </div>
+        <div class="info-box" style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Audiences</strong><br>
+            Create first-party audiences from your user data for targeted campaigns.
         </div>
-    </div>
 
-    <!-- Audience Overlap Matrix -->
-    <div class="card">
-        <h2>🎯 Audience Overlap Analysis</h2>
-        <p class="subtitle">Which segments have overlapping users</p>
-        
-        <div style="margin-top: 20px; background: #f1f3f4; padding: 12px; border-radius: 8px; overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; font-size: 10px;">
+        <div class="table-container">
+            <table>
                 <thead>
                     <tr>
-                        <th style="padding: 8px; text-align: left; font-weight: 600; background: #fff;">Segment A</th>
-                        <th style="padding: 8px; text-align: left; font-weight: 600; background: #fff;">Segment B</th>
-                        <th style="padding: 8px; text-align: center; font-weight: 600; background: #fff;">Overlap %</th>
-                        <th style="padding: 8px; text-align: right; font-weight: 600; background: #fff;">Count</th>
+                        <th>Audience Name</th>
+                        <th>Type</th>
+                        <th>Segments</th>
+                        <th>Size</th>
+                        <th>Created</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr style="border-bottom: 1px solid #dadce0;">
-                        <td style="padding: 8px;">High-Value Users</td>
-                        <td style="padding: 8px;">Tech Enthusiasts</td>
-                        <td style="padding: 8px; text-align: center; font-weight: 600;">45%</td>
-                        <td style="padding: 8px; text-align: right;">1.04M</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #dadce0;">
-                        <td style="padding: 8px;">Tech Enthusiasts</td>
-                        <td style="padding: 8px;">Brand Researchers</td>
-                        <td style="padding: 8px; text-align: center; font-weight: 600;">62%</td>
-                        <td style="padding: 8px; text-align: right;">930K</td>
-                    </tr>
-                    <tr style="border-bottom: 1px solid #dadce0;">
-                        <td style="padding: 8px;">Active Mobile Users</td>
-                        <td style="padding: 8px;">High-Value Users</td>
-                        <td style="padding: 8px; text-align: center; font-weight: 600;">28%</td>
-                        <td style="padding: 8px; text-align: right;">644K</td>
+                    <tr>
+                        <td>Premium Users</td>
+                        <td>First-Party</td>
+                        <td>3</td>
+                        <td>1.2M</td>
+                        <td>Dec 28, 2025</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editAudience(1)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteAudience(1)">Delete</button>
+                        </td>
                     </tr>
                     <tr>
-                        <td style="padding: 8px;">Brand Researchers</td>
-                        <td style="padding: 8px;">High-Value Users</td>
-                        <td style="padding: 8px; text-align: center; font-weight: 600;">71%</td>
-                        <td style="padding: 8px; text-align: right;">1.07M</td>
+                        <td>Newsletter Subscribers</td>
+                        <td>First-Party</td>
+                        <td>5</td>
+                        <td>3.8M</td>
+                        <td>Dec 15, 2025</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Mobile App Users</td>
+                        <td>First-Party</td>
+                        <td>2</td>
+                        <td>2.4M</td>
+                        <td>Dec 5, 2025</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>High-Value Customers</td>
+                        <td>First-Party</td>
+                        <td>4</td>
+                        <td>850K</td>
+                        <td>Nov 20, 2025</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
         </div>
-        
-        <div style="margin-top: 12px; font-size: 11px; color: #5f6368;">
-            <div style="padding: 12px; background: #fff3e0; border-radius: 4px;">
-                <strong>💡 Tip:</strong> High overlap (>50%) means audiences are similar. Use for lookalike modeling. Low overlap (<30%) means complementary audiences. Combine for broader reach.
-            </div>
+    </div>
+</div>
+
+<!-- SEGMENTS Section -->
+<div id="segments" class="tab-content" style="display: none; margin-bottom: 60px;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Audience Segments</h2>
+        <button class="btn btn-primary" onclick="openSegmentModal()">+ New Segment</button>
+    </div>
+
+    <div class="card">
+        <div class="info-box" style="background: #f3e5f5; border-left: 4px solid #9C27B0; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Segments</strong><br>
+            Define segment rules using key-value pairs for granular audience targeting.
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Segment Name</th>
+                        <th>Audience</th>
+                        <th>Rule (Key=Value)</th>
+                        <th>Size</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Purchase History: $500+</td>
+                        <td>Premium Users</td>
+                        <td>purchase_value=500+</td>
+                        <td>450K</td>
+                        <td>Dec 28, 2025</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Engagement: Very High</td>
+                        <td>Premium Users</td>
+                        <td>engagement_level=very_high</td>
+                        <td>380K</td>
+                        <td>Dec 28, 2025</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Category: Electronics</td>
+                        <td>Premium Users</td>
+                        <td>category=electronics</td>
+                        <td>320K</td>
+                        <td>Dec 28, 2025</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Email Verified: Yes</td>
+                        <td>Newsletter Subscribers</td>
+                        <td>email_verified=yes</td>
+                        <td>3.8M</td>
+                        <td>Dec 15, 2025</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline">Edit</button>
+                            <button class="btn btn-sm btn-outline">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<!-- SEGMENT CREATION ASSISTANT -->
-<div class="card">
-    <h2>✨ Create New Segment</h2>
-    <p class="subtitle">Build a custom audience based on user behavior and attributes</p>
+<!-- ANALYTICS Section -->
+<div id="analytics" class="tab-content" style="display: none;">
+    <h2>Audience Analytics</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+        <div class="kpi-card">
+            <div class="kpi-value">12</div>
+            <div class="kpi-label">Total Audiences</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value">38</div>
+            <div class="kpi-label">Total Segments</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value">48.2M</div>
+            <div class="kpi-label">Total Reach</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value">+12%</div>
+            <div class="kpi-label">Growth (MoM)</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Audience Size Breakdown</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Audience</th>
+                        <th>Segments</th>
+                        <th>Size</th>
+                        <th>% of Total</th>
+                        <th>Trend</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Premium Users</td>
+                        <td>3</td>
+                        <td>1,200,000</td>
+                        <td>2.5%</td>
+                        <td>📈 +8%</td>
+                    </tr>
+                    <tr>
+                        <td>Newsletter Subscribers</td>
+                        <td>5</td>
+                        <td>3,800,000</td>
+                        <td>7.9%</td>
+                        <td>📈 +15%</td>
+                    </tr>
+                    <tr>
+                        <td>Mobile App Users</td>
+                        <td>2</td>
+                        <td>2,400,000</td>
+                        <td>5.0%</td>
+                        <td>📈 +12%</td>
+                    </tr>
+                    <tr>
+                        <td>High-Value Customers</td>
+                        <td>4</td>
+                        <td>850,000</td>
+                        <td>1.8%</td>
+                        <td>📈 +5%</td>
+                    </tr>
+                    <tr>
+                        <td>Inactive Users</td>
+                        <td>3</td>
+                        <td>39,952,000</td>
+                        <td>82.8%</td>
+                        <td>📉 -2%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Create Audience Modal -->
+<div id="audienceModal" class="modal">
+    <div class="modal-content" style="border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #e8eaed; gap: 40px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="font-size: 22px; line-height: 1; padding: 4px;">👥</div>
+                <h2 style="margin: 0; color: #202124; font-size: 20px; font-weight: 600; letter-spacing: -0.2px; line-height: 1.4; word-spacing: 3px;">Create New Audience</h2>
+            </div>
+            <span class="close" onclick="closeAudienceModal()" style="font-size: 24px; cursor: pointer; color: #5f6368; transition: all 0.2s; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%;" onmouseover="this.style.color='#202124'; this.style.background='#f5f5f5'" onmouseout="this.style.color='#5f6368'; this.style.background='transparent'">&times;</span>
+        </div>
+        <form id="audienceForm" onsubmit="handleCreateAudience(event)">
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 13px;"><span style="color: #ea4335;">*</span> Audience Name</label>
+                <input type="text" name="audience_name" required placeholder="e.g., Premium Users, Tech Enthusiasts" style="width: 100%; padding: 14px 16px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; background: white;" onfocus="this.style.borderColor='#2196F3'; this.style.boxShadow='0 0 0 2px rgba(33,150,243,0.15)'" onblur="this.style.borderColor='#dadce0'; this.style.boxShadow='none'">
+                <p style="margin: 6px 0 0 0; font-size: 12px; color: #5f6368;">Give your audience a memorable name</p>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 13px;"><span style="color: #ea4335;">*</span> Audience Type</label>
+                <select name="audience_type" required style="width: 100%; padding: 14px 16px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; background: white; cursor: pointer; transition: all 0.2s; box-sizing: border-box;" onfocus="this.style.borderColor='#2196F3'; this.style.boxShadow='0 0 0 2px rgba(33,150,243,0.15)'" onblur="this.style.borderColor='#dadce0'; this.style.boxShadow='none'">
+                    <option value="" disabled>Select type...</option>
+                    <option value="first_party">🏠 First-Party (Your own data)</option>
+                    <option value="dmp">📊 DMP (Data Management Platform)</option>
+                    <option value="cdp">🎯 CDP (Customer Data Platform)</option>
+                </select>
+                <p style="margin: 6px 0 0 0; font-size: 12px; color: #5f6368;">Choose the data source type</p>
+            </div>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 13px;">📝 Description (Optional)</label>
+                <textarea name="description" placeholder="Describe the purpose and criteria of this audience..." rows="3" style="width: 100%; padding: 14px 16px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; font-family: inherit; resize: vertical; transition: all 0.2s; box-sizing: border-box; background: white; line-height: 1.5;" onfocus="this.style.borderColor='#2196F3'; this.style.boxShadow='0 0 0 2px rgba(33,150,243,0.15)'" onblur="this.style.borderColor='#dadce0'; this.style.boxShadow='none'"></textarea>
+                <p style="margin: 6px 0 0 0; font-size: 12px; color: #5f6368;">Help your team understand this audience's purpose</p>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 28px; justify-content: flex-end;">
+                <button type="button" onclick="closeAudienceModal()" style="padding: 10px 20px; background: transparent; color: #5f6368; border: 1px solid #dadce0; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s;" onmouseover="this.style.borderColor='#202124'; this.style.color='#202124'; this.style.background='#f5f5f5'" onmouseout="this.style.borderColor='#dadce0'; this.style.color='#5f6368'; this.style.background='transparent'">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 10px 28px; background: #2196F3; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s;" onmouseover="this.style.background='#1976D2'; this.style.boxShadow='0 4px 12px rgba(33,150,243,0.3)'" onmouseout="this.style.background='#2196F3'; this.style.boxShadow='none'">✓ Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Create Segment Modal -->
+<div id="segmentModal" class="modal">
+    <div class="modal-content" style="border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); padding: 28px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #e8eaed; gap: 40px;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <div style="font-size: 22px; line-height: 1; padding: 4px;">🎯</div>
+                <h2 style="margin: 0; color: #202124; font-size: 20px; font-weight: 600; letter-spacing: -0.2px; line-height: 1.4; word-spacing: 3px;">Create New Segment</h2>
+            </div>
+            <span class="close" onclick="closeSegmentModal()" style="font-size: 24px; cursor: pointer; color: #5f6368; transition: all 0.2s; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%;" onmouseover="this.style.color='#202124'; this.style.background='#f5f5f5'" onmouseout="this.style.color='#5f6368'; this.style.background='transparent'">&times;</span>
+        </div>
+        <form id="segmentForm" onsubmit="handleCreateSegment(event)">
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 13px;"><span style="color: #ea4335;">*</span> Segment Name</label>
+                <input type="text" name="segment_name" required placeholder="e.g., Purchase History: $500+, High Engagement Users" style="width: 100%; padding: 14px 16px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; background: white;" onfocus="this.style.borderColor='#2196F3'; this.style.boxShadow='0 0 0 2px rgba(33,150,243,0.15)'" onblur="this.style.borderColor='#dadce0'; this.style.boxShadow='none'">
+                <p style="margin: 6px 0 0 0; font-size: 12px; color: #5f6368;">Descriptive name for this segment</p>
+            </div>
+            <div class="form-group" style="margin-bottom: 20px;">
+                <label style="display: block; font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 13px;"><span style="color: #ea4335;">*</span> Parent Audience</label>
+                <select name="audience_id" required style="width: 100%; padding: 14px 16px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; background: white; cursor: pointer; transition: all 0.2s; box-sizing: border-box;" onfocus="this.style.borderColor='#2196F3'; this.style.boxShadow='0 0 0 2px rgba(33,150,243,0.15)'" onblur="this.style.borderColor='#dadce0'; this.style.boxShadow='none'">
+                    <option value="" disabled>Select audience...</option>
+                    <option value="1">👥 Premium Users</option>
+                    <option value="2">📧 Newsletter Subscribers</option>
+                    <option value="3">📱 Mobile App Users</option>
+                    <option value="4">💎 High-Value Customers</option>
+                </select>
+                <p style="margin: 6px 0 0 0; font-size: 12px; color: #5f6368;">Which audience does this segment belong to?</p>
+            </div>
+            <div class="form-group" style="margin-bottom: 24px;">
+                <label style="display: block; font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 13px;"><span style="color: #ea4335;">*</span> Targeting Rule</label>
+                <input type="text" name="kv_pair" required placeholder="key=value (e.g., purchase_value=500+, region=US, age=25-45)" style="width: 100%; padding: 14px 16px; border: 1px solid #dadce0; border-radius: 6px; font-size: 14px; transition: all 0.2s; box-sizing: border-box; font-family: 'Courier New', monospace; background: white;" onfocus="this.style.borderColor='#2196F3'; this.style.boxShadow='0 0 0 2px rgba(33,150,243,0.15)'" onblur="this.style.borderColor='#dadce0'; this.style.boxShadow='none'">
+                <div style="margin: 6px 0 0 0; padding: 10px; background: #f5f5f5; border-radius: 6px;">
+                    <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 600; color: #202124;">📌 Format: key=value</p>
+                    <p style="margin: 0 0 4px 0; font-size: 11px; color: #5f6368;">Examples: purchase_value≥500, region=US, age≥25</p>
+                    <p style="margin: 0; font-size: 11px; color: #5f6368;">Operators: =, ≥, ≤, >, <, !=</p>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 28px; justify-content: flex-end;">
+                <button type="button" onclick="closeSegmentModal()" style="padding: 10px 20px; background: transparent; color: #5f6368; border: 1px solid #dadce0; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s;" onmouseover="this.style.borderColor='#202124'; this.style.color='#202124'; this.style.background='#f5f5f5'" onmouseout="this.style.borderColor='#dadce0'; this.style.color='#5f6368'; this.style.background='transparent'">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 10px 28px; background: #9C27B0; color: white; border: none; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; transition: all 0.2s;" onmouseover="this.style.background='#7B1FA2'; this.style.boxShadow='0 4px 12px rgba(156,39,176,0.3)'" onmouseout="this.style.background='#9C27B0'; this.style.boxShadow='none'">✓ Create</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function switchTab(event, tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).style.display = 'block';
+    event.target.classList.add('active');
+}
+
+function openAudienceModal() { document.getElementById('audienceModal').style.display = 'block'; }
+function closeAudienceModal() { document.getElementById('audienceModal').style.display = 'none'; }
+function openSegmentModal() { document.getElementById('segmentModal').style.display = 'block'; }
+function closeSegmentModal() { document.getElementById('segmentModal').style.display = 'none'; }
+
+function editAudience(id) { alert('Edit audience ' + id); }
+function deleteAudience(id) { 
+    if (confirm('Delete this audience?')) {
+        alert('Deleted audience ' + id);
+    }
+}
+
+function handleCreateAudience(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
     
-    <div style="margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-        <!-- Behavior-Based -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">📊 Behavior-Based</h4>
-            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users matching specific behaviors</p>
-            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Example rules:</div>
-                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
-                    <li>Visited pricing page 3+ times</li>
-                    <li>Spent 5+ min on product page</li>
-                    <li>Added to cart but didn't purchase</li>
-                </ul>
-            </div>
-            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Behavior Segment</button>
-        </div>
+    fetch('/api/audiences/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Audience created successfully!');
+            closeAudienceModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
 
-        <!-- Demographic-Based -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">🎂 Demographics</h4>
-            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users matching age, gender, income</p>
-            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Available options:</div>
-                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
-                    <li>Age: 18-34, 35-54, 55+</li>
-                    <li>Gender: M/F</li>
-                    <li>Income: Low/Mid/High</li>
-                </ul>
-            </div>
-            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Demographic Segment</button>
-        </div>
+function handleCreateSegment(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    
+    fetch('/api/audience-segments/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Segment created successfully!');
+            closeSegmentModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
 
-        <!-- Interest-Based -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">💭 Interests</h4>
-            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users interested in topics/categories</p>
-            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Example interests:</div>
-                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
-                    <li>Technology & Gadgets</li>
-                    <li>Finance & Investing</li>
-                    <li>Travel & Vacation</li>
-                </ul>
-            </div>
-            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Interest Segment</button>
-        </div>
-
-        <!-- Lookalike -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">🔗 Lookalike</h4>
-            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Users similar to existing segment</p>
-            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Create from:</div>
-                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
-                    <li>Converters (past buyers)</li>
-                    <li>High-value users</li>
-                    <li>Existing segments</li>
-                </ul>
-            </div>
-            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Create Lookalike</button>
-        </div>
-
-        <!-- Upload CSV -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">📤 Upload List</h4>
-            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Import custom user list (CSV)</p>
-            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Supported formats:</div>
-                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
-                    <li>Email, Phone, Cookie ID</li>
-                    <li>Max 10M users/upload</li>
-                    <li>Encrypted in transit</li>
-                </ul>
-            </div>
-            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Upload CSV</button>
-        </div>
-
-        <!-- Combination -->
-        <div style="border: 1px solid #dadce0; border-radius: 8px; padding: 16px;">
-            <h4 style="margin: 0 0 12px 0; font-size: 13px; font-weight: 600; color: #202124;">⚙️ Combination Rules</h4>
-            <p style="margin: 0 0 12px 0; font-size: 11px; color: #5f6368;">Merge multiple segments with AND/OR</p>
-            <div style="background: #f1f3f4; padding: 12px; border-radius: 6px; margin-bottom: 12px;">
-                <div style="font-size: 11px; color: #5f6368; margin-bottom: 8px;">Example logic:</div>
-                <ul style="margin: 0; padding-left: 16px; font-size: 10px; color: #5f6368;">
-                    <li>(High-Value AND Tech) OR Mobile</li>
-                    <li>NOT Recent-Converters</li>
-                    <li>Nested rules supported</li>
-                </ul>
-            </div>
-            <button style="width: 100%; padding: 8px; background: #1967d2; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500;">Build Combination</button>
-        </div>
-    </div>
-</div>
+window.onclick = function(event) {
+    ['audienceModal', 'segmentModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        if (event.target == modal) modal.style.display = 'none';
+    });
+}
+</script>
 {% endblock %}

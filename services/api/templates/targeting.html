@@ -1,0 +1,425 @@
+{% extends "base.html" %}
+
+{% block title %}Targeting Controls - Digital-SSP{% endblock %}
+
+{% block content %}
+<style>
+.tab-navigation {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background: #f5f5f5;
+    color: #2196F3;
+}
+
+.tab-btn.active {
+    color: #2196F3;
+    border-bottom-color: #2196F3;
+}
+
+.rule-card {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #2196F3;
+    margin-bottom: 15px;
+}
+
+.rule-card strong {
+    color: #2196F3;
+}
+</style>
+
+<div class="page-header">
+    <h1>🎯 Targeting Controls</h1>
+    <p>Manage targeting rules, frequency caps, and competitive exclusions</p>
+</div>
+
+<div class="tab-navigation">
+    <button class="tab-btn active" onclick="switchTab(event, 'rules')">Targeting Rules</button>
+    <button class="tab-btn" onclick="switchTab(event, 'frequency')">Frequency Caps</button>
+    <button class="tab-btn" onclick="switchTab(event, 'competitive')">Competitive Exclusions</button>
+</div>
+
+<!-- TARGETING RULES Section -->
+<div id="rules" class="tab-content" style="display: block;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Targeting Rules</h2>
+        <button class="btn btn-primary" onclick="openRuleModal()">+ New Rule</button>
+    </div>
+
+    <div class="card">
+        <div class="info-box" style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Targeting Rules</strong><br>
+            Define inventory, geography, device, OS, browser, and time-based targeting for line items.
+        </div>
+
+        <h3>Active Rules</h3>
+        <div class="rule-card">
+            <strong>Rule:</strong> US-Based Desktop Traffic<br>
+            <strong>Inventory:</strong> Premium Display Banner<br>
+            <strong>Geography:</strong> United States<br>
+            <strong>Device:</strong> Desktop<br>
+            <strong>OS:</strong> Windows, macOS<br>
+            <strong>Browser:</strong> Chrome, Safari, Firefox<br>
+            <strong>Status:</strong> <span class="badge badge-success">Active</span>
+        </div>
+
+        <div class="rule-card">
+            <strong>Rule:</strong> Mobile Traffic - Key Markets<br>
+            <strong>Inventory:</strong> All Mobile Units<br>
+            <strong>Geography:</strong> US, CA, UK<br>
+            <strong>Device:</strong> Mobile<br>
+            <strong>OS:</strong> iOS, Android<br>
+            <strong>Browser:</strong> Safari Mobile, Chrome Mobile<br>
+            <strong>Status:</strong> <span class="badge badge-success">Active</span>
+        </div>
+
+        <div class="rule-card">
+            <strong>Rule:</strong> Tablet Video Content<br>
+            <strong>Inventory:</strong> Video Player<br>
+            <strong>Geography:</strong> Global<br>
+            <strong>Device:</strong> Tablet<br>
+            <strong>Time-based:</strong> 6 AM - 10 PM<br>
+            <strong>Status:</strong> <span class="badge badge-success">Active</span>
+        </div>
+    </div>
+</div>
+
+<!-- FREQUENCY CAPS Section -->
+<div id="frequency" class="tab-content" style="display: none;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Frequency Caps</h2>
+        <button class="btn btn-primary" onclick="openFrequencyModal()">+ New Frequency Cap</button>
+    </div>
+
+    <div class="card">
+        <div class="info-box" style="background: #f3e5f5; border-left: 4px solid #9C27B0; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Frequency Caps</strong><br>
+            Control how often the same user sees an ad within a specified time period.
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cap Name</th>
+                        <th>Line Item</th>
+                        <th>Impressions</th>
+                        <th>Time Period</th>
+                        <th>Scope</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Max 3 Per Hour</td>
+                        <td>Premium Brand Campaign</td>
+                        <td>3</td>
+                        <td>Hourly</td>
+                        <td>User</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td><button class="btn btn-sm btn-outline">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>Max 10 Per Day</td>
+                        <td>Newsletter Sponsorship</td>
+                        <td>10</td>
+                        <td>Daily</td>
+                        <td>Household</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td><button class="btn btn-sm btn-outline">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>Video Safety Cap</td>
+                        <td>Video Mid-Roll</td>
+                        <td>2</td>
+                        <td>Per Session</td>
+                        <td>Cross-Device</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td><button class="btn btn-sm btn-outline">Edit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- COMPETITIVE EXCLUSIONS Section -->
+<div id="competitive" class="tab-content" style="display: none;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Competitive Exclusions</h2>
+        <button class="btn btn-primary" onclick="openCompetitiveModal()">+ New Exclusion Rule</button>
+    </div>
+
+    <div class="card">
+        <div class="info-box" style="background: #ffe0b2; border-left: 4px solid #FF9800; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Competitive Exclusions</strong><br>
+            Block competing advertisers, categories, or domains from appearing on the same page.
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rule Name</th>
+                        <th>Type</th>
+                        <th>Excluded Items</th>
+                        <th>Line Items Affected</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tech Companies Only</td>
+                        <td>Advertiser</td>
+                        <td>Apple, Microsoft, Samsung (excluded)</td>
+                        <td>5</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td><button class="btn btn-sm btn-outline">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>No Financial Competitors</td>
+                        <td>Category</td>
+                        <td>Banking, Insurance, Investment</td>
+                        <td>3</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td><button class="btn btn-sm btn-outline">Edit</button></td>
+                    </tr>
+                    <tr>
+                        <td>Brand Safe Domains</td>
+                        <td>Domain</td>
+                        <td>Exclude 8 domains</td>
+                        <td>12</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td><button class="btn btn-sm btn-outline">Edit</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Targeting Rule Modal -->
+<div id="ruleModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeRuleModal()">&times;</span>
+        <h2>Create Targeting Rule</h2>
+        <form id="ruleForm" onsubmit="handleCreateRule(event)">
+            <div class="form-group">
+                <label>Rule Name *</label>
+                <input type="text" name="rule_name" required placeholder="e.g., US Desktop Traffic">
+            </div>
+            <div class="form-group">
+                <label>Inventory Target</label>
+                <select name="inventory_target">
+                    <option>All</option>
+                    <option>Premium Display</option>
+                    <option>Video</option>
+                    <option>Mobile</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Geography</label>
+                <input type="text" name="geography" placeholder="US, Canada, UK">
+            </div>
+            <div class="form-group">
+                <label>Device Type</label>
+                <select name="device_type">
+                    <option value="">All Devices</option>
+                    <option value="desktop">Desktop</option>
+                    <option value="mobile">Mobile</option>
+                    <option value="tablet">Tablet</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Operating System</label>
+                <input type="text" name="os" placeholder="Windows, macOS, iOS, Android">
+            </div>
+            <div class="form-group">
+                <label>Browser</label>
+                <input type="text" name="browser" placeholder="Chrome, Safari, Firefox">
+            </div>
+            <button type="submit" class="btn btn-primary">Create Rule</button>
+        </form>
+    </div>
+</div>
+
+<!-- Frequency Cap Modal -->
+<div id="frequencyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeFrequencyModal()">&times;</span>
+        <h2>Create Frequency Cap</h2>
+        <form id="frequencyForm" onsubmit="handleCreateFrequency(event)">
+            <div class="form-group">
+                <label>Cap Name *</label>
+                <input type="text" name="cap_name" required placeholder="Max 3 Per Hour">
+            </div>
+            <div class="form-group">
+                <label>Line Item *</label>
+                <select name="line_item_id" required>
+                    <option>Select Line Item</option>
+                    <option value="1">Premium Brand Campaign</option>
+                    <option value="2">Newsletter Sponsorship</option>
+                    <option value="3">Video Mid-Roll</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Max Impressions *</label>
+                <input type="number" name="max_impressions" required min="1" placeholder="3">
+            </div>
+            <div class="form-group">
+                <label>Time Period *</label>
+                <select name="time_period" required>
+                    <option value="hourly">Hourly</option>
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Frequency Scope *</label>
+                <select name="frequency_scope" required>
+                    <option value="user">User</option>
+                    <option value="household">Household</option>
+                    <option value="cross-device">Cross-Device</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Frequency Cap</button>
+        </form>
+    </div>
+</div>
+
+<!-- Competitive Exclusion Modal -->
+<div id="competitiveModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeCompetitiveModal()">&times;</span>
+        <h2>Create Competitive Exclusion</h2>
+        <form id="competitiveForm" onsubmit="handleCreateCompetitive(event)">
+            <div class="form-group">
+                <label>Rule Name *</label>
+                <input type="text" name="rule_name" required placeholder="e.g., No Competitor Ads">
+            </div>
+            <div class="form-group">
+                <label>Exclusion Type *</label>
+                <select name="exclusion_type" required>
+                    <option value="advertiser">Advertiser</option>
+                    <option value="category">Category</option>
+                    <option value="domain">Domain</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Excluded Items *</label>
+                <textarea name="excluded_items" required placeholder="One per line or comma-separated" rows="4"></textarea>
+            </div>
+            <div class="form-group">
+                <label>Apply to Line Items</label>
+                <input type="text" name="line_item_ids" placeholder="Comma-separated IDs or leave blank for all">
+            </div>
+            <button type="submit" class="btn btn-primary">Create Exclusion</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function switchTab(event, tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).style.display = 'block';
+    event.target.classList.add('active');
+}
+
+function openRuleModal() { document.getElementById('ruleModal').style.display = 'block'; }
+function closeRuleModal() { document.getElementById('ruleModal').style.display = 'none'; }
+function openFrequencyModal() { document.getElementById('frequencyModal').style.display = 'block'; }
+function closeFrequencyModal() { document.getElementById('frequencyModal').style.display = 'none'; }
+function openCompetitiveModal() { document.getElementById('competitiveModal').style.display = 'block'; }
+function closeCompetitiveModal() { document.getElementById('competitiveModal').style.display = 'none'; }
+
+function handleCreateRule(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    fetch('/api/targeting-rules/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Targeting rule created!');
+            closeRuleModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
+
+function handleCreateFrequency(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    fetch('/api/frequency-caps/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Frequency cap created!');
+            closeFrequencyModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
+
+function handleCreateCompetitive(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    fetch('/api/competitive-exclusions/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Competitive exclusion created!');
+            closeCompetitiveModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
+
+window.onclick = function(event) {
+    ['ruleModal', 'frequencyModal', 'competitiveModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        if (event.target == modal) modal.style.display = 'none';
+    });
+}
+</script>
+{% endblock %}

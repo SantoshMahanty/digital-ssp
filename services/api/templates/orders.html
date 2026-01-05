@@ -98,6 +98,90 @@
     </div>
 </div>
 
+<!-- CREATE ORDER MODAL -->
+<div id="createOrderModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 8px; padding: 24px; width: 90%; max-width: 600px; max-height: 90vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2 style="margin: 0;">Create New Order</h2>
+            <button onclick="hideCreateOrderModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">✕</button>
+        </div>
+        
+        <form id="createOrderForm" onsubmit="handleCreateOrder(event)">
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Order Name</label>
+                <input type="text" name="order_name" placeholder="e.g., Q1 Campaign" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Campaign ID</label>
+                <input type="number" name="campaign_id" placeholder="Campaign ID" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="margin-bottom: 16px;">
+                <label style="display: block; margin-bottom: 4px; font-weight: 600;">Publisher ID</label>
+                <input type="number" name="publisher_id" placeholder="Publisher ID" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Order Type</label>
+                    <select name="order_type" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                        <option>GUARANTEED</option>
+                        <option>PREFERRED</option>
+                        <option>STANDARD</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Status</label>
+                    <select name="status" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                        <option>ACTIVE</option>
+                        <option>PAUSED</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Start Date</label>
+                    <input type="date" name="start_date" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">End Date</label>
+                    <input type="date" name="end_date" required style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Daily Budget</label>
+                    <input type="number" name="daily_budget" placeholder="0" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Lifetime Budget</label>
+                    <input type="number" name="lifetime_budget" placeholder="0" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Daily Impression Goal</label>
+                    <input type="number" name="daily_impression_goal" placeholder="0" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+                <div>
+                    <label style="display: block; margin-bottom: 4px; font-weight: 600;">Lifetime Impression Goal</label>
+                    <input type="number" name="lifetime_impression_goal" placeholder="0" style="width: 100%; padding: 8px; border: 1px solid #dadce0; border-radius: 4px;">
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button type="button" onclick="hideCreateOrderModal()" class="btn btn-secondary" style="padding: 8px 16px;">Cancel</button>
+                <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Create Order</button>
+            </div>
+        </form>
+        <div id="createOrderMessage" style="margin-top: 12px; padding: 12px; border-radius: 4px; display: none;"></div>
+    </div>
+</div>
+
 <script>
 function showCreateOrderModal() {
     document.getElementById('createOrderModal').style.display = 'flex';
@@ -105,12 +189,56 @@ function showCreateOrderModal() {
 
 function hideCreateOrderModal() {
     document.getElementById('createOrderModal').style.display = 'none';
+    document.getElementById('createOrderForm').reset();
+    document.getElementById('createOrderMessage').style.display = 'none';
 }
 
-function handleCreateOrder(event) {
+async function handleCreateOrder(event) {
     event.preventDefault();
-    alert('Order created successfully! Redirecting to line items...');
-    hideCreateOrderModal();
+    const form = event.target;
+    const msgDiv = document.getElementById('createOrderMessage');
+    
+    try {
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData);
+        
+        // Convert string values to appropriate types
+        data.campaign_id = parseInt(data.campaign_id);
+        data.publisher_id = parseInt(data.publisher_id);
+        data.daily_budget = parseFloat(data.daily_budget || 0);
+        data.lifetime_budget = parseFloat(data.lifetime_budget || 0);
+        data.daily_impression_goal = parseInt(data.daily_impression_goal || 0);
+        data.lifetime_impression_goal = parseInt(data.lifetime_impression_goal || 0);
+        
+        const response = await fetch('/api/orders/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            msgDiv.style.background = '#e6f4ea';
+            msgDiv.style.color = '#137333';
+            msgDiv.textContent = '✓ ' + result.message;
+            msgDiv.style.display = 'block';
+            setTimeout(() => {
+                hideCreateOrderModal();
+                location.reload();
+            }, 1500);
+        } else {
+            msgDiv.style.background = '#ffebee';
+            msgDiv.style.color = '#c5221f';
+            msgDiv.textContent = '✕ ' + (result.error || 'Error creating order');
+            msgDiv.style.display = 'block';
+        }
+    } catch (error) {
+        msgDiv.style.background = '#ffebee';
+        msgDiv.style.color = '#c5221f';
+        msgDiv.textContent = '✕ Error: ' + error.message;
+        msgDiv.style.display = 'block';
+    }
 }
 </script>
 {% endblock %}

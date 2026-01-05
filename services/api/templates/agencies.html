@@ -1,0 +1,461 @@
+{% extends "base.html" %}
+
+{% block title %}Agencies Management - Digital-SSP{% endblock %}
+
+{% block content %}
+<style>
+.tab-navigation {
+    display: flex;
+    gap: 10px;
+    border-bottom: 2px solid #e0e0e0;
+    margin-bottom: 30px;
+}
+
+.tab-btn {
+    padding: 12px 20px;
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.tab-btn:hover {
+    background: #f5f5f5;
+    color: #2196F3;
+}
+
+.tab-btn.active {
+    color: #2196F3;
+    border-bottom-color: #2196F3;
+}
+
+.kpi-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.kpi-value {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2196F3;
+    margin-bottom: 5px;
+}
+
+.kpi-label {
+    color: #666;
+    font-size: 14px;
+}
+</style>
+
+<div class="page-header">
+    <h1>🏢 Agencies Management</h1>
+    <p>Manage agency partners, commissions, and account settings</p>
+</div>
+
+<div class="tab-navigation">
+    <button class="tab-btn active" onclick="switchTab(event, 'agencies')">Agencies</button>
+    <button class="tab-btn" onclick="switchTab(event, 'salespeople')">Salespeople</button>
+    <button class="tab-btn" onclick="switchTab(event, 'analytics')">Performance</button>
+</div>
+
+<!-- AGENCIES Section -->
+<div id="agencies" class="tab-content" style="display: block;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Agencies</h2>
+        <button class="btn btn-primary" onclick="openAgencyModal()">+ New Agency</button>
+    </div>
+
+    <div class="card">
+        <div class="info-box" style="background: #e3f2fd; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Agencies</strong><br>
+            Manage media buying agencies, set commission rates, and track partnership performance.
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Agency Name</th>
+                        <th>Contact</th>
+                        <th>Phone</th>
+                        <th>Commission %</th>
+                        <th>YTD Spend</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Premier Media Group</td>
+                        <td>john.smith@premiermedia.com</td>
+                        <td>(555) 123-4567</td>
+                        <td>15%</td>
+                        <td>$2,450,000</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editAgency(1)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteAgency(1)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Digital Ventures LLC</td>
+                        <td>sales@digitalventures.com</td>
+                        <td>(555) 234-5678</td>
+                        <td>12%</td>
+                        <td>$1,890,000</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editAgency(2)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteAgency(2)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Strategic Advertising Partners</td>
+                        <td>partnerships@stratadv.com</td>
+                        <td>(555) 345-6789</td>
+                        <td>18%</td>
+                        <td>$3,120,000</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editAgency(3)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteAgency(3)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Growth Marketing Inc</td>
+                        <td>contact@growthmarketing.com</td>
+                        <td>(555) 456-7890</td>
+                        <td>10%</td>
+                        <td>$890,000</td>
+                        <td><span class="badge badge-warning">Inactive</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editAgency(4)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteAgency(4)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- SALESPEOPLE Section -->
+<div id="salespeople" class="tab-content" style="display: none;">
+    <div class="section-header" style="margin-bottom: 20px;">
+        <h2>Salespeople</h2>
+        <button class="btn btn-primary" onclick="openSalespersonModal()">+ New Salesperson</button>
+    </div>
+
+    <div class="card">
+        <div class="info-box" style="background: #f3e5f5; border-left: 4px solid #9C27B0; padding: 15px; margin-bottom: 20px;">
+            <strong>ℹ️ Salespeople</strong><br>
+            Manage sales representatives, territories, and commission tracking.
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Agency</th>
+                        <th>Territory</th>
+                        <th>YTD Commission</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John Smith</td>
+                        <td>john.smith@premiermedia.com</td>
+                        <td>(555) 123-4567</td>
+                        <td>Premier Media Group</td>
+                        <td>Northeast</td>
+                        <td>$367,500</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editSalesperson(1)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteSalesperson(1)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Sarah Johnson</td>
+                        <td>sarah.j@premiermedia.com</td>
+                        <td>(555) 123-4568</td>
+                        <td>Premier Media Group</td>
+                        <td>Southeast</td>
+                        <td>$289,200</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editSalesperson(2)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteSalesperson(2)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Michael Chen</td>
+                        <td>m.chen@digitalventures.com</td>
+                        <td>(555) 234-5680</td>
+                        <td>Digital Ventures LLC</td>
+                        <td>West Coast</td>
+                        <td>$226,800</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editSalesperson(3)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteSalesperson(3)">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Emily Rodriguez</td>
+                        <td>emily.r@stratadv.com</td>
+                        <td>(555) 345-6790</td>
+                        <td>Strategic Advertising Partners</td>
+                        <td>Midwest</td>
+                        <td>$561,600</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-outline" onclick="editSalesperson(4)">Edit</button>
+                            <button class="btn btn-sm btn-outline" onclick="deleteSalesperson(4)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- PERFORMANCE ANALYTICS Section -->
+<div id="analytics" class="tab-content" style="display: none;">
+    <h2>Partner Performance Analytics</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px;">
+        <div class="kpi-card">
+            <div class="kpi-value">4</div>
+            <div class="kpi-label">Active Agencies</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value">8</div>
+            <div class="kpi-label">Sales Representatives</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value">$8.35M</div>
+            <div class="kpi-label">YTD Total Spend</div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-value">$1.27M</div>
+            <div class="kpi-label">Total Commissions</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Agency Performance Ranking</h3>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Agency Name</th>
+                        <th>YTD Spend</th>
+                        <th>Commission Rate</th>
+                        <th>Total Commission</th>
+                        <th>Growth</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Strategic Advertising Partners</td>
+                        <td>$3,120,000</td>
+                        <td>18%</td>
+                        <td>$561,600</td>
+                        <td>📈 +18%</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Premier Media Group</td>
+                        <td>$2,450,000</td>
+                        <td>15%</td>
+                        <td>$367,500</td>
+                        <td>📈 +12%</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Digital Ventures LLC</td>
+                        <td>$1,890,000</td>
+                        <td>12%</td>
+                        <td>$226,800</td>
+                        <td>📈 +8%</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>Growth Marketing Inc</td>
+                        <td>$890,000</td>
+                        <td>10%</td>
+                        <td>$89,000</td>
+                        <td>📉 -5%</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Create Agency Modal -->
+<div id="agencyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeAgencyModal()">&times;</span>
+        <h2>Create Agency</h2>
+        <form id="agencyForm" onsubmit="handleCreateAgency(event)">
+            <div class="form-group">
+                <label>Agency Name *</label>
+                <input type="text" name="agency_name" required placeholder="Premier Media Group">
+            </div>
+            <div class="form-group">
+                <label>Contact Email *</label>
+                <input type="email" name="contact_email" required placeholder="contact@agency.com">
+            </div>
+            <div class="form-group">
+                <label>Contact Phone *</label>
+                <input type="tel" name="contact_phone" required placeholder="(555) 123-4567">
+            </div>
+            <div class="form-group">
+                <label>Commission Rate (%) *</label>
+                <input type="number" name="commission_rate" required min="0" max="100" step="0.5" placeholder="15">
+            </div>
+            <div class="form-group">
+                <label>Status *</label>
+                <select name="status" required>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Agency</button>
+        </form>
+    </div>
+</div>
+
+<!-- Create Salesperson Modal -->
+<div id="salespersonModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeSalespersonModal()">&times;</span>
+        <h2>Create Salesperson</h2>
+        <form id="salespersonForm" onsubmit="handleCreateSalesperson(event)">
+            <div class="form-group">
+                <label>First Name *</label>
+                <input type="text" name="first_name" required placeholder="John">
+            </div>
+            <div class="form-group">
+                <label>Last Name *</label>
+                <input type="text" name="last_name" required placeholder="Smith">
+            </div>
+            <div class="form-group">
+                <label>Email *</label>
+                <input type="email" name="email" required placeholder="john.smith@example.com">
+            </div>
+            <div class="form-group">
+                <label>Phone *</label>
+                <input type="tel" name="phone" required placeholder="(555) 123-4567">
+            </div>
+            <div class="form-group">
+                <label>Agency *</label>
+                <select name="agency_id" required>
+                    <option value="">Select Agency</option>
+                    <option value="1">Premier Media Group</option>
+                    <option value="2">Digital Ventures LLC</option>
+                    <option value="3">Strategic Advertising Partners</option>
+                    <option value="4">Growth Marketing Inc</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Territory *</label>
+                <input type="text" name="territory" required placeholder="Northeast">
+            </div>
+            <button type="submit" class="btn btn-primary">Create Salesperson</button>
+        </form>
+    </div>
+</div>
+
+<script>
+function switchTab(event, tabName) {
+    document.querySelectorAll('.tab-content').forEach(tab => tab.style.display = 'none');
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.getElementById(tabName).style.display = 'block';
+    event.target.classList.add('active');
+}
+
+function openAgencyModal() { document.getElementById('agencyModal').style.display = 'block'; }
+function closeAgencyModal() { document.getElementById('agencyModal').style.display = 'none'; }
+function openSalespersonModal() { document.getElementById('salespersonModal').style.display = 'block'; }
+function closeSalespersonModal() { document.getElementById('salespersonModal').style.display = 'none'; }
+
+function editAgency(id) { alert('Edit agency ' + id); }
+function deleteAgency(id) { 
+    if (confirm('Delete this agency?')) {
+        alert('Deleted agency ' + id);
+    }
+}
+
+function editSalesperson(id) { alert('Edit salesperson ' + id); }
+function deleteSalesperson(id) { 
+    if (confirm('Delete this salesperson?')) {
+        alert('Deleted salesperson ' + id);
+    }
+}
+
+function handleCreateAgency(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    
+    fetch('/api/agencies/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Agency created successfully!');
+            closeAgencyModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
+
+function handleCreateSalesperson(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    
+    fetch('/api/salespeople/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.success) {
+            alert('✓ Salesperson created successfully!');
+            closeSalespersonModal();
+            location.reload();
+        } else {
+            alert('✗ Error: ' + result.message);
+        }
+    })
+    .catch(err => alert('✗ Error: ' + err.message));
+}
+
+window.onclick = function(event) {
+    ['agencyModal', 'salespersonModal'].forEach(id => {
+        const modal = document.getElementById(id);
+        if (event.target == modal) modal.style.display = 'none';
+    });
+}
+</script>
+{% endblock %}

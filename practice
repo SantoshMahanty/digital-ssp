@@ -1,0 +1,465 @@
+# 📋 Complete API Endpoint Reference
+
+## Base URL
+```
+http://localhost:8000
+```
+
+---
+
+## 🏠 Page Routes (HTML)
+
+### Main Pages
+| Route | Method | Description | Template |
+|-------|--------|-------------|----------|
+| `/` | GET | Dashboard/Home | dashboard.html |
+| `/delivery` | GET | Delivery management hub | delivery.html |
+| `/orders` | GET | Orders management | orders.html |
+| `/line-items` | GET | Line items management | line_items.html |
+| `/creatives` | GET | Creative management | creatives.html |
+| `/inventory` | GET | Inventory management | inventory.html |
+| `/targeting` | GET | Targeting controls | targeting.html |
+| `/programmatic` | GET | Programmatic settings | programmatic.html |
+| `/reporting` | GET | Reporting dashboard | reporting.html |
+| `/audiences` | GET | Audience management | audiences.html |
+| `/pacing` | GET | Pacing controls | pacing.html |
+| `/creative-health-check` | GET | Creative QA | creative-health-check.html |
+| `/study_hub` | GET | Study Hub | study_hub.html |
+| `/admin` | GET | Admin panel | admin.html |
+| `/privacy` | GET | Privacy settings | privacy.html |
+| `/optimization` | GET | Optimization | optimization.html |
+| `/tools` | GET | Tools | tools.html |
+| `/console` | GET | Console | console.html |
+
+---
+
+## 🔌 API Endpoints (JSON)
+
+### Health & Status
+```
+GET /health
+Response:
+{
+  "status": "ok",
+  "timestamp": "2026-01-04T21:00:00Z"
+}
+```
+
+### Orders (CRUD)
+```
+POST /api/orders/create
+Body: {
+  "order_name": "string",
+  "campaign_id": int,
+  "publisher_id": int,
+  "order_type": "Standard|Sponsorship|Network|Bulk",
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "budget": float,
+  "goal": "impressions|revenue",
+  "goal_value": int
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/orders
+Response: [{ id, order_name, status, budget, ... }, ...]
+
+PUT /api/orders/{order_id}
+Body: { ...update fields... }
+Response: { "success": bool, "message": "string" }
+
+DELETE /api/orders/{order_id}
+Response: { "success": bool, "message": "string" }
+```
+
+### Line Items (CRUD)
+```
+POST /api/line-items/create
+Body: {
+  "order_name": "string",
+  "campaign_id": int,
+  "publisher_id": int,
+  "line_item_type": "Standard|Sponsorship|Network|Bulk|Price Priority|Programmatic",
+  "start_date": "YYYY-MM-DD",
+  "end_date": "YYYY-MM-DD",
+  "booked": int,
+  "goal": int
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/line-items
+Response: [{ id, order_id, line_item_type, booked, ... }, ...]
+```
+
+### Creatives (CRUD)
+```
+POST /api/creatives/create
+Body: {
+  "creative_name": "string",
+  "campaign_id": int,
+  "creative_type": "BANNER|VIDEO|NATIVE|RICH_MEDIA",
+  "dimensions": "string (e.g., 728x90)",
+  "url": "string",
+  "approval_status": "APPROVED|PENDING|REJECTED"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/creatives
+Response: [{ id, creative_name, type, dimensions, ... }, ...]
+```
+
+### Inventory Management
+```
+POST /api/ad-units/create
+Body: {
+  "ad_unit_name": "string",
+  "code": "string (e.g., /12345/homepage_atf)",
+  "sizes": "string (comma-separated, e.g., 728x90, 300x250)",
+  "parent_ad_unit_id": int (optional),
+  "status": "Active|Inactive|Archived"
+}
+Response: { "success": bool, "message": "string" }
+
+POST /api/placements/create
+Body: {
+  "placement_name": "string",
+  "ad_unit_ids": "string (comma-separated IDs)",
+  "network_code": "string",
+  "primary_exchange_id": int,
+  "pricing_tier": "Tier 1|Tier 2|Premium|Standard"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/inventory-forecast
+Query Params: placement_id (optional), start_date, end_date
+Response: [{
+  date: "YYYY-MM-DD",
+  placement_id: int,
+  available: int,
+  booked: int,
+  forecast_confidence: float
+}, ...]
+```
+
+### Targeting Management
+```
+POST /api/targeting-rules/create
+Body: {
+  "rule_name": "string",
+  "inventory_target": "string",
+  "geography": "string (comma-separated countries)",
+  "device_type": "desktop|mobile|tablet|all",
+  "os": "string (comma-separated OS)",
+  "browser": "string (comma-separated browsers)"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/targeting-rules
+Response: [{ id, rule_name, geography, device_type, ... }, ...]
+
+POST /api/frequency-caps/create
+Body: {
+  "cap_name": "string",
+  "line_item_id": int,
+  "max_impressions": int,
+  "time_period": "hourly|daily|weekly|monthly|per_session",
+  "frequency_scope": "user|household|cross_device"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/frequency-caps
+Response: [{ id, cap_name, max_impressions, time_period, ... }, ...]
+
+POST /api/competitive-exclusions/create
+Body: {
+  "rule_name": "string",
+  "exclusion_type": "advertiser|category|domain",
+  "excluded_items": "string (line-separated or comma-separated)",
+  "line_item_ids": "string (comma-separated, optional)"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/competitive-exclusions
+Response: [{ id, rule_name, exclusion_type, excluded_items, ... }, ...]
+```
+
+### Programmatic Management
+```
+POST /api/programmatic-settings/create
+Body: {
+  "ssp_name": "google_ad_exchange|rubicon|openx|appnexus|index|pubmatic",
+  "account_id": "string",
+  "api_key": "string (password field)",
+  "default_floor": float (e.g., 8.50)
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/programmatic-settings
+Response: [{
+  id: int,
+  ssp_name: "string",
+  account_id: "string",
+  status: "Connected|Pending|Inactive",
+  monthly_revenue: float
+}, ...]
+
+POST /api/preferred-deals/create
+Body: {
+  "deal_name": "string",
+  "buyer_name": "string",
+  "deal_type": "pmp|pg|preferred_first_look",
+  "floor_price": float,
+  "volume_per_week": int (optional),
+  "status": "active|pending|paused"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/preferred-deals
+Response: [{
+  id: int,
+  deal_name: "string",
+  buyer_name: "string",
+  deal_type: "string",
+  floor_price: float,
+  status: "string"
+}, ...]
+
+POST /api/floor-prices/create
+Body: {
+  "placement_id": int,
+  "geography": "string (optional, e.g., US, UK)",
+  "default_floor": float,
+  "desktop_floor": float (optional),
+  "mobile_floor": float (optional),
+  "tablet_floor": float (optional)
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/floor-prices
+Query Params: placement_id (optional)
+Response: [{
+  id: int,
+  placement_id: int,
+  geography: "string",
+  default_floor: float,
+  device_floors: object
+}, ...]
+```
+
+### Reporting
+```
+POST /api/reports/schedule
+Body: {
+  "report_name": "string",
+  "report_type": "delivery|yield|dimensional|combined",
+  "schedule": "daily|weekly|biweekly|monthly",
+  "send_time": "HH:MM",
+  "recipients": "string (comma-separated emails)"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/reports/delivery
+Query Params: start_date, end_date
+Response: [{
+  order_id: int,
+  date: "YYYY-MM-DD",
+  booked: int,
+  delivered: int,
+  delivery_percent: float,
+  status: "string"
+}, ...]
+
+GET /api/reports/yield
+Query Params: start_date, end_date
+Response: [{
+  ssp_id: int,
+  date: "YYYY-MM-DD",
+  impressions: int,
+  revenue: float,
+  cpm: float,
+  match_rate: float
+}, ...]
+
+GET /api/reports/dimensional
+Query Params: dimension (geography|device), start_date, end_date
+Response: [{
+  dimension_value: "string",
+  impressions: int,
+  revenue: float,
+  cpm: float,
+  fill_rate: float
+}, ...]
+```
+
+### Audience Management
+```
+POST /api/audiences/create
+Body: {
+  "audience_name": "string",
+  "audience_type": "first_party|dmp|cdp",
+  "description": "string",
+  "segment_count": int
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/audiences
+Response: [{
+  id: int,
+  audience_name: "string",
+  audience_type: "string",
+  segment_count: int
+}, ...]
+
+POST /api/audience-segments/create
+Body: {
+  "audience_id": int,
+  "segment_name": "string",
+  "kv_pair": "string (key=value)"
+}
+Response: { "success": bool, "message": "string" }
+
+GET /api/audience-segments
+Query Params: audience_id
+Response: [{ id, segment_name, kv_pair, size }, ...]
+```
+
+---
+
+## 📊 Response Format
+
+All API endpoints return JSON in the following format:
+
+### Success Response (200 OK)
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": {
+    "id": 1,
+    "name": "Example",
+    ...
+  }
+}
+```
+
+### Error Response (400/500)
+```json
+{
+  "success": false,
+  "message": "Error description here",
+  "error_code": "VALIDATION_ERROR|DATABASE_ERROR|NOT_FOUND"
+}
+```
+
+---
+
+## 🔐 Authentication
+
+Currently: **No authentication required** (development mode)
+
+For production, add:
+- JWT token validation
+- Bearer token in Authorization header
+- Role-based permission checks
+- API key management
+
+---
+
+## 📈 Rate Limiting
+
+Currently: **No rate limiting** (development mode)
+
+For production, add:
+- 1000 requests per minute per IP
+- 100 requests per minute per authenticated user
+- Exponential backoff retry strategy
+
+---
+
+## 🌐 CORS
+
+Currently: **Allow all origins** (development mode)
+
+For production, configure:
+```
+Access-Control-Allow-Origin: https://yourdomain.com
+Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS
+Access-Control-Allow-Headers: Content-Type, Authorization
+```
+
+---
+
+## 📝 Query Parameters
+
+### Common Parameters
+- `start_date` (YYYY-MM-DD) - Report start date
+- `end_date` (YYYY-MM-DD) - Report end date
+- `limit` (int) - Results per page (default: 100)
+- `offset` (int) - Results offset (default: 0)
+- `sort` (string) - Sort field and direction
+- `filter` (string) - JSON filter conditions
+
+### Examples
+```
+GET /api/orders?start_date=2026-01-01&end_date=2026-01-31
+GET /api/reports/delivery?limit=50&offset=0
+GET /api/preferred-deals?sort=floor_price:desc
+```
+
+---
+
+## ⚡ Performance Tips
+
+1. **Use caching** - Most data is cached for 0.24 seconds
+2. **Batch operations** - Group multiple creates together
+3. **Use filters** - Limit results with query parameters
+4. **Async operations** - Long operations run asynchronously
+5. **Connection pooling** - Database connections are pooled
+
+---
+
+## 📞 Testing Endpoints
+
+### Using cURL
+```bash
+# Create order
+curl -X POST http://localhost:8000/api/orders/create \
+  -H "Content-Type: application/json" \
+  -d '{"order_name":"Test","campaign_id":1,"publisher_id":1,"order_type":"Standard"}'
+
+# Get orders
+curl http://localhost:8000/api/orders
+
+# Health check
+curl http://localhost:8000/health
+```
+
+### Using Postman
+1. Import this JSON:
+```json
+{
+  "info": {
+    "name": "Digital-SSP API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Create Order",
+      "request": {
+        "method": "POST",
+        "url": "{{base_url}}/api/orders/create",
+        "body": {"mode": "raw", "raw": "{}"}
+      }
+    }
+  ]
+}
+```
+
+2. Set variables:
+   - `base_url` = `http://localhost:8000`
+
+---
+
+**API Version**: 1.0.0  
+**Last Updated**: January 4, 2026  
+**Status**: Production Ready ✅

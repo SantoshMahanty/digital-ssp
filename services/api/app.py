@@ -118,6 +118,126 @@ if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 
+# ============================================================================
+# DATA CACHE - Load once on startup, serve from memory
+# ============================================================================
+class DataCache:
+    """In-memory cache for dashboard data"""
+    def __init__(self):
+        self.orders = []
+        self.line_items = []
+        self.creatives = []
+        self.active_orders = 0
+        self.paused_orders = 0
+        self.total_line_items = 0
+        self.delivering_line_items = 0
+        self.total_creatives = 0
+        self.formats = 0
+    
+    def load(self):
+        """Load all data from database into memory"""
+        import time
+        try:
+            from services.api.mysql_queries import execute_query
+            
+            start_time = time.time()
+            logger.info("Loading data cache...")
+            
+            # Get counts with a single query for efficiency
+            count_query = """
+                SELECT 
+                    (SELECT COUNT(*) FROM orders WHERE status = 'ACTIVE') as active_orders,
+                    (SELECT COUNT(*) FROM orders WHERE status = 'PAUSED') as paused_orders,
+                    (SELECT COUNT(*) FROM creatives) as total_creatives,
+                    (SELECT COUNT(DISTINCT creative_type) FROM creatives) as formats
+            """
+            count_result = execute_query(count_query)
+            if count_result:
+                self.active_orders = count_result[0].get('active_orders', 0) or 0
+                self.paused_orders = count_result[0].get('paused_orders', 0) or 0
+                self.total_creatives = count_result[0].get('total_creatives', 0) or 0
+                self.formats = count_result[0].get('formats', 0) or 0
+            
+            # Get top 10 orders for display (not all 100)
+            orders_query = """
+                SELECT
+                    o.order_id, o.order_name, o.status, o.start_date, o.end_date,
+                    o.lifetime_impression_goal, o.lifetime_budget, o.order_type, o.pacing_rate,
+                    a.advertiser_name, c.campaign_name, p.publisher_name,
+                    COALESCE(COUNT(DISTINCT i.impression_id), 0) AS delivered,
+                    COALESCE(SUM(i.click_through), 0) AS clicks,
+                    COALESCE(SUM(i.revenue), 0) AS revenue
+                FROM orders o
+                JOIN campaigns c ON o.campaign_id = c.campaign_id
+                JOIN advertisers a ON c.advertiser_id = a.advertiser_id
+                JOIN publishers p ON o.publisher_id = p.publisher_id
+                LEFT JOIN impressions i ON i.order_id = o.order_id
+                WHERE o.status = 'ACTIVE'
+                GROUP BY o.order_id
+                ORDER BY o.order_id DESC
+                LIMIT 10
+            """
+            self.orders = execute_query(orders_query)
+            
+            # Process orders data
+            for row in self.orders:
+                delivered = int(row.get('delivered', 0) or 0)
+                goal = int(row.get('lifetime_impression_goal', 0) or 0)
+                row['pct_complete'] = round((delivered / goal * 100), 1) if goal else 0
+                revenue = float(row.get('revenue', 0) or 0)
+                row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
+                clicks = int(row.get('clicks', 0) or 0)
+                row['ctr'] = round((clicks / max(delivered, 1) * 100), 2)
+            
+            # Set line items same as orders (they're the same in this system)
+            self.line_items = self.orders
+            self.total_line_items = self.active_orders + self.paused_orders
+            self.delivering_line_items = sum(1 for li in self.line_items if li.get('status') == 'ACTIVE')
+            
+            # Get top 10 creatives for display
+            creatives_query = """
+                SELECT
+                    c.creative_id, c.creative_name, c.creative_type, c.width, c.height,
+                    c.status, c.approval_status, a.advertiser_name, c.campaign_id,
+                    cmp.campaign_name,
+                    COALESCE(COUNT(DISTINCT i.impression_id), 0) AS delivered,
+                    COALESCE(SUM(i.click_through), 0) AS clicks,
+                    COALESCE(SUM(i.revenue), 0) AS revenue
+                FROM creatives c
+                JOIN campaigns cmp ON c.campaign_id = cmp.campaign_id
+                JOIN advertisers a ON cmp.advertiser_id = a.advertiser_id
+                LEFT JOIN impressions i ON i.creative_id = c.creative_id
+                GROUP BY c.creative_id
+                ORDER BY c.creative_id DESC
+                LIMIT 10
+            """
+            self.creatives = execute_query(creatives_query)
+            
+            # Process creatives data
+            for row in self.creatives:
+                delivered = int(row.get('delivered', 0) or 0)
+                revenue = float(row.get('revenue', 0) or 0)
+                clicks = int(row.get('clicks', 0) or 0)
+                row['ctr'] = round((clicks / max(delivered, 1) * 100), 2)
+                row['cpm'] = round((revenue / max(delivered, 1) * 1000), 2)
+                row['size'] = f"{row.get('width') or 0}x{row.get('height') or 0}" if row.get('width') and row.get('height') else "—"
+            
+            elapsed = time.time() - start_time
+            logger.info(f"Cache loaded in {elapsed:.2f}s: {self.active_orders} active orders, {self.total_creatives} creatives")
+        except Exception as e:
+            logger.error(f"Error loading cache: {e}")
+
+# Initialize cache
+data_cache = DataCache()
+
+# Load cache on startup
+@app.on_event("startup")
+async def startup_event():
+    """Load data cache when server starts"""
+    data_cache.load()
+    logger.info("Data cache ready for serving")
+
+
 # -----------------------------------------------------------------------------
 # Models
 # -----------------------------------------------------------------------------
@@ -242,7 +362,7 @@ async def debug_request(req_id: str):
     }
 
 
-@app.get("/line-items", response_model=List[LineItemModel])
+@app.get("/api/line-items", response_model=List[LineItemModel])
 async def list_line_items():
     return [
         {
@@ -305,20 +425,26 @@ async def console_redirect():
 
 @app.get("/delivery", response_class=HTMLResponse)
 async def console_delivery(request: Request):
-    """Delivery management page."""
-    return templates.TemplateResponse("delivery.html", {"request": request, "active_nav": "Delivery"})
+    """Delivery management page with cached data."""
+    return templates.TemplateResponse("delivery.html", {
+        "request": request,
+        "active_nav": "Delivery",
+        "orders": data_cache.orders,
+        "active_orders": data_cache.active_orders,
+        "paused_orders": data_cache.paused_orders,
+        "line_items": data_cache.line_items,
+        "total_line_items": data_cache.total_line_items,
+        "delivering_line_items": data_cache.delivering_line_items,
+        "creatives": data_cache.creatives,
+        "total_creatives": data_cache.total_creatives,
+        "formats": data_cache.formats
+    })
 
 
 @app.get("/orders", response_class=HTMLResponse)
 async def console_orders(request: Request):
-    """Orders management page using Jinja2 template with live MySQL data."""
-    try:
-        from services.api.mysql_queries import get_orders_list
-        orders = get_orders_list()
-    except Exception as e:
-        logger.error(f"Error fetching orders data: {e}")
-        orders = []
-    return templates.TemplateResponse("orders.html", {"request": request, "active_nav": "Orders", "orders": orders})
+    """Orders management page with cached data."""
+    return templates.TemplateResponse("orders.html", {"request": request, "active_nav": "Orders", "orders": data_cache.orders})
 
 
 @app.get("/inventory", response_class=HTMLResponse)
@@ -459,28 +585,6 @@ async def console_programmatic_page():
     return HTMLResponse(_page("Programmatic", body, "Programmatic"))
 
 
-@app.get("/admin", response_class=HTMLResponse)
-async def console_admin():
-    body = f"""
-        <div class=\"card\" style=\"margin-bottom:20px;\">
-            <h2>Admin</h2>
-            <div class=\"muted\">RBAC, settings, and integrations (static for now).</div>
-            <ul>
-                <li>Users & Roles: add role presets (Viewer, Trafficker, Admin)</li>
-                <li>Network settings: currency, timezone, default priorities</li>
-                <li>API keys & webhooks: rotate keys, view audit log</li>
-            </ul>
-        </div>
-        <div class=\"card\">
-            <h3>Current simulator stats</h3>
-            <p>Line items loaded: {len(LINE_ITEMS)}</p>
-            <p>Floor rules loaded: {len(FLOOR_RULES_DATA)}</p>
-            <p>Requests logged: {len(REQUEST_TRACES)}</p>
-        </div>
-    """
-    return HTMLResponse(_page("Admin", body, "Admin"))
-
-
 @app.get("/privacy", response_class=HTMLResponse)
 async def console_privacy():
     body = """
@@ -531,26 +635,240 @@ async def console_tools():
 
 @app.get("/line-items", response_class=HTMLResponse)
 async def console_line_items(request: Request):
-    """Line items management page using Jinja2 template with live MySQL data."""
-    try:
-        from services.api.mysql_queries import get_line_items_list
-        line_items = get_line_items_list()
-    except Exception as e:
-        logger.error(f"Error fetching line items data: {e}")
-        line_items = []
-    return templates.TemplateResponse("line_items.html", {"request": request, "active_nav": "Line Items", "line_items": line_items})
+    """Line items management page with cached data."""
+    return templates.TemplateResponse("line_items.html", {"request": request, "active_nav": "Line Items", "line_items": data_cache.line_items})
 
 
 @app.get("/creatives", response_class=HTMLResponse)
 async def console_creatives(request: Request):
-    """Creatives management page using Jinja2 template with live MySQL data."""
+    """Creatives management page with cached data."""
+    return templates.TemplateResponse("creatives.html", {"request": request, "active_nav": "Creatives", "creatives": data_cache.creatives})
+
+
+@app.get("/targeting", response_class=HTMLResponse)
+async def console_targeting(request: Request):
+    """Targeting controls management page."""
+    return templates.TemplateResponse("targeting.html", {"request": request, "active_nav": "Targeting"})
+
+
+@app.get("/reporting", response_class=HTMLResponse)
+async def console_reporting(request: Request):
+    """Reporting and analytics dashboard."""
+    return templates.TemplateResponse("reporting.html", {"request": request, "active_nav": "Reporting"})
+
+
+@app.get("/audiences", response_class=HTMLResponse)
+async def console_audiences(request: Request):
+    """Audience management page."""
+    return templates.TemplateResponse("audiences.html", {"request": request, "active_nav": "Audiences"})
+
+
+@app.get("/agencies", response_class=HTMLResponse)
+async def console_agencies(request: Request):
+    """Agencies and salespeople management page."""
+    return templates.TemplateResponse("agencies.html", {"request": request, "active_nav": "Agencies"})
+
+
+@app.get("/admin", response_class=HTMLResponse)
+async def console_admin(request: Request):
+    """Admin settings and configuration page."""
+    return templates.TemplateResponse("admin.html", {"request": request, "active_nav": "Admin"})
+
+
+# API CRUD Endpoints
+@app.post("/api/orders/create")
+async def create_order(request: Request):
+    """Create a new order"""
+    from services.api.mysql_queries import execute_query
+    
     try:
-        from services.api.mysql_queries import get_creatives_list
-        creatives = get_creatives_list()
+        data = await request.json()
+        
+        # Validate required fields
+        if not data.get('order_name') or not data.get('campaign_id') or not data.get('publisher_id'):
+            return {"error": "Missing required fields: order_name, campaign_id, publisher_id"}
+        
+        # Insert order
+        insert_query = """
+            INSERT INTO orders (order_name, campaign_id, publisher_id, order_type, 
+                              start_date, end_date, daily_budget, lifetime_budget, 
+                              daily_impression_goal, lifetime_impression_goal, pacing_rate, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 100.0, 'ACTIVE')
+        """
+        
+        execute_query(insert_query, (
+            data.get('order_name'),
+            data.get('campaign_id'),
+            data.get('publisher_id'),
+            data.get('order_type', 'STANDARD'),
+            data.get('start_date'),
+            data.get('end_date'),
+            data.get('daily_budget', 0),
+            data.get('lifetime_budget', 0),
+            data.get('daily_impression_goal', 0),
+            data.get('lifetime_impression_goal', 0)
+        ))
+        
+        # Refresh cache
+        data_cache.load()
+        
+        return {"success": True, "message": "Order created successfully"}
     except Exception as e:
-        logger.error(f"Error fetching creatives data: {e}")
-        creatives = []
-    return templates.TemplateResponse("creatives.html", {"request": request, "active_nav": "Creatives", "creatives": creatives})
+        logger.error(f"Error creating order: {e}")
+        return {"error": str(e)}
+
+
+@app.post("/api/line-items/create")
+async def create_line_item(request: Request):
+    """Create a new line item (order)"""
+    from services.api.mysql_queries import execute_query
+    
+    try:
+        data = await request.json()
+        
+        # Validate required fields
+        if not data.get('order_name') or not data.get('campaign_id') or not data.get('publisher_id'):
+            return {"error": "Missing required fields"}
+        
+        # Same as order creation
+        insert_query = """
+            INSERT INTO orders (order_name, campaign_id, publisher_id, order_type, 
+                              start_date, end_date, daily_budget, lifetime_budget, 
+                              daily_impression_goal, lifetime_impression_goal, pacing_rate, status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'ACTIVE')
+        """
+        
+        execute_query(insert_query, (
+            data.get('order_name'),
+            data.get('campaign_id'),
+            data.get('publisher_id'),
+            data.get('order_type', 'STANDARD'),
+            data.get('start_date'),
+            data.get('end_date'),
+            data.get('daily_budget', 0),
+            data.get('lifetime_budget', 0),
+            data.get('daily_impression_goal', 0),
+            data.get('lifetime_impression_goal', 0),
+            data.get('pacing_rate', 100)
+        ))
+        
+        # Refresh cache
+        data_cache.load()
+        
+        return {"success": True, "message": "Line item created successfully"}
+    except Exception as e:
+        logger.error(f"Error creating line item: {e}")
+        return {"error": str(e)}
+
+
+@app.post("/api/creatives/create")
+async def create_creative(request: Request):
+    """Create a new creative"""
+    from services.api.mysql_queries import execute_query
+    
+    try:
+        data = await request.json()
+        
+        # Validate required fields
+        if not data.get('creative_name') or not data.get('campaign_id'):
+            return {"error": "Missing required fields: creative_name, campaign_id"}
+        
+        # Insert creative
+        insert_query = """
+            INSERT INTO creatives (creative_name, campaign_id, creative_type, width, height, 
+                                  file_size, file_url, status, approval_status)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, 'ACTIVE', 'APPROVED')
+        """
+        
+        execute_query(insert_query, (
+            data.get('creative_name'),
+            data.get('campaign_id'),
+            data.get('creative_type', 'BANNER'),
+            data.get('width', 300),
+            data.get('height', 250),
+            data.get('file_size', 0),
+            data.get('file_url', '')
+        ))
+        
+        # Refresh cache
+        data_cache.load()
+        
+        return {"success": True, "message": "Creative created successfully"}
+    except Exception as e:
+        logger.error(f"Error creating creative: {e}")
+        return {"error": str(e)}
+
+
+@app.put("/api/orders/{order_id}")
+async def update_order(order_id: int, request: Request):
+    """Update an existing order"""
+    from services.api.mysql_queries import execute_query
+    
+    try:
+        data = await request.json()
+        
+        # Build dynamic UPDATE query
+        fields = []
+        values = []
+        
+        allowed_fields = ['order_name', 'order_type', 'status', 'start_date', 'end_date', 
+                         'daily_budget', 'lifetime_budget', 'daily_impression_goal', 
+                         'lifetime_impression_goal', 'pacing_rate']
+        
+        for field in allowed_fields:
+            if field in data:
+                fields.append(f"{field} = %s")
+                values.append(data[field])
+        
+        if not fields:
+            return {"error": "No fields to update"}
+        
+        values.append(order_id)
+        
+        update_query = f"UPDATE orders SET {', '.join(fields)} WHERE order_id = %s"
+        execute_query(update_query, values)
+        
+        # Refresh cache
+        data_cache.load()
+        
+        return {"success": True, "message": "Order updated successfully"}
+    except Exception as e:
+        logger.error(f"Error updating order: {e}")
+        return {"error": str(e)}
+
+
+@app.delete("/api/orders/{order_id}")
+async def delete_order(order_id: int):
+    """Delete an order"""
+    from services.api.mysql_queries import execute_query
+    
+    try:
+        execute_query("DELETE FROM orders WHERE order_id = %s", (order_id,))
+        
+        # Refresh cache
+        data_cache.load()
+        
+        return {"success": True, "message": "Order deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting order: {e}")
+        return {"error": str(e)}
+
+
+@app.delete("/api/creatives/{creative_id}")
+async def delete_creative(creative_id: int):
+    """Delete a creative"""
+    from services.api.mysql_queries import execute_query
+    
+    try:
+        execute_query("DELETE FROM creatives WHERE creative_id = %s", (creative_id,))
+        
+        # Refresh cache
+        data_cache.load()
+        
+        return {"success": True, "message": "Creative deleted successfully"}
+    except Exception as e:
+        logger.error(f"Error deleting creative: {e}")
+        return {"error": str(e)}
 
 
 @app.get("/study-hub", response_class=HTMLResponse)
@@ -629,18 +947,27 @@ async def startup_event():
     
     # Add recent impression data on startup
     try:
-        from add_recent_data import add_recent_impressions
-        logger.info("Adding 1000 recent impression records (last 7 days)...")
-        add_recent_impressions(1000)
+        pass
+        # Commented out - add_recent_data module not available
+        # import sys
+        # sys.path.insert(0, 'practice')
+        # from add_recent_data import add_recent_impressions
+        # logger.info("Adding 1000 recent impression records (last 7 days)...")
+        # add_recent_impressions(1000)
     except Exception as e:
         logger.error(f"Error adding recent data: {e}")
     
-    logger.info("API running on http://0.0.0.0:8001")
+    logger.info("API running on http://0.0.0.0:8000")
 
 
 @app.on_event("shutdown")
 async def shutdown_event():
     logger.info("Digital-SSP API shutting down...")
+
+
+# Register GAM360 endpoints
+from services.api.gam360_endpoints import register_gam360_endpoints
+register_gam360_endpoints(app)
 
 
 if __name__ == "__main__":

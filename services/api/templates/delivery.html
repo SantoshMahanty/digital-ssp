@@ -22,11 +22,11 @@
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
                 <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
-                    <div style="font-weight: 600; color: #202124;">12</div>
+                    <div style="font-weight: 600; color: #202124;">{{ active_orders }}</div>
                     <div style="color: #5f6368;">Active</div>
                 </div>
                 <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
-                    <div style="font-weight: 600; color: #202124;">3</div>
+                    <div style="font-weight: 600; color: #202124;">{{ paused_orders }}</div>
                     <div style="color: #5f6368;">Paused</div>
                 </div>
             </div>
@@ -48,11 +48,11 @@
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
                 <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
-                    <div style="font-weight: 600; color: #202124;">47</div>
+                    <div style="font-weight: 600; color: #202124;">{{ total_line_items }}</div>
                     <div style="color: #5f6368;">Total</div>
                 </div>
                 <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
-                    <div style="font-weight: 600; color: #202124;">38</div>
+                    <div style="font-weight: 600; color: #202124;">{{ delivering_line_items }}</div>
                     <div style="color: #5f6368;">Delivering</div>
                 </div>
             </div>
@@ -74,11 +74,11 @@
             </div>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 12px;">
                 <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
-                    <div style="font-weight: 600; color: #202124;">156</div>
+                    <div style="font-weight: 600; color: #202124;">{{ total_creatives }}</div>
                     <div style="color: #5f6368;">Assets</div>
                 </div>
                 <div style="background: #f1f3f4; padding: 8px; border-radius: 4px; text-align: center;">
-                    <div style="font-weight: 600; color: #202124;">3</div>
+                    <div style="font-weight: 600; color: #202124;">{{ formats }}</div>
                     <div style="color: #5f6368;">Formats</div>
                 </div>
             </div>
@@ -278,6 +278,94 @@
     </div>
 </div>
 
+<!-- NATIVE ADS -->
+<div class="card" style="margin-top: 24px;">
+    <h2>🏷️ Native Ads Management</h2>
+    <p class="subtitle" style="margin-bottom: 16px;">Blended content that matches publisher style</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px;">
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px; border-left: 4px solid #ea4335;">
+            <div style="font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 14px;">📝 Native Assets</div>
+            <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px; line-height: 1.8;">
+                <li><strong>Headline:</strong> 25 char limit</li>
+                <li><strong>Description:</strong> 90 char limit</li>
+                <li><strong>Image:</strong> 1200x628px or 800x480px</li>
+                <li><strong>Icon:</strong> 128x128px</li>
+                <li><strong>CTA:</strong> Learn More, Download, etc.</li>
+            </ul>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px; border-left: 4px solid #4285f4;">
+            <div style="font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 14px;">🎯 Native Targeting</div>
+            <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px; line-height: 1.8;">
+                <li>Content category matching</li>
+                <li>Section/placement targeting</li>
+                <li>Audience alignment</li>
+                <li>Feed position control</li>
+                <li>Brand safety controls</li>
+            </ul>
+        </div>
+        <div style="background: #f1f3f4; padding: 16px; border-radius: 8px; border-left: 4px solid #34a853;">
+            <div style="font-weight: 600; color: #202124; margin-bottom: 8px; font-size: 14px;">📊 Native Performance</div>
+            <ul style="font-size: 12px; color: #5f6368; margin: 0; padding-left: 16px; line-height: 1.8;">
+                <li>Engagement rate tracking</li>
+                <li>Content resonance metrics</li>
+                <li>Native-specific viewability</li>
+                <li>Quality score by publisher</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- DELIVERY TOOL -->
+<div class="card" style="margin-top: 24px;">
+    <h2>🚀 Delivery Tool & Optimization</h2>
+    <p class="subtitle" style="margin-bottom: 16px;">Real-time delivery engine controls</p>
+    
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <div style="background: #e8f5e9; padding: 16px; border-radius: 8px; border-left: 4px solid #34a853;">
+            <div style="font-weight: 600; color: #137333; margin-bottom: 8px; font-size: 14px;">⚡ Smart Delivery</div>
+            <div style="font-size: 12px; color: #1b5e20; line-height: 1.8;">
+                <div style="margin-bottom: 8px;">Automatic optimization to hit impressions goals while respecting all constraints:</div>
+                <ul style="margin: 0; padding-left: 16px;">
+                    <li>Adaptive pacing based on performance</li>
+                    <li>Competitive index balancing</li>
+                    <li>Real-time inventory matching</li>
+                    <li>Frequency cap enforcement</li>
+                    <li>Performance-based creative rotation</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="background: #fff3e0; padding: 16px; border-radius: 8px; border-left: 4px solid #f57c00;">
+            <div style="font-weight: 600; color: #e65100; margin-bottom: 8px; font-size: 14px;">📈 Forecasting & Analysis</div>
+            <div style="font-size: 12px; color: #bf360c; line-height: 1.8;">
+                <div style="margin-bottom: 8px;">Predict delivery success before launch:</div>
+                <ul style="margin: 0; padding-left: 16px;">
+                    <li>Availability predictions</li>
+                    <li>Conflict detection</li>
+                    <li>Overbooking alerts</li>
+                    <li>Historical pacing patterns</li>
+                    <li>Inventory trends</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div style="background: #ffebee; padding: 16px; border-radius: 8px; border-left: 4px solid #d32f2f;">
+            <div style="font-weight: 600; color: #b71c1c; margin-bottom: 8px; font-size: 14px;">🔧 Manual Controls</div>
+            <div style="font-size: 12px; color: #7f0000; line-height: 1.8;">
+                <div style="margin-bottom: 8px;">Override system for special cases:</div>
+                <ul style="margin: 0; padding-left: 16px;">
+                    <li>Pause / resume delivery</li>
+                    <li>Adjust pacing rates</li>
+                    <li>Modify daily caps</li>
+                    <li>Change priority levels</li>
+                    <li>Force creative rotation</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- DELIVERY DASHBOARD -->
 <div class="card" style="margin-top: 24px;">
     <h2>📊 Current Delivery Status</h2>
@@ -296,32 +384,37 @@
                 </tr>
             </thead>
             <tbody>
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>Brand Co - Q1 Campaign</strong></td>
-                    <td style="text-align: right; color: #5f6368;">Sponsorship</td>
-                    <td style="text-align: right; color: #5f6368;">10M</td>
-                    <td style="text-align: right; color: #5f6368;">9.2M</td>
-                    <td style="text-align: right; color: #5f6368;">92%</td>
-                    <td style="text-align: center;"><span style="background: #e6f4ea; color: #137333; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">On Track</span></td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>Tech Inc - Display Campaign</strong></td>
-                    <td style="text-align: right; color: #5f6368;">Standard</td>
-                    <td style="text-align: right; color: #5f6368;">5M</td>
-                    <td style="text-align: right; color: #5f6368;">3.8M</td>
-                    <td style="text-align: right; color: #5f6368;">76%</td>
-                    <td style="text-align: center;"><span style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">Lagging</span></td>
-                </tr>
-                <tr style="border-bottom: 1px solid #e8eaed;">
-                    <td style="padding: 12px 0; color: #202124;"><strong>Startup Labs - Video Campaign</strong></td>
-                    <td style="text-align: right; color: #5f6368;">Programmatic</td>
-                    <td style="text-align: right; color: #5f6368;">2M</td>
-                    <td style="text-align: right; color: #5f6368;">450K</td>
-                    <td style="text-align: right; color: #5f6368;">22%</td>
-                    <td style="text-align: center;"><span style="background: #ffebee; color: #c5221f; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">Behind</span></td>
-                </tr>
+                {% if line_items %}
+                    {% for item in line_items[:10] %}
+                    <tr style="border-bottom: 1px solid #e8eaed;">
+                        <td style="padding: 12px 0; color: #202124;"><strong>{{ item.order_name }}</strong></td>
+                        <td style="text-align: right; color: #5f6368;">{{ item.order_type }}</td>
+                        <td style="text-align: right; color: #5f6368;">{{ item.lifetime_impression_goal|default('—') }}</td>
+                        <td style="text-align: right; color: #5f6368;">{{ item.delivered|default('0') }}</td>
+                        <td style="text-align: right; color: #5f6368;">{{ item.pct_complete|default('0') }}%</td>
+                        <td style="text-align: center;">
+                            {% if item.status == 'ACTIVE' %}
+                                <span style="background: #e6f4ea; color: #137333; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">{{ item.status }}</span>
+                            {% elif item.status == 'PAUSED' %}
+                                <span style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">{{ item.status }}</span>
+                            {% else %}
+                                <span style="background: #f1f3f4; color: #5f6368; padding: 4px 8px; border-radius: 3px; font-size: 12px; font-weight: 500;">{{ item.status }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr style="border-bottom: 1px solid #e8eaed;">
+                        <td colspan="6" style="padding: 12px 0; text-align: center; color: #5f6368;">No line items found</td>
+                    </tr>
+                {% endif %}
             </tbody>
         </table>
+        {% if line_items|length > 10 %}
+        <div style="margin-top: 12px; text-align: center; color: #5f6368; font-size: 12px;">
+            Showing 10 of {{ line_items|length }} line items. <a href="/line-items" style="color: #1967d2;">View all →</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
